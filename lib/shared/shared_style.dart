@@ -16,5 +16,16 @@ class SharedStyle {
   static final Color black2 = SharedFunction.hexToColor("1C1C1E");
   static final Color black3 = SharedFunction.hexToColor("2C2C2E");
   static final Color black4 = SharedFunction.hexToColor("3A3A3C");
+
+
+  // BORDER RADIUS
+  static BorderRadius borderRadius(double tl, double tr, double bl, double br){
+    return BorderRadius.only(
+            topLeft: Radius.circular(tl),
+            topRight: Radius.circular(tr),
+            bottomLeft: Radius.circular(bl),
+            bottomRight: Radius.circular(bl)
+          );
+  }
   
 }
