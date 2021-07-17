@@ -4,8 +4,14 @@ import 'package:ryve_mobile/shared/shared_style.dart';
 import 'welcome_page_style.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-class WelcomePage extends StatelessWidget {
-  final double whiteContainerWidth = 400;
+class WelcomePage extends StatefulWidget {
+  @override
+  _WelcomePageState createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
+  final double whiteContainerWidth = 375;
+  int sliderCount = 0;
   final List <Map> sliderItems = [
     // First Slide Item
     {
@@ -29,8 +35,6 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int sliderCount = 1;
-
     return SafeArea(
       child: Scaffold(
         body: Container( /// BACKGROUND
@@ -54,6 +58,10 @@ class WelcomePage extends StatelessWidget {
                     sliders(context),
                     /// SLIDERS INDICATOR
                     sliderIndicator(context),
+                    /// JOIN RYVE
+                    joinRyve(context),
+                    /// ALREADY REGISTERED
+                    signIn(context)
                   ],
                 )
               ],
@@ -68,7 +76,7 @@ class WelcomePage extends StatelessWidget {
     return Container(
       width: whiteContainerWidth,
       margin: EdgeInsets.only(top: 100),
-      height: SharedFunction.heightPercent(context, 46),
+      height: 376,
       padding: EdgeInsets.only(top: 50),
       decoration: BoxDecoration(
         borderRadius: SharedStyle.borderRadius(20, 20, 0, 0),
@@ -86,8 +94,9 @@ class WelcomePage extends StatelessWidget {
           height: 305,
           viewportFraction: 1,
           onPageChanged: (index, reason) {
-            print(index);
-            print(reason);
+            setState(() {
+              sliderCount = index;
+            });
           }
         ),
         items: sliderItems.map((sliderItem) => sliderContent(context, sliderItem)).toList(),
@@ -103,7 +112,7 @@ class WelcomePage extends StatelessWidget {
     return Builder(
       builder: (BuildContext context){
         return Container(
-          constraints: BoxConstraints.tightFor(width: whiteContainerWidth),
+          width: whiteContainerWidth,
           child: 
             Column(
               crossAxisAlignment: CrossAxisAlignment.
@@ -144,6 +153,94 @@ class WelcomePage extends StatelessWidget {
   }
 
   Widget sliderIndicator(context){
-    return Text("data");
+    List <Widget> indicator = [];
+
+    switch (sliderCount) {
+      case 0:
+        indicator = [
+          sliderDot(true),
+          sliderDot(false),
+          sliderDot(false),
+        ];
+        break;
+      case 1:
+        indicator = [
+          sliderDot(false),
+          sliderDot(true),
+          sliderDot(false),
+        ];
+        break;
+      case 2:
+        indicator = [
+          sliderDot(false),
+          sliderDot(false),
+          sliderDot(true),
+        ];
+        break;
+    }
+    return Container(
+      width: whiteContainerWidth,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: indicator,
+      ),
+    );
+  }
+
+  Widget sliderDot(bool active){
+    if (active) {
+      return Container(
+        margin: EdgeInsets.only(left: 5, right: 5),
+        child: Icon(Icons.circle, size: 7, color: SharedStyle.selectedDot,),
+      );
+    } else {
+      return Container(
+        margin: EdgeInsets.only(left: 5, right: 5),
+        child: Icon(Icons.circle, size: 7, color: SharedStyle.unselectedDot,),
+      );
+    }
+  }
+
+  Widget joinRyve(context){
+    return TextButton(
+      onPressed: () { },
+      child: Container(
+        width: 300,
+        height: 60,
+        margin: EdgeInsets.only(top: 13, bottom: 11),
+        decoration: WelcomePageStyle.joinRyveBtn,
+        child: Center(
+          child: Text(
+            "Join Ryve",
+            style: WelcomePageStyle.joinRyveText,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget signIn(context){
+    return Container(
+      margin: EdgeInsets.only(bottom: 48),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Already registered? ",
+            style: WelcomePageStyle.regularText,
+          ),
+          TextButton(
+            onPressed: (){
+              
+            }, 
+            child: Text(
+              "Sign in.",
+              style: WelcomePageStyle.yellowText,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
