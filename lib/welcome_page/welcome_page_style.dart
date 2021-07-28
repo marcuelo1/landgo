@@ -6,13 +6,13 @@ class WelcomePageStyle {
                         fontSize: 26.0,
                         color: SharedStyle.black,
                         fontWeight: FontWeight.bold,
-                        fontFamily: 'Poppins-Bold' // Not yet added
+                        fontFamily: 'Poppins-Bold'
                       );
                         
   static final caption = TextStyle(
                           fontSize: 20.0,
                           color: SharedStyle.black,
-                          fontFamily: 'SFProText-Regular' // Not yet added
+                          fontFamily: 'SFProText-Regular'
                         );
   
   static final joinRyveBtn = BoxDecoration(

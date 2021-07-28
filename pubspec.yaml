@@ -31,6 +31,7 @@ dependencies:
   
   # NEW
   carousel_slider: ^3.0.0
+  pixel_perfect: ^1.0.8
 
 dev_dependencies:
   flutter_test:

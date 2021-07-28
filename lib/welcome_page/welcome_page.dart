@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'welcome_page_style.dart';
@@ -11,6 +12,15 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   final double whiteContainerWidth = 375;
+  final double whiteContainerHeight = 376;
+  final double sliderHeight = 317; // with slider indicator
+  final double imageWidth = 255;
+  final double imageHeight = 175;
+  final double joinRyveBtnWidth = 300;
+  final double joinRyveBtnHeight = 60;
+  late double scale;
+  late double width;
+  late double height;
   int sliderCount = 0;
   final List <Map> sliderItems = [
     // First Slide Item
@@ -35,49 +45,91 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container( /// BACKGROUND
-          decoration: BoxDecoration(
-            color: SharedStyle.yellow
-          ),
-          height: double.infinity,
-          width: double.infinity,
-          child: Align( 
-            alignment: Alignment.bottomCenter,
-            child: Stack(
-              children: [
-                /// WHITE CONTAINER
-                whiteContainer(context),
-                /// CONTENT
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    /// SLIDERS
-                    sliders(context),
-                    /// SLIDERS INDICATOR
-                    sliderIndicator(context),
-                    /// JOIN RYVE
-                    joinRyve(context),
-                    /// ALREADY REGISTERED
-                    signIn(context)
-                  ],
-                )
-              ],
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    scale = SharedStyle.referenceWidth / width;
+    
+    return PixelPerfect(
+      scale: scale,
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            height: double.infinity,
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(7.5, 4.5, 7.5, 0),
+            decoration: BoxDecoration(
+              color: SharedStyle.yellow
+            ),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Stack(
+                children: [
+                  /// WHITE CONTAINER
+                  whiteContainer(context),
+                  /// CONTENT
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      /// SLIDERS
+                      sliders(context),
+                      /// SLIDERS INDICATOR
+                      sliderIndicator(context),
+                      /// JOIN RYVE
+                      joinRyve(context),
+                      /// ALREADY REGISTERED
+                      signIn(context)
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
-      ),
+      )
     );
+    // return SafeArea(
+    //   child: Scaffold(
+    //     body: Container( /// BACKGROUND
+    //       decoration: BoxDecoration(
+    //         color: SharedStyle.yellow
+    //       ),
+    //       height: double.infinity,
+    //       width: double.infinity,
+    //       child: Align( 
+    //         alignment: Alignment.bottomCenter,
+    //         child: Stack(
+    //           children: [
+    //             /// WHITE CONTAINER
+    //             whiteContainer(context),
+    //             /// CONTENT
+    //             Column(
+    //               mainAxisSize: MainAxisSize.min,
+    //               crossAxisAlignment: CrossAxisAlignment.center,
+    //               children: [
+    //                 /// SLIDERS
+    //                 sliders(context),
+    //                 /// SLIDERS INDICATOR
+    //                 sliderIndicator(context),
+    //                 /// JOIN RYVE
+    //                 joinRyve(context),
+    //                 /// ALREADY REGISTERED
+    //                 signIn(context)
+    //               ],
+    //             )
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
   Widget whiteContainer(context){
     return Container(
       width: whiteContainerWidth,
-      margin: EdgeInsets.only(top: 100),
-      height: 376,
-      padding: EdgeInsets.only(top: 50),
+      height: whiteContainerHeight,
+      margin: EdgeInsets.only(top: SharedFunction.scaleHeight(100, height)),
       decoration: BoxDecoration(
         borderRadius: SharedStyle.borderRadius(20, 20, 0, 0),
         color: Colors.white,
@@ -91,7 +143,7 @@ class _WelcomePageState extends State<WelcomePage> {
       child: CarouselSlider(
         options: CarouselOptions(
           enableInfiniteScroll: false,
-          height: 305,
+          height: sliderHeight,
           viewportFraction: 1,
           onPageChanged: (index, reason) {
             setState(() {
@@ -99,7 +151,11 @@ class _WelcomePageState extends State<WelcomePage> {
             });
           }
         ),
-        items: sliderItems.map((sliderItem) => sliderContent(context, sliderItem)).toList(),
+        items: [
+          for (var sliderItem in sliderItems) ... [
+            sliderContent(context, sliderItem)
+          ]
+        ],
       ),
     );
   }
@@ -121,27 +177,39 @@ class _WelcomePageState extends State<WelcomePage> {
                 // IMAGE
                 ClipRRect(
                   borderRadius: SharedStyle.borderRadius(20, 20, 20, 20),
-                  child: 
-                    Container(
-                      constraints: BoxConstraints.tightFor(width: 255, height: 175),
-                      child: Image.network(url, fit: BoxFit.fill,),
-                    ),
+                  child: Image.network(
+                    url,
+                    width: SharedFunction.scaleWidth(imageWidth, width),
+                    height: SharedFunction.scaleHeight(imageHeight, height),
+                  ),
                 ),
                 // TITLE
                 Container(
                   width: whiteContainerWidth,
-                  margin: EdgeInsets.fromLTRB(36, 30, 75, 2),
+                  margin: EdgeInsets.fromLTRB(
+                    SharedFunction.scaleWidth(35, width), 
+                    SharedFunction.scaleHeight(30, height), 
+                    SharedFunction.scaleWidth(36, width), 
+                    SharedFunction.scaleHeight(2, height)
+                  ),
                   child: Text(
                     title,
+                    textScaleFactor: SharedFunction.textScale(width),
                     style: WelcomePageStyle.title,
                   ),
                 ),
                 // CAPTION
                 Container(
                   width: whiteContainerWidth,
-                  margin: EdgeInsets.fromLTRB(36, 2, 75, 20),
+                  margin: EdgeInsets.fromLTRB(
+                    SharedFunction.scaleWidth(36, width), 
+                    SharedFunction.scaleHeight(0, height), 
+                    SharedFunction.scaleWidth(36, width), 
+                    SharedFunction.scaleHeight(20, height)
+                  ),
                   child: Text(
                     caption,
+                    textScaleFactor: SharedFunction.textScale(width),
                     style: WelcomePageStyle.caption,
                   ),
                 ),
@@ -205,8 +273,8 @@ class _WelcomePageState extends State<WelcomePage> {
     return TextButton(
       onPressed: () { },
       child: Container(
-        width: 300,
-        height: 60,
+        width: joinRyveBtnWidth,
+        height: joinRyveBtnHeight,
         margin: EdgeInsets.only(top: 13, bottom: 11),
         decoration: WelcomePageStyle.joinRyveBtn,
         child: Center(
@@ -221,7 +289,6 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Widget signIn(context){
     return Container(
-      margin: EdgeInsets.only(bottom: 48),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'shared_function.dart';
 
 class SharedStyle {
+  static final double referenceWidth = 375;
+  static final double referenceHeight = 812;
   // Check ryve prototype colors first row (from left to right)
   static final Color lightyellow = SharedFunction.hexToColor("F7F052");
   static final Color yellow = SharedFunction.hexToColor("F2D450");
