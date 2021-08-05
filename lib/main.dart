@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/sign_up/sign_up.dart';
 import 'welcome_page/welcome_page.dart';
 
 void main() {
@@ -10,8 +11,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: 'signup',
       routes: {
         '/': (context) => WelcomePage(),
+        'signup': (context) => SignUp()
       },
     );
   }

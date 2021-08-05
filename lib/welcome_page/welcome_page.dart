@@ -271,7 +271,9 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Widget joinRyve(context){
     return TextButton(
-      onPressed: () { },
+      onPressed: () { 
+        Navigator.pushNamed(context, 'signup');
+      },
       child: Container(
         width: joinRyveBtnWidth,
         height: joinRyveBtnHeight,

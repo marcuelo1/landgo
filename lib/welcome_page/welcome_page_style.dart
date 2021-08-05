@@ -3,14 +3,14 @@ import 'package:ryve_mobile/shared/shared_style.dart';
 
 class WelcomePageStyle {
   static final title = TextStyle(
-                        fontSize: 26.0,
+                        fontSize: 26,
                         color: SharedStyle.black,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Poppins-Bold'
                       );
                         
   static final caption = TextStyle(
-                          fontSize: 20.0,
+                          fontSize: 20,
                           color: SharedStyle.black,
                           fontFamily: 'SFProText-Regular'
                         );
