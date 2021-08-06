@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
+import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/sign_up/sign_up_style.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class SignUp extends StatefulWidget {
   @override
@@ -35,7 +35,7 @@ class _SignUpState extends State<SignUp> {
   var _lastName;
   var _mobileNumber;
 
-  late http.Response _response;
+  bool loading = false;
 
   // Controllers
   TextEditingController emailCon = TextEditingController();
@@ -71,7 +71,7 @@ class _SignUpState extends State<SignUp> {
         break;
     }
 
-    return PixelPerfect(
+    return loading ? Loading() : PixelPerfect(
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.fromLTRB(
@@ -250,17 +250,36 @@ class _SignUpState extends State<SignUp> {
 
   Widget signUp(){
     return TextButton(
-      onPressed: () { 
+      onPressed: () async { 
         if(!formKey.currentState!.validate()){
           return;
         }
 
+        setState(() {
+          loading = true;
+        });
         formKey.currentState!.save();
 
-        sendData();
+        // Sends data to back end
+        var url = Uri.parse('http://localhost:3000/v1/buyer_auth');
+        var response = await http.post(
+          url, 
+          body: {
+            "email": _email,
+            "password": _password,
+            "first_name": _firstName,
+            "last_name": _lastName,
+            "phone_number": _mobileNumber
+          }
+        );
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        print('Response header: ${response.headers}');
 
-        if(_response.statusCode == 200){
-
+        if(response.statusCode == 200){
+          setState(() {
+            loading = false;
+          });
         }
       },
       child: Container(
@@ -341,24 +360,5 @@ class _SignUpState extends State<SignUp> {
         ),
       )
     );
-  }
-
-  void sendData() async {
-    var url = Uri.parse('http://localhost:3000/v1/buyer_auth');
-    var response = await http.post(
-      url, 
-      body: {
-        "email": _email,
-        "password": _password,
-        "first_name": _firstName,
-        "last_name": _lastName,
-        "phone_number": _mobileNumber
-      }
-    );
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-    print('Response header: ${response.headers}');
-
-    _response = response;
   }
 }
