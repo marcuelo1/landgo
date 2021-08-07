@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/shared/loading.dart';
+import 'package:ryve_mobile/shared/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/sign_up/sign_up_style.dart';
@@ -276,10 +277,13 @@ class _SignUpState extends State<SignUp> {
         print('Response body: ${response.body}');
         print('Response header: ${response.headers}');
 
+        setState(() {
+          loading = false;
+        });
         if(response.statusCode == 200){
-          setState(() {
-            loading = false;
-          });
+          Navigator.pushNamed(context, 'home');
+        }else{
+          PopUp.error(context);
         }
       },
       child: Container(

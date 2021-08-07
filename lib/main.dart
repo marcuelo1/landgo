@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/home/home.dart';
 import 'package:ryve_mobile/sign_up/sign_up.dart';
 import 'welcome_page/welcome_page.dart';
 
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
       initialRoute: 'signup',
       routes: {
         '/': (context) => WelcomePage(),
-        'signup': (context) => SignUp()
+        'signup': (context) => SignUp(),
+        'home': (context) => Home()
       },
     );
   }
