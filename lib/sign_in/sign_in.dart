@@ -7,6 +7,7 @@ import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/sign_in/sign_in_style.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SignIn extends StatefulWidget {
   @override
@@ -55,7 +56,7 @@ class _SignInState extends State<SignIn> {
                 // Title
                 title(),
                 // Space betweeen title and form
-                SizedBox(height: (130 / SharedStyle.referenceHeight) * height),
+                SizedBox(height: (80 / SharedStyle.referenceHeight) * height),
                 // Form
                 form()
               ],
@@ -117,7 +118,11 @@ class _SignInState extends State<SignIn> {
     return TextFormField(
       obscureText: true,
       decoration: InputDecoration(labelText: "Password"),
-      validator: (value) {},
+      validator: (value) {
+        if(value!.isEmpty){
+          return "Password is required";
+        }
+      },
       onSaved: (value) => _password = value,
     );
   }
@@ -146,17 +151,27 @@ class _SignInState extends State<SignIn> {
 
         // Send data to backend
         var url = Uri.parse("${SharedUrl.root}/${SharedUrl.version}/buyer_auth/sign_in");
-        var response = await http.post(url, body: {"email": _email, "password": _password});
-        print('Response status: ${response.statusCode}');
-        print('Response body: ${response.body}');
-        print('Response header: ${response.headers}');
+        try {
+          var response = await http.post(url, body: {"email": _email, "password": _password});
+          // convert response body to MAP
+          Map responseBody = json.decode(response.body);
 
-        // end loading page
-        setState(() => loading = false);
-        if(response.statusCode == 200){
-          Navigator.pushNamed(context, 'home');
-        }else{
-          PopUp.error(context);
+          // end loading page
+          setState(() => loading = false);
+          if(response.statusCode == 200){ // successful
+            Navigator.pushNamed(context, 'home');
+          }else if(response.statusCode == 422){ // doesnt have account
+            PopUp.error(context, responseBody['status']);
+          }else if(response.statusCode == 401){ // invalid creds
+            PopUp.error(context, responseBody['errors'][0]);
+          }else{  // 500 status code
+            PopUp.error(context);
+          }
+        } catch (e) {
+          // end loading page
+          setState(() => loading = false);
+          // No internet connection
+          PopUp.error(context, "Please check your internet connection");
         }
       }, 
       child: Container(

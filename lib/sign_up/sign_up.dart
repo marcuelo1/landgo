@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/shared/loading.dart';
@@ -269,26 +271,32 @@ class _SignUpState extends State<SignUp> {
 
         // Sends data to back end
         var url = Uri.parse('${SharedUrl.root}/${SharedUrl.version}/buyer_auth');
-        var response = await http.post(
-          url, 
-          body: {
-            "email": _email,
-            "password": _password,
-            "first_name": _firstName,
-            "last_name": _lastName,
-            "phone_number": _mobileNumber
-          }
-        );
-        print('Response status: ${response.statusCode}');
-        print('Response body: ${response.body}');
-        print('Response header: ${response.headers}');
+        try {
+          var response = await http.post(
+            url, 
+            body: {
+              "email": _email,
+              "password": _password,
+              "first_name": _firstName,
+              "last_name": _lastName,
+              "phone_number": _mobileNumber
+            }
+          );
+          // Convert response body to MAP
+          Map responseBody = json.decode(response.body);
 
-        setState(() {
-          loading = false;
-        });
-        if(response.statusCode == 200){
-          Navigator.pushNamed(context, 'home');
-        }else{
+          setState(() => loading = false);
+          if(response.statusCode == 200){ // successful
+            Navigator.pushNamed(context, 'home');
+          }else if(response.statusCode == 422){ // email has already been taken
+            PopUp.error(context, responseBody['errors']['full_messages'][0]);
+          }else{  // 500 error
+            PopUp.error(context);
+          }
+        } catch (e) {
+          // end loading page
+          setState(() => loading = false);
+          // No internet connection
           PopUp.error(context);
         }
       },

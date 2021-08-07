@@ -39,25 +39,28 @@ class PopUp {
   ///////////////////////////
   ////// ERROR SECTION //////
   ///////////////////////////
-  static Future <void> error (BuildContext context) async {
+  static Future <void> error (BuildContext context, [String message = "Oops there is an error in server"]) async {
     return showDialog(
       context: context, 
       builder: (_) => AlertDialog(
         backgroundColor: SharedStyle.yellow,
-        content: Column(
-          children: [
-            // content
-            _errorContent(),
-            // close button
-            _errorBtn(context)
-          ],
+        content: Container(
+          height: 300,
+          child: Column(
+            children: [
+              // content
+              _errorContent(message),
+              // close button
+              _errorBtn(context)
+            ],
+          ),
         ),
       )
     );
   }
 
-  static Widget _errorContent () {
-    return Text("Error");
+  static Widget _errorContent (String message) {
+    return Text(message);
   }
 
   static Widget _errorBtn (BuildContext context) {
