@@ -4,6 +4,7 @@ import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/sign_up/sign_up_style.dart';
 import 'package:http/http.dart' as http;
 
@@ -77,6 +78,7 @@ class _SignUpState extends State<SignUp> {
     }
 
     return loading ? Loading() : PixelPerfect(
+      scale: scale,
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.fromLTRB(
@@ -266,7 +268,7 @@ class _SignUpState extends State<SignUp> {
         formKey.currentState!.save();
 
         // Sends data to back end
-        var url = Uri.parse('http://localhost:3000/v1/buyer_auth');
+        var url = Uri.parse('${SharedUrl.root}/${SharedUrl.version}/buyer_auth');
         var response = await http.post(
           url, 
           body: {
