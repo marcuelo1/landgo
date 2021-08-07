@@ -301,7 +301,7 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
           TextButton(
             onPressed: (){
-              
+              Navigator.pushNamed(context, 'signin');
             }, 
             child: Text(
               "Sign in.",
