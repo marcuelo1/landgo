@@ -19,4 +19,16 @@ class SignUpStyle {
                               color: SharedStyle.white,
                               fontFamily: 'Poppins-Regular'
                             );
+
+  static final regularText = TextStyle(
+                              fontSize: 16,
+                              color: SharedStyle.black,
+                              fontFamily: 'Poppins-Regular'
+                            );
+
+  static final yellowText = TextStyle(
+                              fontSize: 16,
+                              color: SharedStyle.yellow,
+                              fontFamily: 'Poppins-Regular'
+                            );
 }

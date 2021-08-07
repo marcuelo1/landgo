@@ -60,6 +60,8 @@ class _SignUpState extends State<SignUp> {
           title(),
           /// FORM
           form_1(),
+          /// Already registered
+          signIn()
         ];
         break;
       case 2:
@@ -68,6 +70,8 @@ class _SignUpState extends State<SignUp> {
           title(),
           /// FORM
           form_2(),
+          /// Already registered
+          signIn()
         ];
         break;
     }
@@ -363,6 +367,28 @@ class _SignUpState extends State<SignUp> {
           ),
         ),
       )
+    );
+  }
+
+  Widget signIn(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          "Already registered? ",
+          style: SignUpStyle.regularText,
+        ),
+        TextButton(
+          onPressed: (){
+            Navigator.pushNamed(context, 'signin');
+          }, 
+          child: Text(
+            "Sign in.",
+            style: SignUpStyle.yellowText,
+          ),
+        ),
+      ],
     );
   }
 }
