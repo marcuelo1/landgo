@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
+import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
@@ -159,6 +160,9 @@ class _SignInState extends State<SignIn> {
           // end loading page
           setState(() => loading = false);
           if(response.statusCode == 200){ // successful
+            // save headers
+            await Headers.setHeaders(response.headers);
+            // go to home
             Navigator.pushNamed(context, 'home');
           }else if(response.statusCode == 422){ // doesnt have account
             PopUp.error(context, responseBody['status']);
