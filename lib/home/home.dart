@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
+import 'package:ryve_mobile/home/home_style.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 
@@ -24,7 +25,7 @@ class _HomeState extends State<Home> {
         child: Padding(
           padding: EdgeInsets.all(0), // temporary
           child: Scaffold(
-            appBar: AppBar(title: Text("asd"), backgroundColor: SharedStyle.yellow,),
+            appBar: appBar(),
             drawer: Drawer(
               child: sideBar(),
             ),
@@ -65,6 +66,43 @@ class _HomeState extends State<Home> {
           },
         ),
       ],
+    );
+  }
+
+  AppBar appBar(){
+    return AppBar(
+      title: appBarTitle(),
+      centerTitle: true,
+      backgroundColor: SharedStyle.white,
+      iconTheme: IconThemeData(color: SharedStyle.black),
+      actions: [
+        shoppingCart(),
+        SizedBox(width: 20,),
+        search(),
+        SizedBox(width: 50,),
+      ],
+      actionsIconTheme: IconThemeData(color: SharedStyle.black),
+    );
+  }
+
+  Widget appBarTitle(){
+    return Text(
+      "LandGo",
+      style: HomeStyle.appBarTitle,
+    );
+  }
+
+  Widget shoppingCart(){
+    return GestureDetector(
+      onTap: (){},
+      child: Icon(Icons.shopping_cart_outlined),
+    );
+  }
+
+  Widget search(){
+    return GestureDetector(
+      onTap: (){},
+      child: Icon(Icons.search),
     );
   }
 }
