@@ -7,7 +7,7 @@ class HomeStyle {
  ); 
 
  static final title = TextStyle(
-   color: SharedStyle.black,
+   color: SharedStyle.primaryText,
    fontSize: 35,
    fontFamily: 'Poppins-Bold',
    fontWeight: FontWeight.bold,
@@ -36,14 +36,34 @@ class HomeStyle {
  );
 
  static final productName = TextStyle(
-   color: SharedStyle.black,
+   color: SharedStyle.primaryText,
    fontSize: 14,
    fontFamily: 'SFProText-Bold',
    fontWeight: FontWeight.bold
  );
 
  static final productPrice = TextStyle(
-   color: SharedStyle.black,
+   color: SharedStyle.secondaryText,
+   fontSize: 14,
+   fontFamily: 'SFProText-Regular',
+ );
+
+ static final sellerName = TextStyle(
+   color: SharedStyle.primaryText,
+   fontSize: 18,
+   fontFamily: 'SFProText-Bold',
+   fontWeight: FontWeight.bold
+ );
+
+ static final sellerRating = TextStyle(
+   color: SharedStyle.yellow,
+   fontSize: 16,
+   fontFamily: 'SFProText-Bold',
+   fontWeight: FontWeight.bold
+ );
+
+ static final sellerAddress = TextStyle(
+    color: SharedStyle.secondaryText,
    fontSize: 14,
    fontFamily: 'SFProText-Regular',
  );

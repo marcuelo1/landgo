@@ -23,6 +23,11 @@ class _HomeState extends State<Home> {
   final double productWidth = 327;
   final double productImageWidth = 70;
   final double productImageHeight = 70;
+  final double sellerWidth = 327;
+  final double sellerHeight = 198;
+  final double sellerImageWidth = 327;
+  final double sellerImageHeight = 125;
+  final double sellerAddressWidth = 232;
 
   // categories
   List categories = [
@@ -44,6 +49,40 @@ class _HomeState extends State<Home> {
       "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
       "Assorted Meal",
       180.00
+    ]
+  ];
+
+  // sellers
+  List sellers = [
+    [
+      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+      "Shed Twenty Three",
+      4.8,
+      'Hilado-Rizal Street 6100'
+    ],
+    [
+      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+      "Shed Twenty Three",
+      4.8,
+      'Hilado-Rizal Street 6100 Bacolod City, Villamonte'
+    ],
+    [
+      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+      "Shed Twenty Three",
+      4.8,
+      'Hilado-Rizal Street 6100 Bacolod City, Villamonte'
+    ],
+    [
+      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+      "Shed Twenty Three",
+      4.8,
+      'Hilado-Rizal Street 6100 Bacolod City, Villamonte'
+    ],
+    [
+      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+      "Shed Twenty Three",
+      4.8,
+      'Hilado-Rizal Street 6100 Bacolod City, Villamonte'
     ]
   ];
 
@@ -311,7 +350,7 @@ class _HomeState extends State<Home> {
                   // space
                   SizedBox(height: SharedFunction.scaleHeight(21, height),),
                   // top 5 sellers
-
+                  topSellers()
                 ],
               ),
             ),
@@ -325,16 +364,27 @@ class _HomeState extends State<Home> {
     return Column(
       children: [
         for (var item in products) ... [
-          product(item[0], item[1], item[2].toStringAsFixed(2)),
-          SizedBox(height: SharedFunction.scaleHeight(15, height),),
-          Divider(color: SharedStyle.black,height: 1,),
-          SizedBox(height: SharedFunction.scaleHeight(15, height),)
+          product(item[0], item[1], item[2].toStringAsFixed(2))
         ]
       ],
     );  
   }
 
   Widget product(String imageUrl, String name, String price){
+    return Column(
+      children: [
+        productContent(imageUrl, name, price),
+        // Space
+        SizedBox(height: SharedFunction.scaleHeight(15, height),),
+        // Divider
+        Divider(color: SharedStyle.black,height: 1,),
+        // Space
+        SizedBox(height: SharedFunction.scaleHeight(15, height),)
+      ],
+    );
+  }
+
+  Widget productContent(String imageUrl, String name, String price){
     return Container(
       height: SharedFunction.scaleHeight(productHeight, height),
       width: SharedFunction.scaleWidth(productWidth, width),
@@ -410,7 +460,117 @@ class _HomeState extends State<Home> {
 
   Widget topSellers(){
     return Column(
+      children: [
+        for (var store in sellers) ... [
+          seller(store[0], store[1], store[3], store[2].toStringAsFixed(1))
+        ]
+      ],
+    );
+  }
 
+  Widget seller(String url, String name, String address, String rating){
+    return GestureDetector(
+      onTap: (){},
+      child: Column(
+        children: [
+          // Seller content
+          sellerContent(url, name, address, rating),
+          // Space
+          SizedBox(height: SharedFunction.scaleHeight(10, height),),
+          // Divider
+          Divider(color: SharedStyle.black,height: 1,),
+          // Space
+          SizedBox(height: SharedFunction.scaleHeight(20, height),)
+        ],
+      ),
+    );
+  }
+
+  Widget sellerContent(String url, String name, String address, String rating){
+    return Container(
+      width: SharedFunction.scaleWidth(sellerWidth, width),
+      height: SharedFunction.scaleHeight(sellerHeight, height),
+      child: Column(
+        children: [
+          // Image
+          sellerImage(url),
+          // Space
+          SizedBox(height: SharedFunction.scaleHeight(9, height),),
+          // Name and rating
+          sellerNameAndRating(name, rating),
+          // Space
+          SizedBox(height: SharedFunction.scaleHeight(5, height),),
+          // address
+          sellerAddress(address)
+        ],
+      ),
+    );
+  }
+
+  Widget sellerImage(String url){
+    return ClipRRect(
+      borderRadius: SharedStyle.borderRadius(15, 15, 15, 15),
+      child: Container(
+        width: SharedFunction.scaleWidth(sellerImageWidth, width),
+        height: SharedFunction.scaleHeight(sellerImageHeight, height),
+        child: Image.network(
+          url,
+          fit: BoxFit.fill,
+        ),
+      ),
+    );
+  }
+
+  Widget sellerNameAndRating(String name, String rating){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        sellerName(name),
+        sellerRating(rating)
+      ],
+    );
+  }
+
+  Widget sellerName(String name){
+    return Text(
+      name,
+      style: HomeStyle.sellerName,
+    );
+  }
+
+  Widget sellerRating(String rating){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // star icon
+        Icon(
+          Icons.star_rounded,
+          size: 20,
+          color: SharedStyle.yellow,
+        ),
+        // space
+        SizedBox(width: SharedFunction.scaleWidth(5, width),),
+        // rating
+        Text(
+          rating,
+          style: HomeStyle.sellerRating,
+        )
+      ],
+    );
+  }
+
+  Widget sellerAddress(String address){
+    return Row(
+      children: [
+        Container(
+          width: SharedFunction.scaleWidth(sellerAddressWidth, width),
+          child: Text(
+            address,
+            style: HomeStyle.sellerAddress,
+          ),
+        )
+      ],
     );
   }
 }
