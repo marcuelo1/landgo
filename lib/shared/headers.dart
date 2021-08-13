@@ -33,11 +33,11 @@ class Headers {
     // writeHeaders(headers['access-token'], headers['client'], headers['uid']);
   }
 
-  static Map getHeaders(){
+  static Map<String, String> getHeaders(){
     return {
-      accessToken: _preferences.getString(accessToken),
-      client: _preferences.getString(client),
-      uid: _preferences.getString(uid),
+      accessToken: _preferences.getString(accessToken).toString(),
+      client: _preferences.getString(client).toString(),
+      uid: _preferences.getString(uid).toString(),
     };
   }
 

@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/home/home_style.dart';
 import 'package:ryve_mobile/shared/headers.dart';
+import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:ryve_mobile/shared/shared_url.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -30,13 +34,7 @@ class _HomeState extends State<Home> {
   final double sellerAddressWidth = 232;
 
   // categories
-  List categories = [
-    ["Food", "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg"],
-    ["Services", "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg"],
-    ["Grocery", "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg"],
-    ["Hardware", "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg"],
-    ["Pharmacy", "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg"],
-  ];
+  late List categories;
 
   // products
   List products = [
@@ -86,7 +84,8 @@ class _HomeState extends State<Home> {
     ]
   ];
 
-  Map _headers = {};
+  Map<String,String> _headers = {};
+  var response;
 
   @override
   void initState(){
@@ -100,30 +99,50 @@ class _HomeState extends State<Home> {
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
     
-    return PixelPerfect(
-      scale: scale,
-      child: SafeArea(
-        child: Scaffold(
-          appBar: appBar(),
-          drawer: Drawer(
-            child: sideBar(),
-          ),
-          body: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(color: SharedStyle.yellow),
-            child: Stack(
-              children: [
-                // static page
-                staticPage(),
-                // draggable page
-                draggablePage()
-              ],
-            ),
-          ),
-        ),
-      )
-    );
+    return FutureBuilder(
+      future: getData(),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        print(snapshot);
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Text("check internet");
+          case ConnectionState.waiting:
+            return Loading();
+          default:
+            if(snapshot.hasError){
+              return Text("Error: ${snapshot.error}");
+            }else{
+              Map responseBody = response['body'];
+              categories = json.decode(responseBody['categories']);
+              
+              return PixelPerfect(
+                scale: scale,
+                child: SafeArea(
+                  child: Scaffold(
+                    appBar: appBar(),
+                    drawer: Drawer(
+                      child: sideBar(),
+                    ),
+                    body: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      decoration: BoxDecoration(color: SharedStyle.yellow),
+                      child: Stack(
+                        children: [
+                          // static page
+                          staticPage(),
+                          // draggable page
+                          draggablePage()
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              );
+            }
+        }
+      }
+    ); 
   }
 
   Widget sideBar(){
@@ -228,12 +247,13 @@ class _HomeState extends State<Home> {
   }
 
   Widget categoryRow(int i){
-    List category1;
-    List category2;
-    
+    Map category1;
+    Map category2;
+    print(categories);
+    print(categories[i]);
     if(i+1 == categories.length){ // categtories count is odd numbers
       category1 = categories[i];
-      category2 = [];
+      category2 = {};
     }else{  // categories count is even number
       category1 = categories[i];
       category2 = categories[i+1];
@@ -248,7 +268,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget categoryContent(List category){
+  Widget categoryContent(Map category){
     if(category.isEmpty){
       return Stack(children: [SizedBox()],);  // empty
     }
@@ -258,13 +278,13 @@ class _HomeState extends State<Home> {
       child: Stack(
         children: [
           // image
-          categoryImage(category[1]),
+          categoryImage(category['image']),
           // yellow overlay
           yellowOverlay(),
           //black overlay
           blackOverlay(),
           // text
-          categoryName(category[0])
+          categoryName(category['name'])
         ],
       ),
     );
@@ -572,5 +592,16 @@ class _HomeState extends State<Home> {
         )
       ],
     );
+  }
+
+  Future getData() async {
+    try {
+      var url = Uri.parse("${SharedUrl.root}/${SharedUrl.version}/buyer_user/home_page");
+      var data = await http.get(url, headers: _headers);
+
+      response = {"status": data.statusCode, "body": json.decode(data.body)};
+    } catch (e) {
+      response = {"status": 500};
+    }
   }
 }
