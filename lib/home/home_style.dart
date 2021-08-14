@@ -30,37 +30,4 @@ class HomeStyle {
    borderRadius: SharedStyle.borderRadius(20, 20, 0, 0),
    color: SharedStyle.white,
  );
-
- static final productName = TextStyle(
-   color: SharedStyle.primaryText,
-   fontSize: 14,
-   fontFamily: 'SFProText-Bold',
-   fontWeight: FontWeight.bold
- );
-
- static final productPrice = TextStyle(
-   color: SharedStyle.secondaryText,
-   fontSize: 14,
-   fontFamily: 'SFProText-Regular',
- );
-
- static final sellerName = TextStyle(
-   color: SharedStyle.primaryText,
-   fontSize: 18,
-   fontFamily: 'SFProText-Bold',
-   fontWeight: FontWeight.bold
- );
-
- static final sellerRating = TextStyle(
-   color: SharedStyle.yellow,
-   fontSize: 16,
-   fontFamily: 'SFProText-Bold',
-   fontWeight: FontWeight.bold
- );
-
- static final sellerAddress = TextStyle(
-    color: SharedStyle.secondaryText,
-   fontSize: 14,
-   fontFamily: 'SFProText-Regular',
- );
 }

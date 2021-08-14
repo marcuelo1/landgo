@@ -27,15 +27,6 @@ class _HomeState extends State<Home> {
   // dimensions
   final double imageWidth = 150;
   final double imageHeight = 100;
-  final double productHeight = 70;
-  final double productWidth = 327;
-  final double productImageWidth = 70;
-  final double productImageHeight = 70;
-  final double sellerWidth = 327;
-  final double sellerHeight = 198;
-  final double sellerImageWidth = 327;
-  final double sellerImageHeight = 125;
-  final double sellerAddressWidth = 232;
 
   // categories
   late List categories;
@@ -216,7 +207,7 @@ class _HomeState extends State<Home> {
 
     return GestureDetector(
       onTap: (){
-        Navigator.pushNamed(context, Sellers.routeName, arguments: {'id': category['id']});
+        Navigator.pushNamed(context, Sellers.routeName, arguments: {'id': category['id'], 'name': "${category['name']} Delivery"});
       },
       child: Stack(
         children: [
@@ -327,212 +318,18 @@ class _HomeState extends State<Home> {
     return Column(
       children: [
         for (var item in products) ... [
-          product(item[0], item[1], item[2].toStringAsFixed(2))
+          SharedWidgets.product(item[0], item[1], item[2].toStringAsFixed(2), width, height)
         ]
       ],
     );  
-  }
-
-  Widget product(String imageUrl, String name, String price){
-    return Column(
-      children: [
-        productContent(imageUrl, name, price),
-        // Space
-        SizedBox(height: SharedFunction.scaleHeight(15, height),),
-        // Divider
-        Divider(color: SharedStyle.black,height: 1,),
-        // Space
-        SizedBox(height: SharedFunction.scaleHeight(15, height),)
-      ],
-    );
-  }
-
-  Widget productContent(String imageUrl, String name, String price){
-    return Container(
-      height: SharedFunction.scaleHeight(productHeight, height),
-      width: SharedFunction.scaleWidth(productWidth, width),
-      child: Row( 
-        children: [
-          // product image
-          productImage(imageUrl),
-          // space
-          SizedBox(width: SharedFunction.scaleWidth(21, width),),
-          // product details
-          productDetails(name, price),
-          // add button
-          productAddBtn()
-        ],
-      ),
-    );
-  }
-
-  Widget productImage(String url){
-    return Container(
-      width: SharedFunction.scaleWidth(productImageWidth, width),
-      height: SharedFunction.scaleHeight(productImageHeight, height),
-      child: Image.network(
-        url,
-        fit: BoxFit.fill,
-      ),
-    );
-  }
-
-  Widget productDetails(String name, String price){
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // product name
-        productName(name),
-        // product price
-        productPrice(price)
-      ],
-    );
-  }
-
-  Widget productName(String name){
-    return Text(
-      name,
-      style: HomeStyle.productName,
-    );
-  }
-
-  Widget productPrice(String price){
-    return Text(
-      "₱$price",
-      style: HomeStyle.productPrice,
-    );
-  }
-
-  Widget productAddBtn(){
-    return Expanded(
-      child: Container(
-        alignment: Alignment.centerRight,
-        child: GestureDetector(
-          onTap: (){},
-          child: Icon(
-            Icons.add_circle_outline,
-            size: 35,
-            color: SharedStyle.yellow,
-          ),
-        ),
-      )
-    );
   }
 
   Widget topSellers(){
     return Column(
       children: [
         for (var store in sellers) ... [
-          seller(store[0], store[1], store[3], store[2].toStringAsFixed(1))
+          SharedWidgets.seller(store[0], store[1], store[3], store[2].toStringAsFixed(1), width, height)
         ]
-      ],
-    );
-  }
-
-  Widget seller(String url, String name, String address, String rating){
-    return GestureDetector(
-      onTap: (){},
-      child: Column(
-        children: [
-          // Seller content
-          sellerContent(url, name, address, rating),
-          // Space
-          SizedBox(height: SharedFunction.scaleHeight(10, height),),
-          // Divider
-          Divider(color: SharedStyle.black,height: 1,),
-          // Space
-          SizedBox(height: SharedFunction.scaleHeight(20, height),)
-        ],
-      ),
-    );
-  }
-
-  Widget sellerContent(String url, String name, String address, String rating){
-    return Container(
-      width: SharedFunction.scaleWidth(sellerWidth, width),
-      height: SharedFunction.scaleHeight(sellerHeight, height),
-      child: Column(
-        children: [
-          // Image
-          sellerImage(url),
-          // Space
-          SizedBox(height: SharedFunction.scaleHeight(9, height),),
-          // Name and rating
-          sellerNameAndRating(name, rating),
-          // Space
-          SizedBox(height: SharedFunction.scaleHeight(5, height),),
-          // address
-          sellerAddress(address)
-        ],
-      ),
-    );
-  }
-
-  Widget sellerImage(String url){
-    return ClipRRect(
-      borderRadius: SharedStyle.borderRadius(15, 15, 15, 15),
-      child: Container(
-        width: SharedFunction.scaleWidth(sellerImageWidth, width),
-        height: SharedFunction.scaleHeight(sellerImageHeight, height),
-        child: Image.network(
-          url,
-          fit: BoxFit.fill,
-        ),
-      ),
-    );
-  }
-
-  Widget sellerNameAndRating(String name, String rating){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        sellerName(name),
-        sellerRating(rating)
-      ],
-    );
-  }
-
-  Widget sellerName(String name){
-    return Text(
-      name,
-      style: HomeStyle.sellerName,
-    );
-  }
-
-  Widget sellerRating(String rating){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // star icon
-        Icon(
-          Icons.star_rounded,
-          size: 20,
-          color: SharedStyle.yellow,
-        ),
-        // space
-        SizedBox(width: SharedFunction.scaleWidth(5, width),),
-        // rating
-        Text(
-          rating,
-          style: HomeStyle.sellerRating,
-        )
-      ],
-    );
-  }
-
-  Widget sellerAddress(String address){
-    return Row(
-      children: [
-        Container(
-          width: SharedFunction.scaleWidth(sellerAddressWidth, width),
-          child: Text(
-            address,
-            style: HomeStyle.sellerAddress,
-          ),
-        )
       ],
     );
   }
