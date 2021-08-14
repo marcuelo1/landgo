@@ -10,7 +10,11 @@ import 'package:ryve_mobile/sign_in/sign_in_style.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:ryve_mobile/sign_up/sign_up.dart';
+
 class SignIn extends StatefulWidget {
+  static const String routeName = "signin";
+  
   @override
   _SignInState createState() => _SignInState();
 }
@@ -193,7 +197,7 @@ class _SignInState extends State<SignIn> {
 
   Widget createAcc () {
     return TextButton(
-      onPressed: () => Navigator.pushNamed(context, 'signup'), 
+      onPressed: () => Navigator.pushNamed(context, SignUp.routeName), 
       child: Text(
         "Create Account",
         style: SignInStyle.yellowText,

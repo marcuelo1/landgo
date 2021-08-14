@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
 
 class Sellers extends StatefulWidget {
+  static const String routeName = "sellers";
+  
   @override
   _SellersState createState() => _SellersState();
 }

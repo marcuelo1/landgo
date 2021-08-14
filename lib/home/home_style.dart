@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 
 class HomeStyle {
- static final appBarTitle = TextStyle(
-   color: SharedStyle.yellow,
- ); 
-
  static final title = TextStyle(
    color: SharedStyle.primaryText,
    fontSize: 35,

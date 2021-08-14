@@ -7,10 +7,13 @@ import 'package:ryve_mobile/shared/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
+import 'package:ryve_mobile/sign_in/sign_in.dart';
 import 'package:ryve_mobile/sign_up/sign_up_style.dart';
 import 'package:http/http.dart' as http;
 
 class SignUp extends StatefulWidget {
+  static const String routeName = "signup";
+  
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -391,7 +394,7 @@ class _SignUpState extends State<SignUp> {
         ),
         TextButton(
           onPressed: (){
-            Navigator.pushNamed(context, 'signin');
+            Navigator.pushNamed(context, SignIn.routeName);
           }, 
           child: Text(
             "Sign in.",

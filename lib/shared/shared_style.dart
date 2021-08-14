@@ -44,5 +44,9 @@ class SharedStyle {
             bottomRight: Radius.circular(bl)
           );
   }
+
+ static final appBarTitle = TextStyle(
+   color: SharedStyle.yellow,
+ ); 
   
 }

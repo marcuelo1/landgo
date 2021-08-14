@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/sign_in/sign_in.dart';
+import 'package:ryve_mobile/sign_up/sign_up.dart';
 import 'welcome_page_style.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class WelcomePage extends StatefulWidget {
+  static const String routeName = "/";
+  
   @override
   _WelcomePageState createState() => _WelcomePageState();
 }
@@ -272,7 +276,7 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget joinRyve(context){
     return TextButton(
       onPressed: () { 
-        Navigator.pushNamed(context, 'signup');
+        Navigator.pushNamed(context, SignUp.routeName);
       },
       child: Container(
         width: joinRyveBtnWidth,
@@ -301,7 +305,7 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
           TextButton(
             onPressed: (){
-              Navigator.pushNamed(context, 'signin');
+              Navigator.pushNamed(context, SignIn.routeName);
             }, 
             child: Text(
               "Sign in.",

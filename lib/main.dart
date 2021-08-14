@@ -19,11 +19,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: 'home',
       routes: {
-        '/': (context) => WelcomePage(),
-        'signup': (context) => SignUp(),
-        'signin': (context) => SignIn(),
-        'home': (context) => Home(),
-        'sellers': (context) => Sellers(),
+        WelcomePage.routeName: (context) => WelcomePage(),
+        SignUp.routeName: (context) => SignUp(),
+        SignIn.routeName: (context) => SignIn(),
+        Home.routeName: (context) => Home(),
+        Sellers.routeName: (context) => Sellers(),
       },
     );
   }
