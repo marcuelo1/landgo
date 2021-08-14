@@ -103,15 +103,18 @@ class _HomeState extends State<Home> {
       future: getData(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         print(snapshot);
+        // Connection state of getting the data
         switch (snapshot.connectionState) {
           case ConnectionState.none:
             return Text("check internet");
-          case ConnectionState.waiting:
+          case ConnectionState.waiting: // Retrieving
             return Loading();
-          default:
+          default: // Success of connecting to back end
+            // check if snapshot has an error
             if(snapshot.hasError){
               return Text("Error: ${snapshot.error}");
             }else{
+              // check status of response
               Map responseBody = response['body'];
               categories = json.decode(responseBody['categories']);
               
@@ -274,7 +277,9 @@ class _HomeState extends State<Home> {
     }
 
     return GestureDetector(
-      onTap: (){},
+      onTap: (){
+        Navigator.pushNamed(context, 'sellers', arguments: {'id': category['id']});
+      },
       child: Stack(
         children: [
           // image
