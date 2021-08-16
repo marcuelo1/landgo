@@ -77,9 +77,16 @@ class SharedStyle {
  );
 
  static final sellerAddress = TextStyle(
-    color: SharedStyle.secondaryText,
+   color: SharedStyle.secondaryText,
    fontSize: 14,
    fontFamily: 'SFProText-Regular',
+ );
+
+ static final title = TextStyle(
+  color: SharedStyle.black,
+  fontSize: 35,
+  fontWeight: FontWeight.bold,
+  fontFamily: 'Poppins-Bold'
  );
   
 }

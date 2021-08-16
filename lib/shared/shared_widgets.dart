@@ -176,6 +176,7 @@ class SharedWidgets {
   /////////////////////
   static final double sellerWidth = 327;
   static final double sellerHeight = 198;
+  static final double sellerFinalHeight = 229;
   static final double sellerImageWidth = 327;
   static final double sellerImageHeight = 125;
   static final double sellerAddressWidth = 232;
@@ -227,7 +228,7 @@ class SharedWidgets {
         height: SharedFunction.scaleHeight(sellerImageHeight, height),
         child: Image.network(
           url,
-          fit: BoxFit.fill,
+          fit: BoxFit.cover,
         ),
       ),
     );
