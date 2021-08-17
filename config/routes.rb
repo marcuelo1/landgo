@@ -23,4 +23,6 @@ Rails.application.routes.draw do
       get "list_of_stores", to: "buyer#list_of_stores"
     end
   end
+
+  default_url_options :host => "http://localhost:3000"
 end

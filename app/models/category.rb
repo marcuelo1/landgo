@@ -1,4 +1,5 @@
 class Category < ApplicationRecord
+    has_many :category_deals
     # category image
     has_one_attached :image
     

@@ -6,8 +6,7 @@ class V1::Buyer::BuyerController < ApplicationController
         @categories = Category.where.not(status: 0)
 
         render json: {
-            # categories: CategoryBlueprint.render(@categories),
-            categories: [],
+            categories: CategoryBlueprint.render(@categories),
             products: [],
             sellers: []
         }, status: 200
@@ -19,7 +18,6 @@ class V1::Buyer::BuyerController < ApplicationController
 
         render json: {
             category_deals: category_deals,
-            sellers: []
         }
     end
 
