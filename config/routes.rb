@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
     scope :category do
       get "/", to: "category#index"
+      post "/", to: "category#create"
     end
   end
 end
