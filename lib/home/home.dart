@@ -336,7 +336,7 @@ class _HomeState extends State<Home> {
 
   Future getData() async {
     try {
-      var url = Uri.parse("${SharedUrl.root}/${SharedUrl.version}/buyer_user/home_page");
+      var url = Uri.parse("${SharedUrl.root}/${SharedUrl.version}/buyer/home_page");
       var data = await http.get(url, headers: _headers);
 
       response = {"status": data.statusCode, "body": json.decode(data.body)};

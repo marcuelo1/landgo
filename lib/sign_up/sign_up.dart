@@ -273,7 +273,7 @@ class _SignUpState extends State<SignUp> {
         formKey.currentState!.save();
 
         // Sends data to back end
-        var url = Uri.parse('${SharedUrl.root}/${SharedUrl.version}/buyer_auth');
+        var url = Uri.parse('${SharedUrl.root}/${SharedUrl.version}/buyers');
         try {
           var response = await http.post(
             url, 

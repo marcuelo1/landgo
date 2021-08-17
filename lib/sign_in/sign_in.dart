@@ -155,7 +155,7 @@ class _SignInState extends State<SignIn> {
         formKey.currentState!.save();
 
         // Send data to backend
-        var url = Uri.parse("${SharedUrl.root}/${SharedUrl.version}/buyer_auth/sign_in");
+        var url = Uri.parse("${SharedUrl.root}/${SharedUrl.version}/buyers/sign_in");
         try {
           var response = await http.post(url, body: {"email": _email, "password": _password});
           // convert response body to MAP
