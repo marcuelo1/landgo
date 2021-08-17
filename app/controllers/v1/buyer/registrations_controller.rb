@@ -1,4 +1,5 @@
 class V1::Buyer::RegistrationsController < DeviseTokenAuth::RegistrationsController
+    include DeviseTokenAuth::Concerns::SetUserByToken
     def create
         super
     end

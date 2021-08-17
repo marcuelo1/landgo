@@ -1,4 +1,5 @@
 class V1::Buyer::SessionsController < DeviseTokenAuth::SessionsController   
+    include DeviseTokenAuth::Concerns::SetUserByToken
 
     def create
         if params[:facebook_id]

@@ -26,6 +26,7 @@
                         = image_tag category.image, style: "width: 50px;"
                     - else
                         No Image
-                %td none
+                %td
+                    %a{href: "/admin/category/#{category.id}"}View 
 
         
