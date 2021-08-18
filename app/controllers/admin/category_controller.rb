@@ -13,6 +13,11 @@ class Admin::CategoryController < ApplicationController
         category.save 
         redirect_to "/admin/category"
     end
+
+    def show
+        @category = Category.find(params[:id])
+    end
+    
     
     private
     def categogry_params

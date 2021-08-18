@@ -18,7 +18,7 @@ class V1::Buyer::BuyerController < ApplicationController
         category_deals = category.category_deals 
 
         render json: {
-            category_deals: category_deals,
+            category_deals: CategoryDealBlueprint.render(category_deals),
         }
     end
 

@@ -1,0 +1,45 @@
+%h1 Category
+.card 
+    .card-header 
+        %h3 Add category deal
+    .card-body 
+        = form_with(url: "/admin/category_deal", method: :post) do |f|
+            = hidden_field_tag :category_id, @category.id, {}
+            = f.text_field :name, {placeholder: "Name", style: "width:300px;", class: "form-control"}
+            %br/
+            = f.file_field :image, {class: "form-control", style: "width:300px;"}
+            %br/
+            = submit_tag "Create", {class: "btn btn-primary btn-sm"}
+%br/
+
+%table.table 
+    %tr 
+        %th Category
+        %td= @category.name
+    %tr 
+        %th Status
+        %td= @category.status 
+    %tr 
+        %th Image
+        %td 
+            - if @category.image.attached?
+                = image_tag @category.image, style: "width: 100px"
+            - else
+                No Image 
+
+%table.table 
+    %tr 
+        %th{colspan: 3} 
+            %h3 Category Deals
+    %tr 
+        %th Name
+        %th Image 
+        %th Actions 
+    - @category.category_deals.each do |cd|
+        %tr 
+            %td= cd.name 
+            %td
+                - if cd.image.attached?
+                    = image_tag cd.image, style: "width: 100px"
+                - else 
+                    no image

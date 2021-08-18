@@ -9,6 +9,11 @@ Rails.application.routes.draw do
     scope :category do
       get "/", to: "category#index"
       post "/", to: "category#create"
+      get "/:id", to: "category#show"
+    end
+    
+    scope :category_deal do
+      post "/", to: "category_deals#create"
     end
   end
 
