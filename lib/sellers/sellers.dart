@@ -1,8 +1,8 @@
 import 'dart:convert';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
+import 'package:ryve_mobile/sellers/list_of_products.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
@@ -224,7 +224,12 @@ class _SellersState extends State<Sellers> {
         title("All Stores"),
         // stores
         for (var seller in all_sellers) ... [
-          SharedWidgets.seller(seller['image'], seller['name'], seller['address'], seller['rating'].toStringAsFixed(1), width, height)
+          GestureDetector(
+            onTap: (){
+              Navigator.pushNamed(context, ListOfProducts.routeName, arguments: seller);
+            },
+            child: SharedWidgets.seller(seller['image'], seller['name'], seller['address'], seller['rating'].toStringAsFixed(1), width, height)
+          )
         ]
       ],
     );
@@ -254,9 +259,10 @@ class _SellersState extends State<Sellers> {
               padding: EdgeInsets.only(right: SharedFunction.scaleWidth(15, width)),
               child: GestureDetector(
                 onTap: (){
-                  print(seller['id']);
+                  Navigator.pushNamed(context, ListOfProducts.routeName, arguments: seller);
                 },
-                child: SharedWidgets.seller(seller['image'], seller['name'], seller['address'], seller['rating'].toStringAsFixed(1), width, height)),
+                child: SharedWidgets.seller(seller['image'], seller['name'], seller['address'], seller['rating'].toStringAsFixed(1), width, height)
+              ),
             )
           ]
         ],

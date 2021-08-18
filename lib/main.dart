@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ryve_mobile/home/home.dart';
+import 'package:ryve_mobile/sellers/list_of_products.dart';
 import 'package:ryve_mobile/sellers/sellers.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/sign_in/sign_in.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         SignIn.routeName: (context) => SignIn(),
         Home.routeName: (context) => Home(),
         Sellers.routeName: (context) => Sellers(),
+        ListOfProducts.routeName: (context) => ListOfProducts(),
       },
     );
   }
