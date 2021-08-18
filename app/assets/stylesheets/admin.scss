@@ -3,13 +3,21 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
 // navbar
-.navbar {
+.navbar-container {
     height: 60px;
-    .navbar-brand {
-        img {
-            height: 40px;
-        }
-    }    
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        height: inherit;
+        .navbar-brand {
+            img {
+                height: 40px;
+            }
+        }    
+    }
 }
 // sidebar
 .side-bar-container {
