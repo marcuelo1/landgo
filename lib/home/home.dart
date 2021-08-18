@@ -6,7 +6,6 @@ import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/shared/shared_widgets.dart';
@@ -19,6 +18,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  // url
+  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyer/home_page";
   // variables for scale functions
   late double width;
   late double height;
@@ -80,7 +81,7 @@ class _HomeState extends State<Home> {
   ];
 
   Map<String,String> _headers = {};
-  var response;
+  Map response = {};
 
   @override
   void initState(){
@@ -88,6 +89,7 @@ class _HomeState extends State<Home> {
     _headers = Headers.getHeaders();
     print(_headers);
   }
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -95,9 +97,8 @@ class _HomeState extends State<Home> {
     scale = SharedStyle.referenceWidth / width;
     
     return FutureBuilder(
-      future: getData(),
+      future: SharedFunction.getData(_dataUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot){
-        print(snapshot);
         // Connection state of getting the data
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -109,6 +110,7 @@ class _HomeState extends State<Home> {
             if(snapshot.hasError){
               return Text("Error: ${snapshot.error}");
             }else{
+              response = snapshot.data;
               // check status of response
               Map responseBody = response['body'];
               categories = json.decode(responseBody['categories']);
@@ -332,16 +334,5 @@ class _HomeState extends State<Home> {
         ]
       ],
     );
-  }
-
-  Future getData() async {
-    try {
-      var url = Uri.parse("${SharedUrl.root}/${SharedUrl.version}/buyer/home_page");
-      var data = await http.get(url, headers: _headers);
-
-      response = {"status": data.statusCode, "body": json.decode(data.body)};
-    } catch (e) {
-      response = {"status": 500};
-    }
   }
 }

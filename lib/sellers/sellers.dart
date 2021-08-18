@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
+import 'package:ryve_mobile/shared/headers.dart';
+import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/shared/shared_widgets.dart';
 
 class Sellers extends StatefulWidget {
@@ -13,6 +18,8 @@ class Sellers extends StatefulWidget {
 }
 
 class _SellersState extends State<Sellers> {
+  // url
+  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyer/list_of_stores";
   // variables for scale functions
   late double width;
   late double height;
@@ -22,33 +29,7 @@ class _SellersState extends State<Sellers> {
   final double categoryImage = 50;
 
   // category deals
-  List<Map> category_deals = [
-    {
-      "id": 1,
-      "name": "50%",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Eiffel_Tower_Vertical.JPG",
-    },
-    {
-      "id": 2,
-      "name": "20%",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-    },
-    {
-      "id": 2,
-      "name": "20%",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-    },
-    {
-      "id": 2,
-      "name": "20%",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-    },
-    {
-      "id": 2,
-      "name": "20%",
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-    }
-  ];
+  List category_deals = [];
 
   // sellers
   List sellers = [
@@ -89,49 +70,86 @@ class _SellersState extends State<Sellers> {
     }
   ];
 
+  // response
+  Map response = {};
+  // headers
+  Map<String,String> _headers = {};
+  @override
+  void initState(){
+    super.initState();
+    _headers = Headers.getHeaders();
+    print(_headers);
+  }
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
 
-    final Map categeory = ModalRoute.of(context)!.settings.arguments as Map;
-    print(categeory);
-    return PixelPerfect(
-      child: SafeArea(
-        child: Scaffold(
-          body: Scaffold(
-            appBar: SharedWidgets.appBar(categeory['name']),
-            body: SingleChildScrollView(
-              child: Container(
-                width: double.infinity,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    SharedFunction.scaleWidth(10, width), 
-                    SharedFunction.scaleHeight(19, height), 
-                    SharedFunction.scaleWidth(10, width), 
-                    SharedFunction.scaleHeight(0, height)
+    final Map category = ModalRoute.of(context)!.settings.arguments as Map;
+    print(category);
+    _dataUrl = _dataUrl + "?id=${category['id']}";
+    return FutureBuilder(
+      future: SharedFunction.getData(_dataUrl, _headers),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        // Connection state of getting the data
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Text("check internet");
+          case ConnectionState.waiting: // Retrieving
+            return Loading();
+          default: // Success of connecting to back end
+            // check if snapshot has an error
+            if(snapshot.hasError){
+              return Text("Error: ${snapshot.error}");
+            }
+
+            // get response
+            response = snapshot.data;
+            Map responseBody = response['body'];
+            if(responseBody['category_deals'].length > 0){
+              category_deals = json.decode(responseBody['category_deals']);
+            }
+
+            return PixelPerfect(
+              child: SafeArea(
+                child: Scaffold(
+                  body: Scaffold(
+                    appBar: SharedWidgets.appBar(category['name']),
+                    body: SingleChildScrollView(
+                      child: Container(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(
+                            SharedFunction.scaleWidth(10, width), 
+                            SharedFunction.scaleHeight(19, height), 
+                            SharedFunction.scaleWidth(10, width), 
+                            SharedFunction.scaleHeight(0, height)
+                          ),
+                          child: Column(
+                            children: [
+                              // search bar
+                              // category deals
+                              categoryDeals(),
+                              // top stores
+                              topSellers(),
+                              // recent stores
+                              recentSellers(),
+                              // all stores
+                              allStores()
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      // search bar
-                      // category deals
-                      categoryDeals(),
-                      // top stores
-                      topSellers(),
-                      // recent stores
-                      recentSellers(),
-                      // all stores
-                      allStores()
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        )
-      )
-    );
+                )
+              )
+            );
+        }
+      }
+      );
   }
 
   Widget categoryDeals(){
