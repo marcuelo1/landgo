@@ -252,7 +252,11 @@ class _SellersState extends State<Sellers> {
           for (var seller in _sellers) ... [
             Padding(
               padding: EdgeInsets.only(right: SharedFunction.scaleWidth(15, width)),
-              child: SharedWidgets.seller(seller['image'], seller['name'], seller['address'], seller['rating'].toStringAsFixed(1), width, height),
+              child: GestureDetector(
+                onTap: (){
+                  print(seller['id']);
+                },
+                child: SharedWidgets.seller(seller['image'], seller['name'], seller['address'], seller['rating'].toStringAsFixed(1), width, height)),
             )
           ]
         ],

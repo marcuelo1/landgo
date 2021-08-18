@@ -182,27 +182,23 @@ class SharedWidgets {
   static final double sellerAddressWidth = 232;
 
   static Widget seller(String url, String name, String address, String rating, double width, double height){
-    return GestureDetector(
-      onTap: (){},
-      child: Column(
-        children: [
-          // Seller content
-          _sellerContent(url, name, address, rating, width, height),
-          // Space
-          SizedBox(height: SharedFunction.scaleHeight(10, height),),
-          // Divider
-          Divider(color: SharedStyle.black,height: 1,),
-          // Space
-          SizedBox(height: SharedFunction.scaleHeight(20, height),)
-        ],
-      ),
+    return Column(
+      children: [
+        // Seller content
+        _sellerContent(url, name, address, rating, width, height),
+        // Space
+        SizedBox(height: SharedFunction.scaleHeight(10, height),),
+        // Divider
+        Divider(color: SharedStyle.black,height: 1,),
+        // Space
+        SizedBox(height: SharedFunction.scaleHeight(20, height),)
+      ],
     );
   }
 
   static Widget _sellerContent(String url, String name, String address, String rating, double width, double height){
     return Container(
       width: SharedFunction.scaleWidth(sellerWidth, width),
-      height: SharedFunction.scaleHeight(sellerHeight, height),
       child: Column(
         children: [
           // Image
