@@ -6,4 +6,24 @@ class Seller < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   include DeviseTokenAuth::Concerns::User
+
+  belongs_to :category
+  has_one_attached :image
+
+  def rating
+    4.8
+  end
+
+  def self.top_sellers
+    Seller.all
+  end
+
+  def self.recent_sellers
+    Seller.all
+  end
+
+  def self.all_sellers
+    Seller.all
+  end
+  
 end

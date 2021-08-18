@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
     scope :seller do
       get "/", to: "seller#index"
+      post "/", to: "seller#create"
     end
   end
 

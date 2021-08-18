@@ -19,6 +19,9 @@ class V1::Buyer::BuyerController < ApplicationController
 
         render json: {
             category_deals: CategoryDealBlueprint.render(category_deals),
+            top_sellers: SellerBlueprint.render(Seller.top_sellers),
+            recent_sellers: SellerBlueprint.render(Seller.recent_sellers),
+            all_sellers: SellerBlueprint.render(Seller.all_sellers),
         }
     end
 

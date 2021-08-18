@@ -1,1 +1,42 @@
 %h1 Sellers
+.card 
+    .card-header 
+        %h3 Add Seller
+    .card-body 
+        = form_with(url: "/admin/seller", method: :post) do |f|
+            = f.text_field :name, {placeholder: "Name", style: "width:300px;", class: "form-control"}
+            %br/
+            = f.text_field :email, {placeholder: "Email", style: "width:300px;", class: "form-control"}
+            %br/
+            = f.text_field :phone_number, {placeholder: "Phone Number", style: "width:300px;", class: "form-control"}
+            %br/
+            = f.text_field :address, {placeholder: "Address", style: "width:300px;", class: "form-control"}
+            %br/
+            = f.collection_select :category_id, @categories, :id, :name, {class: "form-control"}
+            %br/
+            = f.file_field :image, {class: "form-control", style: "width:300px;"}
+            %br/
+            = submit_tag "Create", {class: "btn btn-primary btn-sm"}
+%hr/
+%table.table 
+    %tr 
+        %th Name 
+        %th Email 
+        %th Phone Number 
+        %th Address
+        %th Category 
+        %th Image 
+        %th Actions
+    - @sellers.each do |seller|
+        %tr
+            %td= seller.name
+            %td= seller.email 
+            %td= seller.phone_number 
+            %td= seller.address
+            %td= seller.category.name 
+            %td
+                - if seller.image.attached?
+                    = image_tag seller.image, style: "width: 100px;"
+                - else 
+                    No Image
+            %td None

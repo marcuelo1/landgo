@@ -1,9 +1,9 @@
 class Admin::CategoryController < ApplicationController
     before_action :authenticate_admin!
     before_action :set_admin
+    before_action :set_categories, only: [:index]
 
     def index
-        @categories = Category.all 
     end
     
     def create
