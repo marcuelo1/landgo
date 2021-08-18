@@ -15,6 +15,10 @@ Rails.application.routes.draw do
     scope :category_deal do
       post "/", to: "category_deals#create"
     end
+
+    scope :seller do
+      get "/", to: "seller#index"
+    end
   end
 
   namespace :v1, default: {format: :json} do
@@ -27,6 +31,9 @@ Rails.application.routes.draw do
       get 'home_page', to: 'buyer#home_page'
       get "list_of_stores", to: "buyer#list_of_stores"
     end
+
+    ###############################################
+    mount_devise_token_auth_for 'Seller', at: 'sellers'
   end
 
   default_url_options :host => "http://localhost:3000"
