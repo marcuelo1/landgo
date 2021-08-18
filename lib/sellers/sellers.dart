@@ -30,45 +30,12 @@ class _SellersState extends State<Sellers> {
 
   // category deals
   List category_deals = [];
-
-  // sellers
-  List sellers = [
-    {
-      "id": 1,
-      "background_image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "company_name": "Shed Twenty Three",
-      "rating": 4.8,
-      "location": "Hilado-Rizal Street 6100 Bacolod City, Villamonte"
-    },
-    {
-      "id": 1,
-      "background_image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "company_name": "Shed Twenty Three",
-      "rating": 4.8,
-      "location": "Hilado-Rizal Street 6100 Bacolod City, Villamonte"
-    },
-    {
-      "id": 1,
-      "background_image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "company_name": "Shed Twenty Three",
-      "rating": 4.8,
-      "location": "Hilado-Rizal Street 6100 Bacolod City, Villamonte"
-    },
-    {
-      "id": 1,
-      "background_image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "company_name": "Shed Twenty Three",
-      "rating": 4.8,
-      "location": "Hilado-Rizal Street 6100 Bacolod City, Villamonte"
-    },
-    {
-      "id": 1,
-      "background_image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "company_name": "Shed Twenty Three",
-      "rating": 4.8,
-      "location": "Hilado-Rizal Street 6100 Bacolod City, Villamonte"
-    }
-  ];
+  // top_sellers
+  List top_sellers = [];
+  // recent_sellers
+  List recent_sellers = [];
+  // all sellers
+  List all_sellers = [];
 
   // response
   Map response = {};
@@ -108,8 +75,21 @@ class _SellersState extends State<Sellers> {
             // get response
             response = snapshot.data;
             Map responseBody = response['body'];
+            print(responseBody);
             if(responseBody['category_deals'].length > 0){
               category_deals = json.decode(responseBody['category_deals']);
+            }
+
+            if(responseBody['top_sellers'].length > 0){
+              top_sellers = json.decode(responseBody['top_sellers']);
+            }
+
+            if(responseBody['recent_sellers'].length > 0){
+              recent_sellers = json.decode(responseBody['recent_sellers']);
+            }
+
+            if(responseBody['all_sellers'].length > 0){
+              all_sellers = json.decode(responseBody['all_sellers']);
             }
 
             return PixelPerfect(
@@ -212,13 +192,14 @@ class _SellersState extends State<Sellers> {
   }
 
   Widget topSellers(){
+    print("Top Sellers");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // title
         title("Top Sellers"),
         // stores sliders
-        sellerSliders(context, sellers)
+        sellerSliders(context, top_sellers)
       ],
     );
   }
@@ -230,7 +211,7 @@ class _SellersState extends State<Sellers> {
         // title
         title("Recent"),
         // stores sliders
-        sellerSliders(context, sellers)
+        sellerSliders(context, recent_sellers)
       ],
     );
   }
@@ -242,8 +223,8 @@ class _SellersState extends State<Sellers> {
         // title
         title("All Stores"),
         // stores
-        for (var seller in sellers) ... [
-          SharedWidgets.seller(seller['background_image'], seller['company_name'], seller['location'], seller['rating'].toStringAsFixed(1), width, height)
+        for (var seller in all_sellers) ... [
+          SharedWidgets.seller(seller['image'], seller['name'], seller['address'], seller['rating'].toStringAsFixed(1), width, height)
         ]
       ],
     );
@@ -256,7 +237,8 @@ class _SellersState extends State<Sellers> {
     );
   }
 
-  Widget sellerSliders(BuildContext context, List sellers){
+  Widget sellerSliders(BuildContext context, List _sellers){
+    print(_sellers);
     return Container(
       constraints: BoxConstraints.tightFor(width: double.infinity),
       child: CarouselSlider(
@@ -267,10 +249,10 @@ class _SellersState extends State<Sellers> {
           onPageChanged: (index, reason) {}
         ),
         items: [
-          for (var seller in sellers) ... [
+          for (var seller in _sellers) ... [
             Padding(
               padding: EdgeInsets.only(right: SharedFunction.scaleWidth(15, width)),
-              child: SharedWidgets.seller(seller['background_image'], seller['company_name'], seller['location'], seller['rating'].toStringAsFixed(1), width, height),
+              child: SharedWidgets.seller(seller['image'], seller['name'], seller['address'], seller['rating'].toStringAsFixed(1), width, height),
             )
           ]
         ],
