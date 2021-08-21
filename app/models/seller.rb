@@ -9,6 +9,8 @@ class Seller < ActiveRecord::Base
 
   belongs_to :category
   has_one_attached :image
+  has_many :product_categories
+  has_many :products
 
   def rating
     4.8

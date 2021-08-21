@@ -19,6 +19,15 @@ Rails.application.routes.draw do
     scope :seller do
       get "/", to: "seller#index"
       post "/", to: "seller#create"
+      get "/:id", to: "seller#show"
+    end
+
+    scope :product_category do
+      post "/", to: "product_category#create"
+    end
+
+    scope :product do
+      post "/", to: "product#create"
     end
   end
 
