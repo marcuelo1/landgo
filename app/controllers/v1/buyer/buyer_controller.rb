@@ -25,6 +25,15 @@ class V1::Buyer::BuyerController < ApplicationController
         }
     end
 
+    def list_of_products
+        seller = Seller.find(params[:id])
+        
+        render json: {
+            product_categories: ProductCategoryBlueprint.render(seller.product_categories),
+            products: ProductBlueprint.render(seller.products)
+        }, status: 200
+    end
+
     private
     def set_buyer
         @buyer = current_v1_buyer
