@@ -86,13 +86,14 @@ class SharedWidgets {
   static Widget product(String imageUrl, String name, String price, double width, double height){
     return Column(
       children: [
+        // Space
+        SizedBox(height: SharedFunction.scaleHeight(15, height),),
+        // product
         _productContent(imageUrl, name, price, width, height),
         // Space
         SizedBox(height: SharedFunction.scaleHeight(15, height),),
         // Divider
         Divider(color: SharedStyle.black,height: 1,),
-        // Space
-        SizedBox(height: SharedFunction.scaleHeight(15, height),)
       ],
     );
   }
@@ -159,13 +160,10 @@ class SharedWidgets {
     return Expanded(
       child: Container(
         alignment: Alignment.centerRight,
-        child: GestureDetector(
-          onTap: (){},
-          child: Icon(
-            Icons.add_circle_outline,
-            size: 35,
-            color: SharedStyle.yellow,
-          ),
+        child: Icon(
+          Icons.add_circle_outline,
+          size: 35,
+          color: SharedStyle.yellow,
         ),
       )
     );
