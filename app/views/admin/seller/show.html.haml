@@ -44,33 +44,79 @@
                     %tr 
                         %td= pc.name
                         %td None
-    .card{style: "margin-left: 50px;"} 
-        .card-header 
-            %h3 Products
+    .card{style: "margin-left: 50px;"}
+        .card-header
+            %h3 Product Size 
         .card-body 
-            = form_with(url: "/admin/product", method: :post) do |f|
+            = form_with(url: "/admin/product_size", method: :post) do |f|
                 = hidden_field_tag :seller_id, @seller.id, {}
                 = f.text_field :name, {class: "form-control", style: "width: 300px;", placeholder: "Name"}
-                %br/
-                = f.file_field :image, {class: "form-control"}
-                %br/
-                = f.collection_select :product_category_id, @product_categories, :id, :name, {class: "form-control"}
                 %br/
                 = f.submit "Create", {class: "btn btn-primary btn-sm"}
             %br/
             %table.table 
                 %tr 
                     %th Name 
-                    %th Category 
-                    %th Image
                     %th Action 
-                - @products.each do |product|
+                - @product_sizes.each do |ps|
                     %tr 
-                        %td= product.name 
-                        %td= product.product_category.name 
-                        %td 
-                            - if product.image.attached?
-                                = image_tag product.image, style: "width: 200px;"
-                            - else 
-                                No Image
+                        %td= ps.name
                         %td None
+%br/
+.card 
+    .card-header 
+        %h3 Products
+    .card-body 
+        = form_with(url: "/admin/product", method: :post) do |f|
+            = hidden_field_tag :seller_id, @seller.id, {}
+            = f.text_field :name, {class: "form-control", placeholder: "Name"}
+            %br/
+            = f.file_field :image, {class: "form-control"}
+            %br/
+            = f.collection_select :product_category_id, @product_categories, :id, :name, {}, {class: "form-select"}
+            %br/
+            .product-sizes-container.d-flex 
+                .size-form{style: "margin-left: 20px;"}
+                    %h4 Size 1
+                    = f.collection_select "product_size_ids[]", @product_sizes, :id, :name, {}, {class: "form-select"}
+                    %br/
+                    = f.text_field "prices[]", {class: "form-control", placeholder: "Price"}
+                .size-form{style: "margin-left: 20px;"}
+                    %h4 Size 2
+                    = f.collection_select "product_size_ids[]", @product_sizes, :id, :name, {}, {class: "form-select"}
+                    %br/
+                    = f.text_field "prices[]", {class: "form-control", placeholder: "Price"}
+                .size-form{style: "margin-left: 20px;"}
+                    %h4 Size 3
+                    = f.collection_select "product_size_ids[]", @product_sizes, :id, :name, {}, {class: "form-select"}
+                    %br/
+                    = f.text_field "prices[]", {class: "form-control", placeholder: "Price"}
+            %br/
+            = f.submit "Create", {class: "btn btn-primary btn-sm"}
+        %br/
+        %table.table 
+            %tr 
+                %th Name 
+                %th Category 
+                %th Image
+                %th Size
+                %th Price
+                %th Action 
+            - @products.each do |product|
+                - product.product_prices.each_with_index do |pp, i|
+                    - if i == 0
+                        %tr 
+                            %td{rowspan: product.product_prices.count}= product.name 
+                            %td{rowspan: product.product_prices.count}= product.product_category.name 
+                            %td{rowspan: product.product_prices.count} 
+                                - if product.image.attached?
+                                    = image_tag product.image, style: "width: 200px;"
+                                - else 
+                                    No Image
+                            %td= pp.product_size.name
+                            %td= pp.price
+                            %td{rowspan: product.product_prices.count} None
+                    - else 
+                        %tr 
+                            %td= pp.product_size.name
+                            %td= pp.price

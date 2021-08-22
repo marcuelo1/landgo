@@ -29,6 +29,10 @@ Rails.application.routes.draw do
     scope :product do
       post "/", to: "product#create"
     end
+
+    scope :product_size do
+      post "/", to: "product_size#create"
+    end
   end
 
   namespace :v1, default: {format: :json} do

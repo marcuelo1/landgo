@@ -25,5 +25,10 @@ class ApplicationController < ActionController::Base
     def set_products
         @products = @seller.products
     end
+
+    def set_product_sizes
+        @product_sizes = @seller.product_sizes
+    end
+    
     
 end

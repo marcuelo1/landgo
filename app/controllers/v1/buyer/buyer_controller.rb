@@ -30,9 +30,15 @@ class V1::Buyer::BuyerController < ApplicationController
         
         render json: {
             product_categories: ProductCategoryBlueprint.render(seller.product_categories),
-            products: ProductBlueprint.render(seller.products)
+            products: ProductBlueprint.render(seller.products),
+            seller: SellerBlueprint.render(seller)
         }, status: 200
     end
+
+    def product
+        
+    end
+    
 
     private
     def set_buyer
