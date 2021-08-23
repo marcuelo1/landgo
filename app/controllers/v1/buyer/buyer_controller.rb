@@ -35,8 +35,12 @@ class V1::Buyer::BuyerController < ApplicationController
         }, status: 200
     end
 
-    def product
-        
+    def product_details
+        product = Product.find(params[:id])
+
+        render json: {
+            sizes: ProductPriceBlueprint.render(product.product_prices)
+        }
     end
     
 

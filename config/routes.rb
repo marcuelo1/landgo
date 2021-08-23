@@ -45,6 +45,7 @@ Rails.application.routes.draw do
       get 'home_page', to: 'buyer#home_page'
       get "list_of_stores", to: "buyer#list_of_stores"
       get "list_of_products", to: "buyer#list_of_products"
+      get "product_details", to: "buyer#product_details"
     end
 
     ###############################################
