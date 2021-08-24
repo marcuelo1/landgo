@@ -33,6 +33,11 @@ Rails.application.routes.draw do
     scope :product_size do
       post "/", to: "product_size#create"
     end
+
+    scope :add_on do
+      post "/", to: "add_on#create"
+      post "/group", to: "add_on#group_create"
+    end
   end
 
   namespace :v1, default: {format: :json} do

@@ -63,6 +63,51 @@
                         %td= ps.name
                         %td None
 %br/
+.d-flex 
+    .card 
+        .card-header
+            %h3 Add On Groups
+        .card-body 
+            =form_with(url: "/admin/add_on/group", method: :post) do |f|
+                = hidden_field_tag :seller_id, @seller.id, {}
+                = f.text_field :name, {class: "form-control", placeholder: "Name"}
+                %br/
+                = f.submit "Create", {class: "btn btn-primary btn-sm"}
+            %br/
+            %table.table 
+                %tr 
+                    %th Name 
+                    %th Action 
+                - @add_on_groups.each do |aog|
+                    %tr
+                        %td= aog.name 
+                        %td None
+    .card{style: "margin-left: 50px;"} 
+        .card-header 
+            %h3 Add Ons 
+        .card-body 
+            =form_with(url: "/admin/add_on", method: :post) do |f|
+                = f.text_field :name, {class: "form-control", placeholder: "Name"}
+                %br/
+                = f.text_field :price, {class: "form-control", placeholder: "Price"}
+                %br/
+                = f.collection_select :add_on_group_id, @add_on_groups, :id, :name, {}, {class: "form-select"}
+                %br/
+                = f.submit "Create", {class: "btn btn-primary btn-sm"}
+            %br/
+            %table.table 
+                %tr 
+                    %th Name
+                    %th Price 
+                    %th Group 
+                    %th Action 
+                - @add_ons.each do |ao|
+                    %tr 
+                        %td= ao.name 
+                        %td= ao.price 
+                        %td= ao.add_on_group.name 
+                        %td None
+%br/
 .card 
     .card-header 
         %h3 Products
@@ -74,6 +119,8 @@
             = f.file_field :image, {class: "form-control"}
             %br/
             = f.collection_select :product_category_id, @product_categories, :id, :name, {}, {class: "form-select"}
+            %br/
+            .btn.btn-sm.btn-primary#add-size Add Size 
             %br/
             .product-sizes-container.d-flex 
                 .size-form{style: "margin-left: 20px;"}
@@ -92,6 +139,18 @@
                     %br/
                     = f.text_field "prices[]", {class: "form-control", placeholder: "Price"}
             %br/
+            .add_ons_container.d-flex 
+                .add_on_form{style: "margin-left: 20px;"}
+                    %h4 Add On Group 1
+                    = f.collection_select "add_on_group_ids[]", @add_on_groups, :id, :name, {}, {class: "form-select"}
+                .add_on_form{style: "margin-left: 20px;"}
+                    %h4 Add On Group 2
+                    = f.collection_select "add_on_group_ids[]", @add_on_groups, :id, :name, {}, {class: "form-select"}
+                .add_on_form{style: "margin-left: 20px;"}
+                    %h4 Add On Group 3
+                    = f.collection_select "add_on_group_ids[]", @add_on_groups, :id, :name, {}, {class: "form-select"}
+
+            %br/
             = f.submit "Create", {class: "btn btn-primary btn-sm"}
         %br/
         %table.table 
@@ -101,6 +160,7 @@
                 %th Image
                 %th Size
                 %th Price
+                %th Add On Groups
                 %th Action 
             - @products.each do |product|
                 - product.product_prices.each_with_index do |pp, i|
@@ -115,6 +175,12 @@
                                     No Image
                             %td= pp.product_size.name
                             %td= pp.price
+                            %td 
+                                - if product.add_on_groups.count > 0
+                                    - product.add_on_groups.each do |aog|
+                                        %span= "#{aog.name}, "
+                                - else 
+                                    No Add Ons
                             %td{rowspan: product.product_prices.count} None
                     - else 
                         %tr 

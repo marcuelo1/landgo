@@ -39,7 +39,8 @@ class V1::Buyer::BuyerController < ApplicationController
         product = Product.find(params[:id])
 
         render json: {
-            sizes: ProductPriceBlueprint.render(product.product_prices)
+            sizes: ProductPriceBlueprint.render(product.product_prices),
+            add_on_groups: AddOnGroupBlueprint.render(product.add_on_groups)
         }
     end
     

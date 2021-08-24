@@ -3,7 +3,7 @@ class Admin::SellerController < ApplicationController
     before_action :set_admin
     before_action :set_categories, only: [:index]
     before_action :set_sellers, only: [:index]
-    before_action :set_seller, :set_product_categories, :set_products, :set_product_sizes, only: [:show]
+    before_action :set_seller, :set_product_categories, :set_products, :set_product_sizes, :set_add_on_groups, :set_add_ons, only: [:show]
 
     def index
     end

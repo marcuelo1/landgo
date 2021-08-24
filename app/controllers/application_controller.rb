@@ -30,5 +30,12 @@ class ApplicationController < ActionController::Base
         @product_sizes = @seller.product_sizes
     end
     
+    def set_add_on_groups
+        @add_on_groups = @seller.add_on_groups
+    end
+    
+    def set_add_ons
+        @add_ons = @seller.add_ons
+    end
     
 end

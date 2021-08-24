@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_22_115002) do
+ActiveRecord::Schema.define(version: 2021_08_23_092025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,23 @@ ActiveRecord::Schema.define(version: 2021_08_22_115002) do
     t.string "checksum", null: false
     t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "add_on_groups", force: :cascade do |t|
+    t.string "name"
+    t.bigint "seller_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["seller_id"], name: "index_add_on_groups_on_seller_id"
+  end
+
+  create_table "add_ons", force: :cascade do |t|
+    t.float "price"
+    t.string "name"
+    t.bigint "add_on_group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["add_on_group_id"], name: "index_add_ons_on_add_on_group_id"
   end
 
   create_table "admins", force: :cascade do |t|
@@ -91,6 +108,15 @@ ActiveRecord::Schema.define(version: 2021_08_22_115002) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["category_id"], name: "index_category_deals_on_category_id"
+  end
+
+  create_table "product_add_ons", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.bigint "add_on_group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["add_on_group_id"], name: "index_product_add_ons_on_add_on_group_id"
+    t.index ["product_id"], name: "index_product_add_ons_on_product_id"
   end
 
   create_table "product_categories", force: :cascade do |t|
@@ -158,7 +184,11 @@ ActiveRecord::Schema.define(version: 2021_08_22_115002) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "add_on_groups", "sellers"
+  add_foreign_key "add_ons", "add_on_groups"
   add_foreign_key "category_deals", "categories"
+  add_foreign_key "product_add_ons", "add_on_groups"
+  add_foreign_key "product_add_ons", "products"
   add_foreign_key "product_categories", "sellers"
   add_foreign_key "product_prices", "product_sizes"
   add_foreign_key "product_prices", "products"

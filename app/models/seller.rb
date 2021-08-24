@@ -12,6 +12,8 @@ class Seller < ActiveRecord::Base
   has_many :product_categories
   has_many :products
   has_many :product_sizes
+  has_many :add_on_groups
+  has_many :add_ons, through: :add_on_groups
 
   def rating
     4.8

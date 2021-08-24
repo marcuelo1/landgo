@@ -17,8 +17,19 @@ class Admin::ProductController < ApplicationController
             product_price.save
         end
 
+        # create product add ons
+        if params[:add_on_group_ids]
+            params[:add_on_group_ids].each do |aog_id|
+                pao = ProductAddOn.new()
+                pao.product_id = product.id 
+                pao.add_on_group_id = aog_id 
+                pao.save
+            end
+        end
+
         redirect_to "/admin/seller/#{params[:seller_id]}"
     end
+    
 
     private
     def product_params
