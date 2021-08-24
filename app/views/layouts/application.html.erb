@@ -16,15 +16,19 @@
   </head>
 
   <body>
-    <%# navbar %>
-    <%= render partial: "/layouts/navbar" %>
-    <div class="d-flex">
-      <%# sidebar %>
-      <%= render partial: "/layouts/sidebar" %>
-      <%# content %>
-      <div class="body">
-        <%= yield %>
+    <% if admin_signed_in? %>
+      <div class="d-flex">
+        <%# sidebar %>
+        <%= render partial: "/layouts/sidebar" %>
+        <%# content %>
+        <div class="body">
+          <%# navbar %>
+          <%= render partial: "/layouts/navbar" %>
+          <%= yield %>
+        </div>
       </div>
-    </div>
+    <% else %>
+      <%= yield %>
+    <% end %>
   </body>
 </html>

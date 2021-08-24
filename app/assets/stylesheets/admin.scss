@@ -8,7 +8,7 @@
     .navbar {
         position: fixed;
         top: 0;
-        left: 0;
+        left: 240px;
         right: 0;
         z-index: 999;
         height: inherit;
@@ -16,25 +16,88 @@
             img {
                 height: 40px;
             }
-        }    
+        }
+
+        .sign-out {
+            color: #fff;
+            text-decoration: none;
+        }
     }
 }
 // sidebar
 .side-bar-container {
     width: 240px;
+    
     .sidebar {
         background-color: #f8f9fa;
         width: inherit;
         height: 100vh;
         position: fixed;
-        top: 60px;
+        top: 0;
         left: 0;
         bottom: 0;
         right: auto;
+        padding: 20px 0 0 0;
+        box-shadow: 1px 1px 8px #888888;
 
         ul {
             li {
                 background: none;
+            }
+        }
+
+        .profile-details {
+            margin-bottom: 20px;
+
+            .profile-pic {
+                width: 100px;
+                height: 100px;
+                margin: auto;
+    
+                img {
+                    width: inherit;
+                    height: inherit;
+                    border-radius: 50%;
+                    border: 2px solid rgb(78, 78, 78);
+                }
+            }
+
+            .profile-name, .profile-role {
+                width: 150px;
+                margin: auto;
+                text-align: center;
+                margin-top: 10px;
+            }
+
+            .profile-role h4 {
+                font-size: 14px;
+            }
+
+            hr {
+                width: 75%;
+                margin: auto;
+            }
+        }
+
+        .menu-container {
+            width: 170px;
+            margin: auto;
+
+            .menu-name {
+                font-size: 13px;
+                font-weight: bold;
+                width: fit-content;
+                margin: auto;
+                margin-bottom: 10px;
+            }
+
+            .menu-item {
+                margin-bottom: 10px;
+                a {
+                    color: #000;
+                    text-decoration: none;
+                    font-size: 20px;
+                }
             }
         }
     }

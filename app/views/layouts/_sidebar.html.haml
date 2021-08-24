@@ -1,9 +1,18 @@
 .side-bar-container
     .sidebar
-        %ul.list-group.list-group-flush
-            %li.list-group-item
+        .profile-details
+            .profile-pic
+                = image_tag asset_path("no-photo.jpg")
+            .profile-name 
+                %h4 John Doe
+            .profile-role 
+                %h4 Super Administrator
+            %hr/
+        .menu-container
+            .menu-name MENU 
+            .menu-item
                 %a{href: "/admin"} Home 
-            %li.list-group-item
-                %a{href: "/admin/category"} Category 
-            %li.list-group-item
+            .menu-item
+                %a{href: "/admin/category"} Category  
+            .menu-item
                 %a{href: "/admin/seller"} Seller 
