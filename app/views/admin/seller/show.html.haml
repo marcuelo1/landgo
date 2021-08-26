@@ -1,188 +1,101 @@
-%h1 Seller's Page
-.card
-    .card-body 
-        .row 
-            .col
-                - if @seller.image.attached?
-                    = image_tag @seller.image, style: "width: 300px;"
-                - else 
-                    No Image 
-            .col 
-                %table.table 
-                    %tr 
-                        %th Name 
-                        %td= @seller.name 
-                    %tr 
-                        %th Email
-                        %td= @seller.email 
-                    %tr 
-                        %th Phone Number 
-                        %td= @seller.phone_number 
-                    %tr 
-                        %th Address
-                        %td= @seller.address 
-                    %tr 
-                        %th Category 
-                        %td= @seller.category.name
-%br/
-.d-flex 
-    .card 
-        .card-header 
-            %h3 Product Category 
-        .card-body 
-            = form_with(url: "/admin/product_category", method: :post) do |f|
-                = hidden_field_tag :seller_id, @seller.id, {}
-                = f.text_field :name, {class: "form-control", style: "width: 300px;", placeholder: "Name"}
-                %br/
-                = f.submit "Create", {class: "btn btn-primary btn-sm"}
-            %br/
-            %table.table 
-                %tr 
-                    %th Name 
-                    %th Action 
-                - @product_categories.each do |pc|
-                    %tr 
-                        %td= pc.name
-                        %td None
-    .card{style: "margin-left: 50px;"}
-        .card-header
-            %h3 Product Size 
-        .card-body 
-            = form_with(url: "/admin/product_size", method: :post) do |f|
-                = hidden_field_tag :seller_id, @seller.id, {}
-                = f.text_field :name, {class: "form-control", style: "width: 300px;", placeholder: "Name"}
-                %br/
-                = f.submit "Create", {class: "btn btn-primary btn-sm"}
-            %br/
-            %table.table 
-                %tr 
-                    %th Name 
-                    %th Action 
-                - @product_sizes.each do |ps|
-                    %tr 
-                        %td= ps.name
-                        %td None
-%br/
-.d-flex 
-    .card 
-        .card-header
-            %h3 Add On Groups
-        .card-body 
-            =form_with(url: "/admin/add_on/group", method: :post) do |f|
-                = hidden_field_tag :seller_id, @seller.id, {}
-                = f.text_field :name, {class: "form-control", placeholder: "Name"}
-                %br/
-                = f.submit "Create", {class: "btn btn-primary btn-sm"}
-            %br/
-            %table.table 
-                %tr 
-                    %th Name 
-                    %th Action 
-                - @add_on_groups.each do |aog|
-                    %tr
-                        %td= aog.name 
-                        %td None
-    .card{style: "margin-left: 50px;"} 
-        .card-header 
-            %h3 Add Ons 
-        .card-body 
-            =form_with(url: "/admin/add_on", method: :post) do |f|
-                = f.text_field :name, {class: "form-control", placeholder: "Name"}
-                %br/
-                = f.text_field :price, {class: "form-control", placeholder: "Price"}
-                %br/
-                = f.collection_select :add_on_group_id, @add_on_groups, :id, :name, {}, {class: "form-select"}
-                %br/
-                = f.submit "Create", {class: "btn btn-primary btn-sm"}
-            %br/
-            %table.table 
-                %tr 
-                    %th Name
-                    %th Price 
-                    %th Group 
-                    %th Action 
-                - @add_ons.each do |ao|
-                    %tr 
-                        %td= ao.name 
-                        %td= ao.price 
-                        %td= ao.add_on_group.name 
-                        %td None
-%br/
-.card 
-    .card-header 
-        %h3 Products
-    .card-body 
-        = form_with(url: "/admin/product", method: :post) do |f|
-            = hidden_field_tag :seller_id, @seller.id, {}
-            = f.text_field :name, {class: "form-control", placeholder: "Name"}
-            %br/
-            = f.file_field :image, {class: "form-control"}
-            %br/
-            = f.collection_select :product_category_id, @product_categories, :id, :name, {}, {class: "form-select"}
-            %br/
-            .btn.btn-sm.btn-primary#add-size Add Size 
-            %br/
-            .product-sizes-container.d-flex 
-                .size-form{style: "margin-left: 20px;"}
-                    %h4 Size 1
-                    = f.collection_select "product_size_ids[]", @product_sizes, :id, :name, {}, {class: "form-select"}
-                    %br/
-                    = f.text_field "prices[]", {class: "form-control", placeholder: "Price"}
-                .size-form{style: "margin-left: 20px;"}
-                    %h4 Size 2
-                    = f.collection_select "product_size_ids[]", @product_sizes, :id, :name, {}, {class: "form-select"}
-                    %br/
-                    = f.text_field "prices[]", {class: "form-control", placeholder: "Price"}
-                .size-form{style: "margin-left: 20px;"}
-                    %h4 Size 3
-                    = f.collection_select "product_size_ids[]", @product_sizes, :id, :name, {}, {class: "form-select"}
-                    %br/
-                    = f.text_field "prices[]", {class: "form-control", placeholder: "Price"}
-            %br/
-            .add_ons_container.d-flex 
-                .add_on_form{style: "margin-left: 20px;"}
-                    %h4 Add On Group 1
-                    = f.collection_select "add_on_group_ids[]", @add_on_groups, :id, :name, {}, {class: "form-select"}
-                .add_on_form{style: "margin-left: 20px;"}
-                    %h4 Add On Group 2
-                    = f.collection_select "add_on_group_ids[]", @add_on_groups, :id, :name, {}, {class: "form-select"}
-                .add_on_form{style: "margin-left: 20px;"}
-                    %h4 Add On Group 3
-                    = f.collection_select "add_on_group_ids[]", @add_on_groups, :id, :name, {}, {class: "form-select"}
+= content_for :javascript_includes do
+    = javascript_pack_tag "sellers_page"
 
-            %br/
-            = f.submit "Create", {class: "btn btn-primary btn-sm"}
+.header.d-flex.justify-content-between 
+    .page-title Seller's Page
+    .actions-container.d-flex.justify-content-end
+        .btn.btn-primary#details
+            Details
+        .btn.btn-primary#products
+            Products
+%br/
+.body
+    #seller-details.seller-details
+        = render partial: "/admin/seller/partials/seller_details"
+    #seller-products.seller-products    
+        = render partial: "/admin/product/partials/list_of_products"
+    #seller-category-sizes.seller-category-sizes                        
+        .d-flex 
+            .card 
+                .card-header 
+                    %h3 Product Category 
+                .card-body 
+                    = form_with(url: "/admin/product_category", method: :post) do |f|
+                        = hidden_field_tag :seller_id, @seller.id, {}
+                        = f.text_field :name, {class: "form-control", style: "width: 300px;", placeholder: "Name"}
+                        %br/
+                        = f.submit "Create", {class: "btn btn-primary btn-sm"}
+                    %br/
+                    %table.table 
+                        %tr 
+                            %th Name 
+                            %th Action 
+                        - @product_categories.each do |pc|
+                            %tr 
+                                %td= pc.name
+                                %td None
+            .card{style: "margin-left: 50px;"}
+                .card-header
+                    %h3 Product Size 
+                .card-body 
+                    = form_with(url: "/admin/product_size", method: :post) do |f|
+                        = hidden_field_tag :seller_id, @seller.id, {}
+                        = f.text_field :name, {class: "form-control", style: "width: 300px;", placeholder: "Name"}
+                        %br/
+                        = f.submit "Create", {class: "btn btn-primary btn-sm"}
+                    %br/
+                    %table.table 
+                        %tr 
+                            %th Name 
+                            %th Action 
+                        - @product_sizes.each do |ps|
+                            %tr 
+                                %td= ps.name
+                                %td None
         %br/
-        %table.table 
-            %tr 
-                %th Name 
-                %th Category 
-                %th Image
-                %th Size
-                %th Price
-                %th Add On Groups
-                %th Action 
-            - @products.each do |product|
-                - product.product_prices.each_with_index do |pp, i|
-                    - if i == 0
+        .d-flex 
+            .card 
+                .card-header
+                    %h3 Add On Groups
+                .card-body 
+                    =form_with(url: "/admin/add_on/group", method: :post) do |f|
+                        = hidden_field_tag :seller_id, @seller.id, {}
+                        = f.text_field :name, {class: "form-control", placeholder: "Name"}
+                        %br/
+                        = f.submit "Create", {class: "btn btn-primary btn-sm"}
+                    %br/
+                    %table.table 
                         %tr 
-                            %td{rowspan: product.product_prices.count}= product.name 
-                            %td{rowspan: product.product_prices.count}= product.product_category.name 
-                            %td{rowspan: product.product_prices.count} 
-                                - if product.image.attached?
-                                    = image_tag product.image, style: "width: 200px;"
-                                - else 
-                                    No Image
-                            %td= pp.product_size.name
-                            %td= pp.price
-                            %td 
-                                - if product.add_on_groups.count > 0
-                                    - product.add_on_groups.each do |aog|
-                                        %span= "#{aog.name}, "
-                                - else 
-                                    No Add Ons
-                            %td{rowspan: product.product_prices.count} None
-                    - else 
+                            %th Name 
+                            %th Action 
+                        - @add_on_groups.each do |aog|
+                            %tr
+                                %td= aog.name 
+                                %td None
+            .card{style: "margin-left: 50px;"} 
+                .card-header 
+                    %h3 Add Ons 
+                .card-body 
+                    =form_with(url: "/admin/add_on", method: :post) do |f|
+                        = f.text_field :name, {class: "form-control", placeholder: "Name"}
+                        %br/
+                        = f.text_field :price, {class: "form-control", placeholder: "Price"}
+                        %br/
+                        = f.collection_select :add_on_group_id, @add_on_groups, :id, :name, {}, {class: "form-select"}
+                        %br/
+                        = f.submit "Create", {class: "btn btn-primary btn-sm"}
+                    %br/
+                    %table.table 
                         %tr 
-                            %td= pp.product_size.name
-                            %td= pp.price
+                            %th Name
+                            %th Price 
+                            %th Group 
+                            %th Action 
+                        - @add_ons.each do |ao|
+                            %tr 
+                                %td= ao.name 
+                                %td= ao.price 
+                                %td= ao.add_on_group.name 
+                                %td None
+        %br/
+        

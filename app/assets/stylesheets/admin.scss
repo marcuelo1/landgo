@@ -103,7 +103,129 @@
     }
 }
 
-// body
-.body {
+// application body
+.app-body {
     padding: 20px;
+}
+
+// header
+.header {
+    padding: 0 40px;
+    .page-title {
+        font-size: 25px;
+        font-weight: bold;
+    }
+
+    .actions-container {
+        .btn {
+            margin: 0 5px;
+        }
+    }
+}
+
+.btn {
+    border-radius: 30px !important;
+}
+
+.body {
+    padding: 0 40px;
+
+    .table-list {
+        width: 100%;
+    
+        tr:nth-child(1) {
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+            height: 40px;
+        }
+
+        td {
+            height: 60px;
+            img {
+                width: 50px;
+                height: 50px;
+                cursor: pointer;
+            }
+            .show-btn {
+                width: 35px;
+                height: 35px;
+                padding: 0;
+                border-radius: 50%;
+                
+                i {
+                    line-height: 32px;
+                }
+            }
+        }
+    }
+
+    .table-details {
+        margin: auto;
+        tr {
+            border-bottom: 1px solid rgb(122, 122, 122);
+            th {
+                text-align: right;
+                padding-right: 5px;
+            }
+            
+            td {
+                padding-left: 10px;
+            }
+        }
+    }
+
+    .search-bar {
+        width: 300px;
+        position: relative;
+        input {
+            border-radius: 30px;
+        }
+
+        .icon-search {
+            position: absolute;
+            top: 50%;
+            transform: translate(0, -50%);
+            right: 20px;
+        }
+    }
+
+    .table-title {
+        font-size: 20px;
+        font-weight: bold;
+    }
+}
+
+.modal-bg {
+    background-color: rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99999;
+}
+
+.modal-content {
+    position: absolute !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto !important;
+    height: 80vh;
+    z-index: 999999;
+    background: white !important;
+    border: none !important;
+
+    .expanded-image {
+        width: 60vw;
+        height: inherit;
+        object-fit: contain;
+    }
+    
+    .card {
+        width: fit-content;
+        margin: auto;
+        max-height: 80vh;
+        overflow-y: scroll;
+    }
 }

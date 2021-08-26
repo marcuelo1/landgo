@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
     scope :seller do
       get "/", to: "seller#index"
+      get "/new", to: "seller#new"
       post "/", to: "seller#create"
       get "/:id", to: "seller#show"
     end
@@ -28,6 +29,7 @@ Rails.application.routes.draw do
 
     scope :product do
       post "/", to: "product#create"
+      get "/new", to: "product#new"
     end
 
     scope :product_size do

@@ -1,6 +1,7 @@
 class Admin::ProductController < ApplicationController
     before_action :authenticate_admin!
     before_action :set_admin
+    before_action :set_seller, :set_product_categories, :set_product_sizes, :set_add_on_groups, only: [:new]
 
     def create
         # create product
@@ -28,6 +29,9 @@ class Admin::ProductController < ApplicationController
         end
 
         redirect_to "/admin/seller/#{params[:seller_id]}"
+    end
+
+    def new
     end
     
 

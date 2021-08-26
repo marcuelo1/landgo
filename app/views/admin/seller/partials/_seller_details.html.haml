@@ -1,0 +1,24 @@
+.card
+    .card-body 
+        .seller-image 
+            - if @seller.image.attached?
+                = image_tag @seller.image
+            - else 
+                = image_tag asset_path "no-photo-2.jpg"
+        %br/
+        %table.table-details 
+            %tr 
+                %th Name: 
+                %td= @seller.name 
+            %tr 
+                %th Email:
+                %td= @seller.email 
+            %tr 
+                %th Phone Number: 
+                %td= @seller.phone_number 
+            %tr 
+                %th Address:
+                %td= @seller.address 
+            %tr 
+                %th Category: 
+                %td= @seller.category.name

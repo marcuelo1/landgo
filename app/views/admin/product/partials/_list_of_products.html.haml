@@ -1,0 +1,42 @@
+.card 
+    .card-body 
+        .d-flex.justify-content-between 
+            .table-title List of Products
+            .actions-container.d-flex.justify-content-end
+                .btn.btn-primary#add-product{url: "/admin/product/new?id=#{@seller.id}"}
+                    %i.icon-plus
+                    Add Product
+        .search-bar 
+            %input{type: "text", placeholder: "Search Seller", class: "form-control"}/
+            %i.icon-search 
+        %br/
+        %table.table-list 
+            %tr 
+                %th Name 
+                %th Category 
+                %th Image
+                %th Size
+                %th Price
+                %th Add On Groups
+                %th Action 
+            - @products.each do |product|
+                %tr 
+                    %td= product.name 
+                    %td= product.product_category.name 
+                    %td.product-image
+                        - if product.image.attached?
+                            = image_tag product.image
+                        - else 
+                            = image_tag asset_path "no-photo-2.jpg"
+                    %td 
+                        %select.product-size.form-select 
+                            - product.product_prices.order(price: :asc).each do |pp|
+                                %option{value: pp.price}= pp.product_size.name
+                    %td.product-price= product.product_prices.order(price: :asc).first.price
+                    %td 
+                        - if product.add_on_groups.count > 0
+                            - product.add_on_groups.each do |aog|
+                                %span= "#{aog.name}, "
+                        - else 
+                            No Add Ons
+                    %td None

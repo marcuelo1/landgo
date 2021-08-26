@@ -1,0 +1,42 @@
+.modal-bg
+.modal-content
+    .card 
+        .card-header 
+            %h3 Add Product
+        .card-body    
+            = form_with(url: "/admin/product", method: :post) do |f|
+                = hidden_field_tag :seller_id, @seller.id, {}
+                .row 
+                    .col 
+                        = f.text_field :name, {class: "form-control", placeholder: "Name"}
+                        %br/
+                        = f.file_field :image, {class: "form-control"}
+                        %br/
+                        = f.collection_select :product_category_id, @product_categories, :id, :name, {}, {class: "form-select"}
+                    .col 
+                        = f.text_area :description, {class: "form-control", style: "height: 100%;resize: none;", placeholder: "Product Description"}
+                %br/
+                .product-sizes-container 
+                    .d-flex.justify-content-between.sub-header
+                        %h4 Sizes
+                        .btn.btn-primary#add-size 
+                            %i.icon-plus
+                            Add Size
+                    %ul#input-sizes-container.input-sizes-container{data: {options: @product_sizes.pluck(:id, :name).to_s}}
+                        %li.input-size#first-size
+                            .number
+                                .val 1
+                            = f.collection_select "product_size_ids[]", @product_sizes, :id, :name, {}, {class: "form-select", id: ""}
+                            = f.text_field "prices[]", {class: "form-control", placeholder: "Price", id: ""}
+                %br/
+                .add_ons_container
+                    .d-flex.justify-content-between.sub-header
+                        %h4 Add Ons
+                        .btn.btn-primary#add-add-ons 
+                            %i.icon-plus
+                            Add Add Ons
+                    %ul#input-addons-container.input-addons-container{data:{options: @add_on_groups.pluck(:id, :name).to_s}}
+
+                %br/
+                %center 
+                    = f.submit "Create", {class: "btn btn-primary"}
