@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_23_092025) do
+ActiveRecord::Schema.define(version: 2021_08_26_132311) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,6 +115,7 @@ ActiveRecord::Schema.define(version: 2021_08_23_092025) do
     t.bigint "add_on_group_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "require", default: 0
     t.index ["add_on_group_id"], name: "index_product_add_ons_on_add_on_group_id"
     t.index ["product_id"], name: "index_product_add_ons_on_product_id"
   end
@@ -151,6 +152,7 @@ ActiveRecord::Schema.define(version: 2021_08_23_092025) do
     t.bigint "seller_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "description"
     t.index ["product_category_id"], name: "index_products_on_product_category_id"
     t.index ["seller_id"], name: "index_products_on_seller_id"
   end

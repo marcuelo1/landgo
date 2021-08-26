@@ -1,8 +1,16 @@
 class AddOnGroupBlueprint < Blueprinter::Base
-    fields :id, :name 
+    fields :require
 
-    field :add_ons do |aog|
-        aog.add_ons.collect do |ao|
+    field :id do |pao|
+        pao.add_on_group.id
+    end
+    
+    field :name do |pao|
+        pao.add_on_group.name
+    end
+
+    field :add_ons do |pao|
+        pao.add_on_group.add_ons.collect do |ao|
             {
                 price: ao.price,
                 name: ao.name

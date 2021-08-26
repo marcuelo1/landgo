@@ -88,6 +88,7 @@ $(document).ready(function(){
                 <select class="form-select" name="add_on_group_ids[]" id="add_on_group_ids[]">
                     ${options}
                 </select>
+                <input class="form-control" placeholder="# require" type="text" name="requires[]" id="">
             </li>
         `)
     })

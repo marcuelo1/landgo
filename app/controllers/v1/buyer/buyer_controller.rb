@@ -40,7 +40,7 @@ class V1::Buyer::BuyerController < ApplicationController
 
         render json: {
             sizes: ProductPriceBlueprint.render(product.product_prices),
-            add_on_groups: AddOnGroupBlueprint.render(product.add_on_groups)
+            add_on_groups: AddOnGroupBlueprint.render(product.product_add_ons)
         }
     end
     

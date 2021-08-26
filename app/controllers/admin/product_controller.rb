@@ -20,10 +20,11 @@ class Admin::ProductController < ApplicationController
 
         # create product add ons
         if params[:add_on_group_ids]
-            params[:add_on_group_ids].each do |aog_id|
+            params[:add_on_group_ids].each_with_index do |_, i|
                 pao = ProductAddOn.new()
                 pao.product_id = product.id 
-                pao.add_on_group_id = aog_id 
+                pao.add_on_group_id = params[:add_on_group_ids][i] 
+                pao.require = params[:requires][i]
                 pao.save
             end
         end
@@ -37,7 +38,7 @@ class Admin::ProductController < ApplicationController
 
     private
     def product_params
-        params.permit(:seller_id, :name, :product_category_id, :image)
+        params.permit(:seller_id, :name, :product_category_id, :image, :description)
     end
     
 end
