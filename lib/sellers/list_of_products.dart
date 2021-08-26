@@ -1,8 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/sellers/list_of_products_style.dart';
+import 'package:ryve_mobile/sellers/product.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
@@ -32,6 +32,7 @@ class _ListOfProductsState extends State<ListOfProducts> {
   final double categoryHeight = 40;
   final double categoryNameWidth = 70;
 
+  Map seller = {};
   List product_categories = [];
   List products = [];
   // response
@@ -50,7 +51,7 @@ class _ListOfProductsState extends State<ListOfProducts> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
-    final Map seller = ModalRoute.of(context)!.settings.arguments as Map;
+    seller = ModalRoute.of(context)!.settings.arguments as Map;
     print(seller);
     _dataUrl = _dataUrl + "?id=${seller['id']}";
 
@@ -155,7 +156,7 @@ class _ListOfProductsState extends State<ListOfProducts> {
           for (var i = 0; i < products.length; i++) ... [
             TextButton(
               onPressed: (){
-                print(products[i]['id']);
+                Navigator.pushNamed(context, Product.routeName, arguments: {"seller": seller, "product": products[i]});
               },
               child: SharedWidgets.product(products[i]['image'], products[i]['name'], products[i]['price'].toStringAsFixed(2), width, height)
             )
