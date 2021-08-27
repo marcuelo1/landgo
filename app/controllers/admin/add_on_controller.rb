@@ -1,6 +1,4 @@
-class Admin::AddOnController < ApplicationController
-    before_action :authenticate_admin!
-    before_action :set_admin
+class Admin::AddOnController < AdministratorController
 
     def create
         ao = AddOn.new(add_on_params)

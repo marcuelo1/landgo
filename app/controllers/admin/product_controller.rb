@@ -1,6 +1,4 @@
-class Admin::ProductController < ApplicationController
-    before_action :authenticate_admin!
-    before_action :set_admin
+class Admin::ProductController < AdministratorController
     before_action :set_seller, :set_product_categories, :set_product_sizes, :set_add_on_groups, only: [:new]
 
     def create

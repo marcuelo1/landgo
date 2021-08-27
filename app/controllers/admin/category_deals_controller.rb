@@ -1,6 +1,4 @@
-class Admin::CategoryDealsController < ApplicationController
-    before_action :authenticate_admin!
-    before_action :set_admin
+class Admin::CategoryDealsController < AdministratorController
 
     def create 
         cd = CategoryDeal.new(category_deal_params)

@@ -136,4 +136,35 @@
 
 .seller-category-sizes {
     display: none;
+    
+    .search-bar {
+        margin: auto;
+        margin-bottom: 10px;
+    }
+
+    .product-categories {
+        .table-list {
+            text-align: center;
+            td {
+                height: 35px;
+            }
+        }
+    }
+
+    .product-sizes {
+        .table-list {
+            text-align: center;
+            td {
+                height: 35px;
+            }
+        }
+    }
+}
+
+.create-product-category {
+    height: fit-content;
+}
+
+.seller-add-ons {
+    display: none;
 }

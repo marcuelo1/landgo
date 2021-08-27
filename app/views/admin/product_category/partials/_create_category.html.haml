@@ -1,0 +1,11 @@
+.modal-bg
+.modal-content.create-product-category
+    .card 
+        .card-header 
+            %h3 Add Product Category
+        .card-body 
+            = form_with(url: "/admin/product_category", method: :post) do |f|
+                = hidden_field_tag :seller_id, @seller.id, {}
+                = f.text_field :name, {class: "form-control", style: "width: 300px;", placeholder: "Name"}
+                %br/
+                = f.submit "Create", {class: "btn btn-primary btn-sm"}

@@ -2,11 +2,26 @@ $(document).ready(function(){
     $("body").on('click', '#details', function(){
         $("#seller-details").css('display', 'block')
         $("#seller-products").css('display', 'none')
+        $("#seller-category-sizes").css('display', 'none')
+        $("#seller-add-ons").css('display', 'none')
     })
     
     $("body").on('click', '#products', function(){
         $("#seller-details").css('display', 'none')
         $("#seller-products").css('display', 'block')
+        $("#seller-category-sizes").css('display', 'none')
+        $("#seller-add-ons").css('display', 'none')
+    })
+
+    $("body").on("click", "#product-category-sizes", function(){
+        $("#seller-details").css('display', 'none')
+        $("#seller-products").css('display', 'none')
+        $("#seller-category-sizes").css('display', 'block')
+        $("#seller-add-ons").css('display', 'none')
+    })
+
+    $("body").on("click", "#product-add-ons", function(){
+
     })
 
     $("body").on('change', '.product-size', function(){
@@ -100,6 +115,26 @@ $(document).ready(function(){
             $(this).find(".val").text(count)
             count++
         })
+    })
+
+    $("body").on('click', '#create-product-category', function(){
+        url = $(this).attr("url")
+        $.ajax({
+            url: url,
+            dataType: "script",
+            data: {},
+            success: function(response){}
+        });
+    })
+
+    $("body").on('click', '#create-product-size', function(){
+        url = $(this).attr("url")
+        $.ajax({
+            url: url,
+            dataType: "script",
+            data: {},
+            success: function(response){}
+        });
     })
 })
 

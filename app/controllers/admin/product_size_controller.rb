@@ -1,6 +1,5 @@
-class Admin::ProductSizeController < ApplicationController
-    before_action :authenticate_admin!
-    before_action :set_admin
+class Admin::ProductSizeController < AdministratorController
+    before_action :set_seller, only: [:new]
 
     def create
         product_size = ProductSize.new(product_size_params)
@@ -8,6 +7,11 @@ class Admin::ProductSizeController < ApplicationController
 
         redirect_to "/admin/seller/#{params[:seller_id]}"
     end
+
+    def new
+        
+    end
+    
 
     private
     def product_size_params

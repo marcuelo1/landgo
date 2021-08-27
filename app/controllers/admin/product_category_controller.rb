@@ -1,6 +1,5 @@
-class Admin::ProductCategoryController < ApplicationController
-    before_action :authenticate_admin!
-    before_action :set_admin
+class Admin::ProductCategoryController < AdministratorController
+    before_action :set_seller, only: [:new]
 
     def create
         pc = ProductCategory.new(product_category_params)
@@ -8,6 +7,11 @@ class Admin::ProductCategoryController < ApplicationController
 
         redirect_to "/admin/seller/#{params[:seller_id]}"
     end
+
+    def new
+        
+    end
+    
     
     private
     def product_category_params

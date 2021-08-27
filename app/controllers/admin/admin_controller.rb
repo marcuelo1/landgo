@@ -1,7 +1,5 @@
-class Admin::AdminController < ApplicationController
-    before_action :authenticate_admin!
-    before_action :set_admin
-
+class Admin::AdminController < AdministratorController
+    
     def index
         
     end

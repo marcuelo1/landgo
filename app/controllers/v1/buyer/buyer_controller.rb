@@ -1,5 +1,4 @@
-class V1::Buyer::BuyerController < ApplicationController
-    include DeviseTokenAuth::Concerns::SetUserByToken
+class V1::Buyer::BuyerController < ApiController
     before_action :authenticate_v1_buyer!
     before_action :set_buyer
     

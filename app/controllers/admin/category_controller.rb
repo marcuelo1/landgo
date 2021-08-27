@@ -1,6 +1,4 @@
-class Admin::CategoryController < ApplicationController
-    before_action :authenticate_admin!
-    before_action :set_admin
+class Admin::CategoryController < AdministratorController
     before_action :set_categories, only: [:index]
 
     def index

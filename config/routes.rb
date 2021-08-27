@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
     scope :product_category do
       post "/", to: "product_category#create"
+      get "/new", to: "product_category#new"
     end
 
     scope :product do
@@ -34,6 +35,7 @@ Rails.application.routes.draw do
 
     scope :product_size do
       post "/", to: "product_size#create"
+      get "/new", to: "product_size#new"
     end
 
     scope :add_on do
