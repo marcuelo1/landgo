@@ -39,4 +39,7 @@
                                 %span= "#{aog.name}, "
                         - else 
                             No Add Ons
-                    %td None
+                    %td
+                        %a{href: "/admin/product/#{product.id}"} 
+                            .show-btn.btn.btn-secondary
+                                %i.icon-eye-open 

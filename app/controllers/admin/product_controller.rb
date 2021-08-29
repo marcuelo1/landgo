@@ -1,5 +1,6 @@
 class Admin::ProductController < AdministratorController
     before_action :set_seller, :set_product_categories, :set_product_sizes, :set_add_on_groups, only: [:new]
+    before_action :set_product, :set_product_prices, :set_product_add_on_groups, only: [:show]
 
     def create
         # create product
@@ -31,6 +32,10 @@ class Admin::ProductController < AdministratorController
     end
 
     def new
+    end
+    
+    def show
+        
     end
     
 

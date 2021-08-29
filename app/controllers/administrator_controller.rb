@@ -38,4 +38,17 @@ class AdministratorController < ApplicationController
     def set_add_ons
         @add_ons = @seller.add_ons
     end
+
+    def set_product
+        @product = Product.find(params[:id])
+    end
+
+    def set_product_prices
+        @product_prices = @product.product_prices
+    end
+
+    def set_product_add_on_groups
+        @product_add_on_groups = @product.product_add_ons 
+    end
+    
 end

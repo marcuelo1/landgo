@@ -1,0 +1,83 @@
+= content_for :javascript_includes do
+    = javascript_pack_tag "product_show"
+
+.header.d-flex.justify-content-between 
+    .page-title Product's Detail Page
+    .actions-container.d-flex.justify-content-end
+        .btn.btn-primary#details
+            Details
+        .btn.btn-primary#products
+            Products
+        .btn.btn-primary#product-category-sizes
+            Category & Sizes
+        .btn.btn-primary#product-add-ons
+            Add Ons
+%br/
+.body.product-details 
+    -# Product Details
+    .card 
+        .card-body 
+            .d-flex.justify-content-center 
+                .image-container
+                    - if @product.image.attached? 
+                        = image_tag @product.image
+                    - else 
+                        = image_tag asset_path "no-photo-2.jpg"
+                .details
+                    %table.table-details 
+                        %tr 
+                            %th Name:
+                            %td= @product.name 
+                        %tr 
+                            %th Category: 
+                            %td= @product.product_category.name
+                        %tr 
+                            %th Description: 
+                            %td= @product.description == "" || @product.description == nil ? "No description" :  @product.description
+    %br/
+    -# Product Sizes
+    .card   
+        .card-body 
+            .d-flex.justify-content-between 
+            .table-title Product Sizes
+            .actions-container.d-flex.justify-content-end
+                .btn.btn-primary#add-product{url: "/admin/product/new?id="}
+                    %i.icon-plus
+                    Add Size
+            %br/
+            %table.table-list 
+                %tr 
+                    %th Size 
+                    %th Price 
+                    %th Action 
+                - @product_prices.each do |pp|
+                    %tr 
+                        %td= pp.product_size.name 
+                        %td= pp.price
+                        %td Edit, Delete
+    %br/
+    -# Product Add Ons
+    .card 
+        .card-body 
+            .d-flex.justify-content-between 
+            .table-title Product Add Ons
+            .actions-container.d-flex.justify-content-end
+                .btn.btn-primary#add-product{url: "/admin/product/new?id="}
+                    %i.icon-plus
+                    Add Add Ons 
+            %br/
+            - @product_add_on_groups.each do |paog|
+                - aog = paog.add_on_group
+                %h4= aog.name.capitalize
+                %h6= "Require: #{paog.require == 0 ? "Optional" : paog.require}"
+                %h6= "Number of selected choices: #{paog.num_of_select}"
+                %table.table-list 
+                    %tr 
+                        %th Name 
+                        %th Price 
+                    - aog.add_ons.each do |ao|
+                        %tr 
+                            %td= ao.name 
+                            %td= ao.price 
+                %hr/
+                %br/

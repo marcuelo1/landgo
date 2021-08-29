@@ -31,6 +31,7 @@ Rails.application.routes.draw do
     scope :product do
       post "/", to: "product#create"
       get "/new", to: "product#new"
+      get "/:id", to: "product#show"
     end
 
     scope :product_size do
