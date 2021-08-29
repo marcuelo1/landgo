@@ -2,41 +2,45 @@
     .card 
         .card-body
             .row 
-                .col.product-categories{style: "border-right: 1px solid rgba(0,0,0,.125);"}
+                .col.product-add-ons{style: "border-right: 1px solid rgba(0,0,0,.125);"}
                     .header.d-flex.justify-content-between 
-                        .page-title Product Categories
+                        .page-title Add On Groups
                         .actions-container.d-flex.justify-content-end
                             .btn.btn-primary#create-product-category{url: "/admin/product_category/new?id=#{@seller.id}"}
                                 %i.icon-plus
-                                Add Category
+                                Add Groups
                     %br/
                     .search-bar 
                         %input{type: "text", placeholder: "Search Seller", class: "form-control"}/
                         %i.icon-search 
-                    %table.table-list  
+                    %table.table-list   
                         %tr 
                             %th Name 
                             %th Action 
-                        - @product_categories.each do |pc|
-                            %tr 
-                                %td= pc.name
+                        - @add_on_groups.each do |aog|
+                            %tr
+                                %td= aog.name 
                                 %td None
-                .col.product-sizes
+                .col.product-add-ons{style: "border-right: 1px solid rgba(0,0,0,.125);"}
                     .header.d-flex.justify-content-between 
-                        .page-title Product Sizes
+                        .page-title Add Ons
                         .actions-container.d-flex.justify-content-end
-                            .btn.btn-primary#create-product-size{url: "/admin/product_size/new?id=#{@seller.id}"}
+                            .btn.btn-primary#create-product-category{url: "/admin/product_category/new?id=#{@seller.id}"}
                                 %i.icon-plus
-                                Add Size
+                                Add Add Ons
                     %br/
                     .search-bar 
                         %input{type: "text", placeholder: "Search Seller", class: "form-control"}/
                         %i.icon-search 
                     %table.table-list 
                         %tr 
-                            %th Name 
+                            %th Name
+                            %th Price 
+                            %th Group 
                             %th Action 
-                        - @product_sizes.each do |ps|
+                        - @add_ons.each do |ao|
                             %tr 
-                                %td= ps.name
+                                %td= ao.name 
+                                %td= ao.price 
+                                %td= ao.add_on_group.name 
                                 %td None

@@ -167,4 +167,18 @@
 
 .seller-add-ons {
     display: none;
+    
+    .search-bar {
+        margin: auto;
+        margin-bottom: 10px;
+    }
+    
+    .product-add-ons {
+        .table-list {
+            text-align: center;
+            td {
+                height: 35px;
+            }
+        }
+    }
 }

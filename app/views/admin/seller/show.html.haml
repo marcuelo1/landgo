@@ -21,49 +21,5 @@
     #seller-category-sizes.seller-category-sizes          
         = render partial: "/admin/product_category/partials/category_sizes"
     #seller-add-ons.seller-add-ons      
-        .d-flex 
-            .card 
-                .card-header
-                    %h3 Add On Groups
-                .card-body 
-                    =form_with(url: "/admin/add_on/group", method: :post) do |f|
-                        = hidden_field_tag :seller_id, @seller.id, {}
-                        = f.text_field :name, {class: "form-control", placeholder: "Name"}
-                        %br/
-                        = f.submit "Create", {class: "btn btn-primary btn-sm"}
-                    %br/
-                    %table.table 
-                        %tr 
-                            %th Name 
-                            %th Action 
-                        - @add_on_groups.each do |aog|
-                            %tr
-                                %td= aog.name 
-                                %td None
-            .card{style: "margin-left: 50px;"} 
-                .card-header 
-                    %h3 Add Ons 
-                .card-body 
-                    =form_with(url: "/admin/add_on", method: :post) do |f|
-                        = f.text_field :name, {class: "form-control", placeholder: "Name"}
-                        %br/
-                        = f.text_field :price, {class: "form-control", placeholder: "Price"}
-                        %br/
-                        = f.collection_select :add_on_group_id, @add_on_groups, :id, :name, {}, {class: "form-select"}
-                        %br/
-                        = f.submit "Create", {class: "btn btn-primary btn-sm"}
-                    %br/
-                    %table.table 
-                        %tr 
-                            %th Name
-                            %th Price 
-                            %th Group 
-                            %th Action 
-                        - @add_ons.each do |ao|
-                            %tr 
-                                %td= ao.name 
-                                %td= ao.price 
-                                %td= ao.add_on_group.name 
-                                %td None
-        %br/
+        = render partial: "/admin/add_on_groups/partials/add_on_page"
         

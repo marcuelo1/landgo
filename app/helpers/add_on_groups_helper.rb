@@ -1,0 +1,2 @@
+module AddOnGroupsHelper
+end

@@ -13,7 +13,9 @@ class AddOnGroupBlueprint < Blueprinter::Base
         pao.add_on_group.add_ons.collect do |ao|
             {
                 price: ao.price,
-                name: ao.name
+                name: ao.name,
+                id: ao.id,
+                add_on_group_id: ao.add_on_group_id
             }
         end
     end

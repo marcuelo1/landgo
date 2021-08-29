@@ -21,7 +21,10 @@ $(document).ready(function(){
     })
 
     $("body").on("click", "#product-add-ons", function(){
-
+        $("#seller-details").css('display', 'none')
+        $("#seller-products").css('display', 'none')
+        $("#seller-category-sizes").css('display', 'none')
+        $("#seller-add-ons").css('display', 'block')
     })
 
     $("body").on('change', '.product-size', function(){
