@@ -88,5 +88,19 @@ class SharedStyle {
   fontWeight: FontWeight.bold,
   fontFamily: 'Poppins-Bold'
  );
+
+  static final yellowBtn = ButtonStyle(
+    backgroundColor: MaterialStateProperty.all(SharedStyle.yellow),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: SharedStyle.borderRadius(30, 30, 30, 30)
+      )
+    )
+  );
   
+  static final yellowBtnText = TextStyle(
+    fontSize: 18,
+    color: SharedStyle.white,
+    fontFamily: 'Poppins-Regular'
+  );
 }

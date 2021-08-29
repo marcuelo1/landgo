@@ -62,4 +62,23 @@ class ProductStyle {
       )
     )
   );
+
+  static final quantityBar = BoxDecoration(
+    borderRadius: SharedStyle.borderRadius(30, 30, 30, 30),
+    border: Border.all(color: SharedStyle.yellow)
+  );
+
+  static final quantityBarNum = TextStyle(
+    color: SharedStyle.primaryText,
+    fontSize: 20,
+    fontFamily: 'SFProText-Bold',
+    fontWeight: FontWeight.bold,
+  );
+
+  static final totalAmount = TextStyle(
+    color: SharedStyle.yellow,
+    fontSize: 20,
+    fontFamily: 'SFProText-Bold',
+    fontWeight: FontWeight.bold,
+  );
 }

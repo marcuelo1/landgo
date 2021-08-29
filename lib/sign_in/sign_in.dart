@@ -183,8 +183,8 @@ class _SignInState extends State<SignIn> {
         }
       }, 
       child: Container(
-        width: signInBtnWidth,
-        height: signInBtnHeight,
+        width: SharedFunction.scaleWidth(signInBtnWidth, width),
+        height: SharedFunction.scaleHeight(signInBtnHeight, height),
         child: Center(
           child: Text(
             "Sign In",

@@ -5,6 +5,7 @@ import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/sellers/product_style.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
+import 'package:ryve_mobile/shared/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
@@ -29,13 +30,21 @@ class _ProductState extends State<Product> {
   // dimensions
   final double productImageWidth = 325;
   final double productImageHeight = 200;
+  final double quantityBarWidth = 100;
+  final double quantityBarHeight = 35;
+  final double addToBasketBtnWidth = 300;
+  final double addToBasketBtnHeight = 60;
 
   Map seller = {};
   Map product = {};
   List sizes = [];
   List add_on_groups = [];
   String displayPrice = "";
-  int selectedSize = 0;
+
+  // selected
+  Map selectedSize = {};
+  Map selectedAddOns = {}; // {aog_id: {require: int, num_of_select: int, addOns: List of add on ids, addOnPrices: List of add on prices} }
+  int quan_of_prod = 1;
 
   // response
   Map response = {};
@@ -61,7 +70,7 @@ class _ProductState extends State<Product> {
     print(product);
     _dataUrl = _dataUrl + "?id=${product['id']}";
     
-    return FutureBuilder(
+    return responseBody.isEmpty ? FutureBuilder(
       future: SharedFunction.getData(_dataUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         // Connection state of getting the data
@@ -88,7 +97,8 @@ class _ProductState extends State<Product> {
               // check if product has only one size, so we can display at the bottom of product name
               if(sizes.length == 1){
                 displayPrice = sizes[0]['price'].toStringAsFixed(2);
-                selectedSize = sizes[0]['id'];
+                selectedSize["id"] = sizes[0]['id'];
+                selectedSize["price"] = sizes[0]['price'];
               }
             }
 
@@ -98,56 +108,86 @@ class _ProductState extends State<Product> {
             }
             print(add_on_groups);
             print("==============================================================");
+            for (var aog in add_on_groups) {
+              selectedAddOns[aog['id']] = {
+                "require": aog['require'],
+                "num_of_select": aog['num_of_select'],
+                "addOns": [],
+                "addOnPrices": []
+              };
+            }
+            print(selectedAddOns);
+            print("==============================================================");
 
-            return PixelPerfect(
-              child: SafeArea(
-                child: Scaffold(
-                  appBar: SharedWidgets.appBar(seller['name']),
-                  body: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      SharedFunction.scaleWidth(24, width), 
-                      SharedFunction.scaleHeight(20, height), 
-                      SharedFunction.scaleWidth(24, width), 
-                      SharedFunction.scaleHeight(0, height)
-                    ),
-                    child: SingleChildScrollView(
-                      child: Container(
-                        width: double.infinity,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            // product image
-                            productImage(product['image']),
-                            // space
-                            SizedBox(height: SharedFunction.scaleHeight(18, height),),
-                            // product name
-                            productName(product['name']),
-                            // space
-                            SizedBox(height: SharedFunction.scaleHeight(7, height),),
-                            // product price
-                            if(sizes.length == 1) ... [
-                              productPrice(displayPrice),
-                              // space
-                              SizedBox(height: SharedFunction.scaleHeight(33, height),),
-                            ],
-                            // product size
-                            if(sizes.length > 1) ... [
-                              productSizes(sizes)
-                            ],
-                            // product add ons
-                            if(add_on_groups.length > 0) ... [
-                              productAddOns(add_on_groups)
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              )
-            );
+            return content();
         }
       }
+    ) : content();
+  }
+
+  Widget content(){
+    return PixelPerfect(
+      child: SafeArea(
+        child: Scaffold(
+          appBar: SharedWidgets.appBar(seller['name']),
+          body: Padding(
+            padding: EdgeInsets.fromLTRB(
+              SharedFunction.scaleWidth(24, width), 
+              SharedFunction.scaleHeight(20, height), 
+              SharedFunction.scaleWidth(24, width), 
+              SharedFunction.scaleHeight(0, height)
+            ),
+            child: SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // product image
+                    productImage(product['image']),
+                    // space
+                    SizedBox(height: SharedFunction.scaleHeight(18, height),),
+                    // product name
+                    productName(product['name']),
+                    // space
+                    SizedBox(height: SharedFunction.scaleHeight(7, height),),
+                    // product price
+                    if(sizes.length == 1) ... [
+                      productPrice(displayPrice),
+                      // space
+                      SizedBox(height: SharedFunction.scaleHeight(30, height),),
+                    ],
+                    // product size
+                    if(sizes.length > 1) ... [
+                      productSizes(sizes),
+                      // space
+                      SizedBox(height: SharedFunction.scaleHeight(30, height),),
+                    ],
+                    // product add ons
+                    if(add_on_groups.length > 0) ... [
+                      productAddOns(add_on_groups),
+                      // space
+                      SizedBox(height: SharedFunction.scaleHeight(30, height),),
+                    ],
+                    // Quantity
+                    quantity(),
+                    // space
+                    SizedBox(height: SharedFunction.scaleHeight(30, height),),
+                    // Total
+                    total(),
+                    // space
+                    SizedBox(height: SharedFunction.scaleHeight(45, height),),
+                    // Add to cart
+                    addToBasketBtn(),
+                    // space
+                    SizedBox(height: SharedFunction.scaleHeight(80, height),),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        )
+      )
     );
   }
 
@@ -208,11 +248,12 @@ class _ProductState extends State<Product> {
   Widget productSizeDetail(Map size){
     String _name = size['size'];
     String _price = size['price'].toStringAsFixed(2);
-    bool selected = selectedSize == size['id'] ? true : false ;
+    bool selected = selectedSize["id"] == size['id'] ? true : false ;
     return ElevatedButton(
       onPressed: (){
         setState(() {
-          selectedSize = size['id'];
+          selectedSize["id"] = size['id'];
+          selectedSize["price"] = size['price'];
         });
       }, 
       style: selected ? ProductStyle.selectedBtn : ProductStyle.unselectedBtn,
@@ -260,10 +301,40 @@ class _ProductState extends State<Product> {
   Widget addOn(Map ao){
     String _name = ao['name'];
     String _price = ao['price'].toStringAsFixed(2);
-    bool selected = false ;
+    bool selected = selectedAddOns[ao['add_on_group_id']]['addOns'].contains(ao['id']);
 
     return ElevatedButton(
-      onPressed: (){}, 
+      onPressed: (){  
+        if(selected){
+          int _addOnsRequire = selectedAddOns[ao['add_on_group_id']]['require'];
+          // if required then cannot unselect, and the user should select another choice
+          if(_addOnsRequire == 0){
+            setState(() {
+              selectedAddOns[ao['add_on_group_id']]['addOns'].remove(ao['id']);
+              selectedAddOns[ao['add_on_group_id']]['addOnPrices'].remove(ao['price']);
+            });
+          }
+        }else{
+          setState(() {
+            List _addOns = selectedAddOns[ao['add_on_group_id']]['addOns'];
+            int _numberOfSelected = selectedAddOns[ao['add_on_group_id']]['num_of_select'];
+            // check if add on selected hasn't selected any yet
+            if(_addOns.isEmpty){
+              selectedAddOns[ao['add_on_group_id']]['addOns'].add(ao['id']);
+              selectedAddOns[ao['add_on_group_id']]['addOnPrices'].add(ao['price']);
+            }else{
+              // check number of items can be selected
+              if(_numberOfSelected == _addOns.length){
+                selectedAddOns[ao['add_on_group_id']]['addOns'].removeAt(0);
+              selectedAddOns[ao['add_on_group_id']]['addOnPrices'].removeAt(0);
+              }
+
+              selectedAddOns[ao['add_on_group_id']]['addOns'].add(ao['id']);
+              selectedAddOns[ao['add_on_group_id']]['addOnPrices'].add(ao['price']);
+            }
+          });
+        }
+      }, 
       style: selected ? ProductStyle.selectedBtn : ProductStyle.unselectedBtn,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,6 +345,87 @@ class _ProductState extends State<Product> {
           subTitle("₱$_price", selected),
         ],
       )
+    );
+  }
+
+  Widget quantity(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // title
+        plainTitle("Quantity"),
+        // 
+        quantityBar()
+      ],
+    );
+  }
+
+  Widget quantityBar(){
+    return Container(
+      width: SharedFunction.scaleWidth(quantityBarWidth, width),
+      height: SharedFunction.scaleHeight(quantityBarHeight, height),
+      decoration: ProductStyle.quantityBar,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          quantityMinus(),
+          quantityNum(),
+          quantityAdd()
+        ],
+      ),
+    );
+  }
+
+  Widget quantityMinus(){
+    return Center(
+      child: IconButton(
+        onPressed: (){
+          if(quan_of_prod > 1){
+            setState(() {
+              quan_of_prod--;
+            });
+          }
+        }, 
+        icon: Icon(
+          Icons.remove,
+        ),
+        color: SharedStyle.yellow,
+      ),
+    );
+  }
+
+  Widget quantityAdd(){
+    return Center(
+      child: IconButton(
+        onPressed: (){
+          setState(() {
+            quan_of_prod++;
+          });
+        }, 
+        icon: Icon(
+          Icons.add
+        ),
+        color: SharedStyle.yellow,
+      ),
+    );
+  }
+
+  Widget quantityNum(){
+    return Text(
+      "$quan_of_prod",
+      style: ProductStyle.quantityBarNum,
+    );
+  }
+
+  Widget total(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // title
+        plainTitle("Total"),
+        // total amount
+        totalAmount( getTotalAmount().toStringAsFixed(2))
+      ],
     );
   }
 
@@ -291,10 +443,7 @@ class _ProductState extends State<Product> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       mainAxisSize: MainAxisSize.max,
       children: [
-        Text(
-          name,
-          style: ProductStyle.title,
-        ),
+        plainTitle(name),
         Container(
           padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
           decoration: ProductStyle.requireContainer,
@@ -307,10 +456,72 @@ class _ProductState extends State<Product> {
     );
   }
 
+  Widget plainTitle(String name){
+    return Text(
+      name,
+      style: ProductStyle.title,
+    );
+  }
+
   Widget subTitle(String name, bool selected){
     return Text(
       name,
       style: selected ? ProductStyle.selectedSubTitle : ProductStyle.unselectedSubTitle,
     );
+  }
+
+  Widget totalAmount(String _total){
+    return Text(
+      "₱$_total",
+      style: ProductStyle.totalAmount
+    );
+  }
+
+  double getTotalAmount(){
+    // get price of size
+    double _sizePrice = selectedSize["price"] == null ? 0 : selectedSize["price"];
+    double _addOnPrice = 0;
+
+    if(selectedAddOns.isNotEmpty){
+      selectedAddOns.forEach((key, value) {
+        _addOnPrice += value["addOnPrices"].isEmpty ? 0 : value["addOnPrices"].reduce((a, b) => a + b);
+      });
+    }
+
+    double _total = quan_of_prod * (_sizePrice + _addOnPrice);
+    return _total;
+  }
+
+  Widget addToBasketBtn(){
+    return ElevatedButton(
+      style: SharedStyle.yellowBtn,
+      onPressed: (){
+        // check if size has been selected
+        if(selectedSize["id"] == null){
+          PopUp.error(context, "Please choose one size");
+          return;
+        }
+
+        // check if add on required is not selected
+        selectedAddOns.forEach((key, value) {
+          if(value["addOns"].length < value["require"]){
+            PopUp.error(context, "Please select on of the required add ons");
+            return;
+          }
+        });
+
+        // send data to back end
+        
+      }, 
+      child: Container(
+        width: SharedFunction.scaleWidth(addToBasketBtnWidth, width),
+        height: SharedFunction.scaleHeight(addToBasketBtnHeight, height),
+        child: Center(
+          child: Text(
+            "Add To Basket",
+            style: SharedStyle.yellowBtnText,
+          ),
+        ),
+      ));
   }
 }
