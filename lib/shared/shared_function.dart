@@ -24,20 +24,38 @@ class SharedFunction {
     }
   }
   
-  static Future<Map> getData(String rawUrl, Map<String,String> headers, [String method = "get", body]) async {
+  static Future<Map> getData(String rawUrl, Map<String,String> headers) async {
+    try {
+      var url = Uri.parse(rawUrl);
+      var data = await http.get(url, headers: headers);
+
+      return {"status": data.statusCode, "body": json.decode(data.body)};
+    } catch (e) {
+      return {"status": 500};
+    }
+  }
+  
+  static Future<Map> sendData(String rawUrl, Map<String,String> headers, Map rawBody, [String method = "post"]) async {
     try {
       var url = Uri.parse(rawUrl);
       var data;
+      var body = json.encode(rawBody);
+      headers["Content-Type"] = "application/json";
       switch (method) {
-        case "post":
-          data = await http.post(url, headers: headers, body: body);
+        case "put":
+          data = await http.put(url, headers: headers, body: body);
+          break;
+        case "delete":
+          data = await http.delete(url, headers: headers, body: body);
           break;
         default:
-          data = await http.get(url, headers: headers);
+          data = await http.post(url, headers: headers, body: body);
       }
 
       return {"status": data.statusCode, "body": json.decode(data.body)};
     } catch (e) {
+      print(e);
+      print("==================================");
       return {"status": 500};
     }
   }

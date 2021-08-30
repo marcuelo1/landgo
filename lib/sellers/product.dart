@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/sellers/product_style.dart';
@@ -97,7 +96,7 @@ class _ProductState extends State<Product> {
               // check if product has only one size, so we can display at the bottom of product name
               if(sizes.length == 1){
                 displayPrice = sizes[0]['price'].toStringAsFixed(2);
-                selectedSize["id"] = sizes[0]['id'];
+                selectedSize["product_price_id"] = sizes[0]['product_price_id'];
                 selectedSize["price"] = sizes[0]['price'];
               }
             }
@@ -248,11 +247,11 @@ class _ProductState extends State<Product> {
   Widget productSizeDetail(Map size){
     String _name = size['size'];
     String _price = size['price'].toStringAsFixed(2);
-    bool selected = selectedSize["id"] == size['id'] ? true : false ;
+    bool selected = selectedSize["product_price_id"] == size['product_price_id'] ? true : false ;
     return ElevatedButton(
       onPressed: (){
         setState(() {
-          selectedSize["id"] = size['id'];
+          selectedSize["product_price_id"] = size['product_price_id'];
           selectedSize["price"] = size['price'];
         });
       }, 
@@ -495,23 +494,49 @@ class _ProductState extends State<Product> {
   Widget addToBasketBtn(){
     return ElevatedButton(
       style: SharedStyle.yellowBtn,
-      onPressed: (){
+      onPressed: () async {
         // check if size has been selected
-        if(selectedSize["id"] == null){
+        if(selectedSize["product_price_id"] == null){
           PopUp.error(context, "Please choose one size");
           return;
         }
 
         // check if add on required is not selected
+        int check = 0;
         selectedAddOns.forEach((key, value) {
           if(value["addOns"].length < value["require"]){
-            PopUp.error(context, "Please select on of the required add ons");
-            return;
+            check = 1;
           }
         });
 
+        if(check == 1){
+          PopUp.error(context, "Please select on of the required add ons"); 
+          return;
+        }
+
         // send data to back end
-        
+        List _addOnsIds = [];
+        selectedAddOns.forEach((key, value) {
+          _addOnsIds.add(value["addOns"]);
+        });
+
+        Map _data = {
+          "product_id": product["id"],
+          "seller_id": seller["id"],
+          "product_price_id": selectedSize["product_price_id"],
+          "quantity": quan_of_prod,
+          "add_on_ids" : _addOnsIds,
+          "total": getTotalAmount()
+        };
+
+        String _url = "${SharedUrl.root}/${SharedUrl.version}/buyer/carts";
+        Map _response = await SharedFunction.sendData(_url, _headers, _data);
+
+        if(_response["status"] == 200){
+          Navigator.pop(context);
+        }else{
+          PopUp.error(context, "error in server");
+        }
       }, 
       child: Container(
         width: SharedFunction.scaleWidth(addToBasketBtnWidth, width),
