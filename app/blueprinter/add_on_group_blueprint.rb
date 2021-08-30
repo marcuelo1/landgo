@@ -1,5 +1,5 @@
 class AddOnGroupBlueprint < Blueprinter::Base
-    fields :require
+    fields :require, :num_of_select
 
     field :id do |pao|
         pao.add_on_group.id

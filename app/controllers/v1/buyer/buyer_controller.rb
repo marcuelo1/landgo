@@ -42,11 +42,4 @@ class V1::Buyer::BuyerController < ApiController
             add_on_groups: AddOnGroupBlueprint.render(product.product_add_ons)
         }
     end
-    
-
-    private
-    def set_buyer
-        @buyer = current_v1_buyer
-    end
-    
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_29_055155) do
+ActiveRecord::Schema.define(version: 2021_08_30_051243) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,6 +93,30 @@ ActiveRecord::Schema.define(version: 2021_08_29_055155) do
     t.index ["email"], name: "index_buyers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_buyers_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_buyers_on_uid_and_provider", unique: true
+  end
+
+  create_table "cart_add_ons", force: :cascade do |t|
+    t.bigint "cart_id", null: false
+    t.bigint "add_on_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["add_on_id"], name: "index_cart_add_ons_on_add_on_id"
+    t.index ["cart_id"], name: "index_cart_add_ons_on_cart_id"
+  end
+
+  create_table "carts", force: :cascade do |t|
+    t.bigint "buyer_id", null: false
+    t.bigint "product_id", null: false
+    t.bigint "seller_id", null: false
+    t.integer "quantity"
+    t.bigint "product_price_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.float "total"
+    t.index ["buyer_id"], name: "index_carts_on_buyer_id"
+    t.index ["product_id"], name: "index_carts_on_product_id"
+    t.index ["product_price_id"], name: "index_carts_on_product_price_id"
+    t.index ["seller_id"], name: "index_carts_on_seller_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -189,6 +213,12 @@ ActiveRecord::Schema.define(version: 2021_08_29_055155) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "add_on_groups", "sellers"
   add_foreign_key "add_ons", "add_on_groups"
+  add_foreign_key "cart_add_ons", "add_ons"
+  add_foreign_key "cart_add_ons", "carts"
+  add_foreign_key "carts", "buyers"
+  add_foreign_key "carts", "product_prices"
+  add_foreign_key "carts", "products"
+  add_foreign_key "carts", "sellers"
   add_foreign_key "category_deals", "categories"
   add_foreign_key "product_add_ons", "add_on_groups"
   add_foreign_key "product_add_ons", "products"
