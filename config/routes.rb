@@ -57,7 +57,11 @@ Rails.application.routes.draw do
       get "list_of_products", to: "buyer#list_of_products"
       get "product_details", to: "buyer#product_details"
 
-      resources :carts
+      resources :carts do
+        collection do
+          get :list_of_sellers
+        end
+      end
     end
 
     ###############################################
