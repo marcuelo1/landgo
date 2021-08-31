@@ -96,7 +96,7 @@ class _SellersState extends State<Sellers> {
               child: SafeArea(
                 child: Scaffold(
                   body: Scaffold(
-                    appBar: SharedWidgets.appBar(category['name']),
+                    appBar: SharedWidgets.appBar(context, category['name']),
                     body: SingleChildScrollView(
                       child: Container(
                         width: double.infinity,
@@ -228,7 +228,7 @@ class _SellersState extends State<Sellers> {
             onTap: (){
               Navigator.pushNamed(context, ListOfProducts.routeName, arguments: seller);
             },
-            child: SharedWidgets.seller(seller['image'], seller['name'], seller['address'], seller['rating'].toStringAsFixed(1), width, height)
+            child: SharedWidgets.seller(seller, width, height)
           )
         ]
       ],
@@ -261,7 +261,7 @@ class _SellersState extends State<Sellers> {
                 onTap: (){
                   Navigator.pushNamed(context, ListOfProducts.routeName, arguments: seller);
                 },
-                child: SharedWidgets.seller(seller['image'], seller['name'], seller['address'], seller['rating'].toStringAsFixed(1), width, height)
+                child: SharedWidgets.seller(seller, width, height)
               ),
             )
           ]

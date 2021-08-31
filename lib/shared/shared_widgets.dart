@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/cart/cart.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 
@@ -6,14 +7,14 @@ class SharedWidgets {
   /////////////////////
   /// A P P  B A R
   /// /////////////////
-  static AppBar appBar([String title = "LandGo"]){
+  static AppBar appBar(BuildContext context, [String title = "LandGo"]){
     return AppBar(
       title: _appBarTitle(title),
       centerTitle: true,
       backgroundColor: SharedStyle.black2,
       iconTheme: IconThemeData(color: SharedStyle.yellow),
       actions: [
-        _shoppingCart(),
+        _shoppingCart(context),
         // SizedBox(width: 20,),
         // _search(),
         SizedBox(width: 50,),
@@ -29,9 +30,11 @@ class SharedWidgets {
     );
   }
 
-  static Widget _shoppingCart(){
+  static Widget _shoppingCart(BuildContext context){
     return GestureDetector(
-      onTap: (){},
+      onTap: (){
+        Navigator.pushNamed(context, Cart.routeName);
+      },
       child: Icon(Icons.shopping_cart_outlined),
     );
   }
@@ -179,7 +182,12 @@ class SharedWidgets {
   static final double sellerImageHeight = 125;
   static final double sellerAddressWidth = 232;
 
-  static Widget seller(String url, String name, String address, String rating, double width, double height){
+  static Widget seller(Map seller, double width, double height){
+    String url = seller['image'];
+    String name = seller['name'];
+    String address = seller['address'];
+    String rating = seller['rating'].toStringAsFixed(1);
+
     return Column(
       children: [
         // Seller content

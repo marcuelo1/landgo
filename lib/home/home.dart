@@ -48,36 +48,48 @@ class _HomeState extends State<Home> {
 
   // sellers
   List sellers = [
-    [
-      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "Shed Twenty Three",
-      4.8,
-      'Hilado-Rizal Street 6100'
-    ],
-    [
-      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "Shed Twenty Three",
-      4.8,
-      'Hilado-Rizal Street 6100 Bacolod City, Villamonte'
-    ],
-    [
-      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "Shed Twenty Three",
-      4.8,
-      'Hilado-Rizal Street 6100 Bacolod City, Villamonte'
-    ],
-    [
-      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "Shed Twenty Three",
-      4.8,
-      'Hilado-Rizal Street 6100 Bacolod City, Villamonte'
-    ],
-    [
-      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "Shed Twenty Three",
-      4.8,
-      'Hilado-Rizal Street 6100 Bacolod City, Villamonte'
-    ]
+    {
+      "id": 1,
+      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+      "name": "Shed Twenty Three",
+      "rating":  4.8,
+      "address": 'Hilado-Rizal Street 6100'
+    },
+    {
+      "id": 1,
+      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+      "name": "Shed Twenty Three",
+      "rating":  4.8,
+      "address": 'Hilado-Rizal Street 6100'
+    },
+    {
+      "id": 1,
+      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+      "name": "Shed Twenty Three",
+      "rating":  4.8,
+      "address": 'Hilado-Rizal Street 6100'
+    },
+    {
+      "id": 1,
+      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+      "name": "Shed Twenty Three",
+      "rating":  4.8,
+      "address": 'Hilado-Rizal Street 6100'
+    },
+    {
+      "id": 1,
+      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+      "name": "Shed Twenty Three",
+      "rating":  4.8,
+      "address": 'Hilado-Rizal Street 6100'
+    },
+    {
+      "id": 1,
+      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+      "name": "Shed Twenty Three",
+      "rating":  4.8,
+      "address": 'Hilado-Rizal Street 6100'
+    }
   ];
 
   Map<String,String> _headers = {};
@@ -119,7 +131,7 @@ class _HomeState extends State<Home> {
                 scale: scale,
                 child: SafeArea(
                   child: Scaffold(
-                    appBar: SharedWidgets.appBar(),
+                    appBar: SharedWidgets.appBar(context),
                     drawer: Drawer(
                       child: SharedWidgets.sideBar(),
                     ),
@@ -330,7 +342,7 @@ class _HomeState extends State<Home> {
     return Column(
       children: [
         for (var store in sellers) ... [
-          SharedWidgets.seller(store[0], store[1], store[3], store[2].toStringAsFixed(1), width, height)
+          SharedWidgets.seller(store, width, height)
         ]
       ],
     );

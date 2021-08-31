@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/cart/cart.dart';
 import 'package:ryve_mobile/home/home.dart';
 import 'package:ryve_mobile/sellers/list_of_products.dart';
 import 'package:ryve_mobile/sellers/product.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: 'home',
+      initialRoute: 'signin',
       routes: {
         WelcomePage.routeName: (context) => WelcomePage(),
         SignUp.routeName: (context) => SignUp(),
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         Sellers.routeName: (context) => Sellers(),
         ListOfProducts.routeName: (context) => ListOfProducts(),
         Product.routeName: (context) => Product(),
+        Cart.routeName: (context) => Cart()
       },
     );
   }

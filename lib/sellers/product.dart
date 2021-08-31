@@ -128,7 +128,7 @@ class _ProductState extends State<Product> {
     return PixelPerfect(
       child: SafeArea(
         child: Scaffold(
-          appBar: SharedWidgets.appBar(seller['name']),
+          appBar: SharedWidgets.appBar(context, seller['name']),
           body: Padding(
             padding: EdgeInsets.fromLTRB(
               SharedFunction.scaleWidth(24, width), 

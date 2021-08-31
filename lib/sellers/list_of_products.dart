@@ -86,7 +86,7 @@ class _ListOfProductsState extends State<ListOfProducts> {
 
             return PixelPerfect(
               child: Scaffold(
-                appBar: SharedWidgets.appBar(""),
+                appBar: SharedWidgets.appBar(context, ""),
                 body: SingleChildScrollView(
                   child: Column(
                     children: [
