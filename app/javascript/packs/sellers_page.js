@@ -32,16 +32,6 @@ $(document).ready(function(){
         $(this).parent().parent().find('.product-price').text(price)
     })
 
-    $('body').on('click', '#add-product', function(){
-        url = $(this).attr("url")
-        $.ajax({
-            url: url,
-            dataType: "script",
-            data: {},
-            success: function(response){}
-        });
-    })
-
     $('.product-image').on('click', function(){
         image_url = $(this).find("img").attr("src");
         $("body").prepend(expandImage(image_url));
@@ -120,17 +110,7 @@ $(document).ready(function(){
         })
     })
 
-    $("body").on('click', '#create-product-category', function(){
-        url = $(this).attr("url")
-        $.ajax({
-            url: url,
-            dataType: "script",
-            data: {},
-            success: function(response){}
-        });
-    })
-
-    $("body").on('click', '#create-product-size', function(){
+    $("body").on('click', '.new-btn', function(){
         url = $(this).attr("url")
         $.ajax({
             url: url,

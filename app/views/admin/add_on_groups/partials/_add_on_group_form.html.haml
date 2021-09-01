@@ -1,4 +1,10 @@
-=form_with(url: "/admin/add_on/group", method: :post) do |f|
+.modal-bg
+.modal-content
+    .card 
+        .card-header 
+            %h3 Add Group
+        .card-body
+            =form_with(url: "/admin/add_on_groups", method: :post) do |f|
                 = hidden_field_tag :seller_id, @seller.id, {}
                 = f.text_field :name, {class: "form-control", placeholder: "Name"}
                 %br/

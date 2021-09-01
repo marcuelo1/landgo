@@ -39,9 +39,12 @@ Rails.application.routes.draw do
       get "/new", to: "product_size#new"
     end
 
-    scope :add_on do
-      post "/", to: "add_on#create"
-      post "/group", to: "add_on#group_create"
+    resources :add_ons do
+      
+    end
+
+    resources :add_on_groups do
+      
     end
   end
 
