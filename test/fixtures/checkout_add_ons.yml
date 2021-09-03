@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  checkout_product: one
+  add_on: one
+  name: MyString
+  price: 1.5
+
+two:
+  checkout_product: two
+  add_on: two
+  name: MyString
+  price: 1.5

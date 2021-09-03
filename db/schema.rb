@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_30_051243) do
+ActiveRecord::Schema.define(version: 2021_09_03_035835) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -134,6 +134,52 @@ ActiveRecord::Schema.define(version: 2021_08_30_051243) do
     t.index ["category_id"], name: "index_category_deals_on_category_id"
   end
 
+  create_table "checkout_add_ons", force: :cascade do |t|
+    t.bigint "checkout_product_id", null: false
+    t.bigint "add_on_id", null: false
+    t.string "name"
+    t.float "price"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["add_on_id"], name: "index_checkout_add_ons_on_add_on_id"
+    t.index ["checkout_product_id"], name: "index_checkout_add_ons_on_checkout_product_id"
+  end
+
+  create_table "checkout_products", force: :cascade do |t|
+    t.bigint "checkout_seller_id", null: false
+    t.bigint "product_id", null: false
+    t.bigint "product_price_id", null: false
+    t.string "size"
+    t.float "price"
+    t.integer "quantity"
+    t.float "total"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["checkout_seller_id"], name: "index_checkout_products_on_checkout_seller_id"
+    t.index ["product_id"], name: "index_checkout_products_on_product_id"
+    t.index ["product_price_id"], name: "index_checkout_products_on_product_price_id"
+  end
+
+  create_table "checkout_sellers", force: :cascade do |t|
+    t.bigint "checkout_id", null: false
+    t.bigint "seller_id", null: false
+    t.float "delivery_fee"
+    t.float "total"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["checkout_id"], name: "index_checkout_sellers_on_checkout_id"
+    t.index ["seller_id"], name: "index_checkout_sellers_on_seller_id"
+  end
+
+  create_table "checkouts", force: :cascade do |t|
+    t.bigint "buyer_id", null: false
+    t.integer "status"
+    t.float "total"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["buyer_id"], name: "index_checkouts_on_buyer_id"
+  end
+
   create_table "product_add_ons", force: :cascade do |t|
     t.bigint "product_id", null: false
     t.bigint "add_on_group_id", null: false
@@ -220,6 +266,14 @@ ActiveRecord::Schema.define(version: 2021_08_30_051243) do
   add_foreign_key "carts", "products"
   add_foreign_key "carts", "sellers"
   add_foreign_key "category_deals", "categories"
+  add_foreign_key "checkout_add_ons", "add_ons"
+  add_foreign_key "checkout_add_ons", "checkout_products"
+  add_foreign_key "checkout_products", "checkout_sellers"
+  add_foreign_key "checkout_products", "product_prices"
+  add_foreign_key "checkout_products", "products"
+  add_foreign_key "checkout_sellers", "checkouts"
+  add_foreign_key "checkout_sellers", "sellers"
+  add_foreign_key "checkouts", "buyers"
   add_foreign_key "product_add_ons", "add_on_groups"
   add_foreign_key "product_add_ons", "products"
   add_foreign_key "product_categories", "sellers"

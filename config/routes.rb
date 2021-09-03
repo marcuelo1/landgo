@@ -40,11 +40,9 @@ Rails.application.routes.draw do
     end
 
     resources :add_ons do
-      
     end
 
     resources :add_on_groups do
-      
     end
   end
 
@@ -64,6 +62,9 @@ Rails.application.routes.draw do
         collection do
           get :list_of_sellers
         end
+      end
+
+      resources :checkouts do
       end
     end
 
