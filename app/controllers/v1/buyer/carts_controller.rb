@@ -33,6 +33,14 @@ class V1::Buyer::CartsController < ApiController
 
         render json: {success: true}, status: 200
     end
+
+    def update
+        @cart = Cart.find(params[:id])
+
+        @cart.update(quantity: params[:quantity], total: params[:total])
+
+        render json: {success: true}, status: 200
+    end
     
     private
     def cart_params

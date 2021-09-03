@@ -1,9 +1,5 @@
 class CartBlueprint < Blueprinter::Base
-    fields :quantity, :total
-
-    field :cart_id do |cart|
-        cart.id
-    end
+    fields :id, :quantity, :total
 
     field :product do |cart|
         ProductBlueprint.render(cart.product)

@@ -10,6 +10,10 @@ class ProductBlueprint < Blueprinter::Base
     end
 
     field :price do |product|
-        100.0
+        if product.product_prices.count == 1
+            product.product_prices.first.price 
+        else
+            0
+        end
     end
 end
