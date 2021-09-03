@@ -89,6 +89,27 @@ class SharedStyle {
   fontFamily: 'Poppins-Bold'
  );
 
+ static final titleYellow = TextStyle(
+  color: SharedStyle.yellow,
+  fontSize: 35,
+  fontWeight: FontWeight.bold,
+  fontFamily: 'Poppins-Bold'
+ );
+
+ static final subTitle = TextStyle(
+  color: SharedStyle.black,
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  fontFamily: 'Poppins-Bold'
+ );
+
+ static final subTitleYellow = TextStyle(
+  color: SharedStyle.yellow,
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  fontFamily: 'Poppins-Bold'
+ );
+
   static final yellowBtn = ButtonStyle(
     backgroundColor: MaterialStateProperty.all(SharedStyle.yellow),
     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
