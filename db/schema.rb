@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_03_035835) do
+ActiveRecord::Schema.define(version: 2021_09_07_052624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -178,6 +178,21 @@ ActiveRecord::Schema.define(version: 2021_09_03_035835) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["buyer_id"], name: "index_checkouts_on_buyer_id"
+  end
+
+  create_table "locations", force: :cascade do |t|
+    t.string "user_type", null: false
+    t.bigint "user_id", null: false
+    t.string "name"
+    t.float "longitude"
+    t.float "latitude"
+    t.string "details"
+    t.string "street"
+    t.string "city"
+    t.string "province"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_type", "user_id"], name: "index_locations_on_user_type_and_user_id"
   end
 
   create_table "product_add_ons", force: :cascade do |t|

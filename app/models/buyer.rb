@@ -8,4 +8,5 @@ class Buyer < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   has_many :carts
+  has_many :locations, as: :user
 end

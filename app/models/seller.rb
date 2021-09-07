@@ -14,6 +14,7 @@ class Seller < ActiveRecord::Base
   has_many :product_sizes
   has_many :add_on_groups
   has_many :add_ons, through: :add_on_groups
+  has_many :locations, as: :user
 
   def rating
     4.8
