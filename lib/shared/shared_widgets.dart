@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ryve_mobile/cart/cart.dart';
+import 'package:ryve_mobile/locations/list_of_locations.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 
@@ -14,8 +15,9 @@ class SharedWidgets {
       backgroundColor: SharedStyle.black2,
       iconTheme: IconThemeData(color: SharedStyle.yellow),
       actions: [
+        _locations(context),
+        SizedBox(width: 10,),
         _shoppingCart(context),
-        // SizedBox(width: 20,),
         // _search(),
         SizedBox(width: 50,),
       ],
@@ -43,6 +45,14 @@ class SharedWidgets {
     return GestureDetector(
       onTap: (){},
       child: Icon(Icons.search),
+    );
+  }
+  static Widget _locations(BuildContext context){
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, ListOfLocations.routeName);
+      },
+      child: Icon(Icons.location_on_outlined),
     );
   }
 
