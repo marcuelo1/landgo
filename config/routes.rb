@@ -66,6 +66,9 @@ Rails.application.routes.draw do
 
       resources :checkouts do
       end
+
+      resources :locations do
+      end
     end
 
     ###############################################
