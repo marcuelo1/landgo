@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/sellers/product_style.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
@@ -125,67 +124,65 @@ class _ProductState extends State<Product> {
   }
 
   Widget content(){
-    return PixelPerfect(
-      child: SafeArea(
-        child: Scaffold(
-          appBar: SharedWidgets.appBar(context, seller['name']),
-          body: Padding(
-            padding: EdgeInsets.fromLTRB(
-              SharedFunction.scaleWidth(24, width), 
-              SharedFunction.scaleHeight(20, height), 
-              SharedFunction.scaleWidth(24, width), 
-              SharedFunction.scaleHeight(0, height)
-            ),
-            child: SingleChildScrollView(
-              child: Container(
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // product image
-                    productImage(product['image']),
-                    // space
-                    SizedBox(height: SharedFunction.scaleHeight(18, height),),
-                    // product name
-                    productName(product['name']),
-                    // space
-                    SizedBox(height: SharedFunction.scaleHeight(7, height),),
-                    // product price
-                    if(sizes.length == 1) ... [
-                      productPrice(displayPrice),
-                      // space
-                      SizedBox(height: SharedFunction.scaleHeight(30, height),),
-                    ],
-                    // product size
-                    if(sizes.length > 1) ... [
-                      productSizes(sizes),
-                      // space
-                      SizedBox(height: SharedFunction.scaleHeight(30, height),),
-                    ],
-                    // product add ons
-                    if(add_on_groups.length > 0) ... [
-                      productAddOns(add_on_groups),
-                      // space
-                      SizedBox(height: SharedFunction.scaleHeight(30, height),),
-                    ],
-                    // Quantity
-                    quantity(),
+    return SafeArea(
+      child: Scaffold(
+        appBar: SharedWidgets.appBar(context, seller['name']),
+        body: Padding(
+          padding: EdgeInsets.fromLTRB(
+            SharedFunction.scaleWidth(24, width), 
+            SharedFunction.scaleHeight(20, height), 
+            SharedFunction.scaleWidth(24, width), 
+            SharedFunction.scaleHeight(0, height)
+          ),
+          child: SingleChildScrollView(
+            child: Container(
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // product image
+                  productImage(product['image']),
+                  // space
+                  SizedBox(height: SharedFunction.scaleHeight(18, height),),
+                  // product name
+                  productName(product['name']),
+                  // space
+                  SizedBox(height: SharedFunction.scaleHeight(7, height),),
+                  // product price
+                  if(sizes.length == 1) ... [
+                    productPrice(displayPrice),
                     // space
                     SizedBox(height: SharedFunction.scaleHeight(30, height),),
-                    // Total
-                    total(),
-                    // space
-                    SizedBox(height: SharedFunction.scaleHeight(45, height),),
-                    // Add to cart
-                    addToBasketBtn(),
-                    // space
-                    SizedBox(height: SharedFunction.scaleHeight(80, height),),
                   ],
-                ),
+                  // product size
+                  if(sizes.length > 1) ... [
+                    productSizes(sizes),
+                    // space
+                    SizedBox(height: SharedFunction.scaleHeight(30, height),),
+                  ],
+                  // product add ons
+                  if(add_on_groups.length > 0) ... [
+                    productAddOns(add_on_groups),
+                    // space
+                    SizedBox(height: SharedFunction.scaleHeight(30, height),),
+                  ],
+                  // Quantity
+                  quantity(),
+                  // space
+                  SizedBox(height: SharedFunction.scaleHeight(30, height),),
+                  // Total
+                  total(),
+                  // space
+                  SizedBox(height: SharedFunction.scaleHeight(45, height),),
+                  // Add to cart
+                  addToBasketBtn(),
+                  // space
+                  SizedBox(height: SharedFunction.scaleHeight(80, height),),
+                ],
               ),
             ),
           ),
-        )
+        ),
       )
     );
   }

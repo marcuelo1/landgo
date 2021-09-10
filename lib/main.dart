@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: 'add_location',
+      initialRoute: '/',
       debugShowCheckedModeBanner: false,
       routes: {
         WelcomePage.routeName: (context) => WelcomePage(),

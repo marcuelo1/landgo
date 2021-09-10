@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/sign_in/sign_in.dart';
@@ -53,80 +52,42 @@ class _WelcomePageState extends State<WelcomePage> {
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
     
-    return PixelPerfect(
-      scale: scale,
-      child: SafeArea(
-        child: Scaffold(
-          body: Container(
-            height: double.infinity,
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(7.5, 4.5, 7.5, 0),
-            decoration: BoxDecoration(
-              color: SharedStyle.yellow
-            ),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Stack(
-                children: [
-                  /// WHITE CONTAINER
-                  whiteContainer(context),
-                  /// CONTENT
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      /// SLIDERS
-                      sliders(context),
-                      /// SLIDERS INDICATOR
-                      sliderIndicator(context),
-                      /// JOIN RYVE
-                      joinRyve(context),
-                      /// ALREADY REGISTERED
-                      signIn(context)
-                    ],
-                  )
-                ],
-              ),
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          padding: EdgeInsets.fromLTRB(7.5, 4.5, 7.5, 0),
+          decoration: BoxDecoration(
+            color: SharedStyle.yellow
+          ),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Stack(
+              children: [
+                /// WHITE CONTAINER
+                whiteContainer(context),
+                /// CONTENT
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    /// SLIDERS
+                    sliders(context),
+                    /// SLIDERS INDICATOR
+                    sliderIndicator(context),
+                    /// JOIN RYVE
+                    joinRyve(context),
+                    /// ALREADY REGISTERED
+                    signIn(context)
+                  ],
+                )
+              ],
             ),
           ),
         ),
-      )
+      ),
     );
-    // return SafeArea(
-    //   child: Scaffold(
-    //     body: Container( /// BACKGROUND
-    //       decoration: BoxDecoration(
-    //         color: SharedStyle.yellow
-    //       ),
-    //       height: double.infinity,
-    //       width: double.infinity,
-    //       child: Align( 
-    //         alignment: Alignment.bottomCenter,
-    //         child: Stack(
-    //           children: [
-    //             /// WHITE CONTAINER
-    //             whiteContainer(context),
-    //             /// CONTENT
-    //             Column(
-    //               mainAxisSize: MainAxisSize.min,
-    //               crossAxisAlignment: CrossAxisAlignment.center,
-    //               children: [
-    //                 /// SLIDERS
-    //                 sliders(context),
-    //                 /// SLIDERS INDICATOR
-    //                 sliderIndicator(context),
-    //                 /// JOIN RYVE
-    //                 joinRyve(context),
-    //                 /// ALREADY REGISTERED
-    //                 signIn(context)
-    //               ],
-    //             )
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   Widget whiteContainer(context){

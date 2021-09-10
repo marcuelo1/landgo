@@ -31,7 +31,6 @@ dependencies:
   
   # NEW
   carousel_slider: ^3.0.0
-  pixel_perfect: ^1.0.8
   http: ^0.13.3
   flutter_spinkit: ^5.0.0
   shared_preferences: ^2.0.6

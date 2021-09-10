@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/sellers/product_style.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';

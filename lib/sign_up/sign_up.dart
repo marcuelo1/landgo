@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
@@ -82,23 +81,20 @@ class _SignUpState extends State<SignUp> {
         break;
     }
 
-    return loading ? Loading() : PixelPerfect(
-      scale: scale,
-      child: SafeArea(
-        child: Padding(
+    return loading ? Loading() : SafeArea(
+      child: Scaffold(
+        body: Padding(
           padding: EdgeInsets.fromLTRB(
             SharedFunction.scaleWidth(37.5, width), 
             SharedFunction.scaleHeight(226, height), 
             SharedFunction.scaleWidth(37.5, width), 
             SharedFunction.scaleHeight(48, height)
           ),
-          child: Scaffold(
-            body: Column(
-              children: page,
-            ),
+          child: Column(
+            children: page,
           ),
         ),
-      )
+      ),
     );
   }
 

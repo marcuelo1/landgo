@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/home/home_style.dart';
 import 'package:ryve_mobile/sellers/sellers.dart';
 import 'package:ryve_mobile/shared/headers.dart';
@@ -127,29 +126,26 @@ class _HomeState extends State<Home> {
               Map responseBody = response['body'];
               categories = json.decode(responseBody['categories']);
               
-              return PixelPerfect(
-                scale: scale,
-                child: SafeArea(
-                  child: Scaffold(
-                    appBar: SharedWidgets.appBar(context),
-                    drawer: Drawer(
-                      child: SharedWidgets.sideBar(),
-                    ),
-                    body: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      decoration: BoxDecoration(color: SharedStyle.yellow),
-                      child: Stack(
-                        children: [
-                          // static page
-                          staticPage(),
-                          // draggable page
-                          draggablePage()
-                        ],
-                      ),
+              return SafeArea(
+                child: Scaffold(
+                  appBar: SharedWidgets.appBar(context),
+                  drawer: Drawer(
+                    child: SharedWidgets.sideBar(),
+                  ),
+                  body: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    decoration: BoxDecoration(color: SharedStyle.yellow),
+                    child: Stack(
+                      children: [
+                        // static page
+                        staticPage(),
+                        // draggable page
+                        draggablePage()
+                      ],
                     ),
                   ),
-                )
+                ),
               );
             }
         }

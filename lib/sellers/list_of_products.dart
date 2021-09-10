@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/sellers/list_of_products_style.dart';
 import 'package:ryve_mobile/sellers/product.dart';
 import 'package:ryve_mobile/shared/headers.dart';
@@ -84,22 +83,20 @@ class _ListOfProductsState extends State<ListOfProducts> {
               products = json.decode(responseBody['products']);
             }
 
-            return PixelPerfect(
-              child: Scaffold(
-                appBar: SharedWidgets.appBar(context, ""),
-                body: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      // seller image
-                      sellerImage(seller['image']),
-                      // product categories
-                      productCategories(product_categories),
-                      // list of products
-                      listOfProducts(products)
-                    ],
-                  ),
+            return Scaffold(
+              appBar: SharedWidgets.appBar(context, ""),
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // seller image
+                    sellerImage(seller['image']),
+                    // product categories
+                    productCategories(product_categories),
+                    // list of products
+                    listOfProducts(products)
+                  ],
                 ),
-              )
+              ),
             );
         }
       }

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:pixel_perfect/pixel_perfect.dart';
 import 'package:ryve_mobile/sellers/list_of_products.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
@@ -92,39 +91,37 @@ class _SellersState extends State<Sellers> {
               all_sellers = json.decode(responseBody['all_sellers']);
             }
 
-            return PixelPerfect(
-              child: SafeArea(
-                child: Scaffold(
-                  body: Scaffold(
-                    appBar: SharedWidgets.appBar(context, category['name']),
-                    body: SingleChildScrollView(
-                      child: Container(
-                        width: double.infinity,
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            SharedFunction.scaleWidth(10, width), 
-                            SharedFunction.scaleHeight(19, height), 
-                            SharedFunction.scaleWidth(10, width), 
-                            SharedFunction.scaleHeight(0, height)
-                          ),
-                          child: Column(
-                            children: [
-                              // search bar
-                              // category deals
-                              categoryDeals(),
-                              // top stores
-                              topSellers(),
-                              // recent stores
-                              recentSellers(),
-                              // all stores
-                              allStores()
-                            ],
-                          ),
+            return SafeArea(
+              child: Scaffold(
+                body: Scaffold(
+                  appBar: SharedWidgets.appBar(context, category['name']),
+                  body: SingleChildScrollView(
+                    child: Container(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          SharedFunction.scaleWidth(10, width), 
+                          SharedFunction.scaleHeight(19, height), 
+                          SharedFunction.scaleWidth(10, width), 
+                          SharedFunction.scaleHeight(0, height)
+                        ),
+                        child: Column(
+                          children: [
+                            // search bar
+                            // category deals
+                            categoryDeals(),
+                            // top stores
+                            topSellers(),
+                            // recent stores
+                            recentSellers(),
+                            // all stores
+                            allStores()
+                          ],
                         ),
                       ),
                     ),
                   ),
-                )
+                ),
               )
             );
         }
