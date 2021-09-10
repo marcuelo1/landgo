@@ -3,10 +3,10 @@ class Location < ApplicationRecord
   
   # Geocode
   reverse_geocoded_by :latitude, :longitude
-  after_validation :reverse_geocode if :coordinates_changed? 
+  # after_validation :reverse_geocode if :coordinates_changed? 
 
   def address 
-    [street, city, province].compact.join(", ") 
+    [street, city, village, state].compact.join(", ") 
   end 
 
   def address_changed? 
@@ -17,5 +17,4 @@ class Location < ApplicationRecord
     latitude_changed? || longitude_changed?
   end
 
-  
 end

@@ -13,6 +13,7 @@ class V1::Buyer::LocationsController < ApiController
         geo_object = Geocoder.search([params[:latitude], params[:longitude]]).first.data
         
         address = geo_object['address']
+        print(address)
         @location.street = address['road']
         @location.village = address['village'] ? address['village'] : address['suburb']
         @location.city = address['city']
