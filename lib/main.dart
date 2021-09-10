@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ryve_mobile/cart/cart.dart';
 import 'package:ryve_mobile/home/home.dart';
+import 'package:ryve_mobile/locations/add_location.dart';
 import 'package:ryve_mobile/locations/list_of_locations.dart';
 import 'package:ryve_mobile/sellers/list_of_products.dart';
 import 'package:ryve_mobile/sellers/product.dart';
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: 'home',
+      initialRoute: 'add_location',
+      debugShowCheckedModeBanner: false,
       routes: {
         WelcomePage.routeName: (context) => WelcomePage(),
         SignUp.routeName: (context) => SignUp(),
@@ -32,6 +34,7 @@ class MyApp extends StatelessWidget {
         Product.routeName: (context) => Product(),
         Cart.routeName: (context) => Cart(),
         ListOfLocations.routeName: (context) => ListOfLocations(),
+        AddLocation.routeName: (context) => AddLocation(),
       },
     );
   }

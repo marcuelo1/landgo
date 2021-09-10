@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/locations/add_location.dart';
 import 'package:ryve_mobile/locations/list_of_locations_style.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
@@ -25,6 +26,8 @@ class _ListOfLocationsState extends State<ListOfLocations> {
   // dimensions
   final double addressWidth = 347;
   final double addressHeight = 60;
+  final double addBtnWidth = 150;
+  final double addBtnHeight = 30;
 
   List addresses = [
     {
@@ -71,8 +74,9 @@ class _ListOfLocationsState extends State<ListOfLocations> {
           ),
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                addAddress(),
                 for (var _address in addresses) ... [
                   address(_address)
                 ]
@@ -162,6 +166,25 @@ class _ListOfLocationsState extends State<ListOfLocations> {
         icon: Icon(
           Icons.edit
         ),
+      ),
+    );
+  }
+
+  Widget addAddress(){
+    return Container(
+      width: SharedFunction.scaleWidth(addBtnWidth, width),
+      height: SharedFunction.scaleHeight(addBtnHeight, height),
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.pushNamed(context, AddLocation.routeName);
+        }, 
+        style: SharedStyle.yellowBtn,
+        child: Center(
+          child: Text(
+            "Add Address",
+            style: SharedStyle.yellowBtnText,
+          ),
+        )
       ),
     );
   }
