@@ -193,6 +193,10 @@ class _AddLocationState extends State<AddLocation> {
 
           var _response = await SharedFunction.sendData(_dataUrlAddLoc, _headers, _data);
           print(_response);
+
+          if(_response['status'] == 200){
+            Navigator.pop(context);
+          }
         },
         style: SharedStyle.yellowBtn,
         child: Center(

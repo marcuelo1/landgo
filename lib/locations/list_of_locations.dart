@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ryve_mobile/locations/add_location.dart';
 import 'package:ryve_mobile/locations/list_of_locations_style.dart';
 import 'package:ryve_mobile/shared/headers.dart';
+import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
@@ -16,7 +19,8 @@ class ListOfLocations extends StatefulWidget {
 
 class _ListOfLocationsState extends State<ListOfLocations> {
   // url
-  String _dataUrl ="${SharedUrl.root}/${SharedUrl.version}/buyer/carts/list_of_sellers";
+  String _dataUrl ="${SharedUrl.root}/${SharedUrl.version}/buyer/locations";
+  String _selectAddressUrl ="${SharedUrl.root}/${SharedUrl.version}/buyer/locations";
 
   // variables for scale functions
   late double width;
@@ -24,23 +28,17 @@ class _ListOfLocationsState extends State<ListOfLocations> {
   late double scale;
 
   // dimensions
+  final double addressDetailWidth = 200;
   final double addressWidth = 347;
   final double addressHeight = 60;
   final double addBtnWidth = 150;
   final double addBtnHeight = 30;
 
-  List addresses = [
-    {
-      "id": 1,
-      "name": "Home",
-      "details": "Bacolod City, Negros Occidental"
-    },
-    {
-      "id": 2,
-      "name": "Office",
-      "details": "Bacolod City, Negros Occidental"
-    }
-  ];
+  // response
+  Map response = {};
+  Map responseBody = {};
+
+  List locations = [];
   int selectedAddress = 0;
 
   // headers
@@ -58,7 +56,39 @@ class _ListOfLocationsState extends State<ListOfLocations> {
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
 
-    return content(context);
+    return responseBody.isNotEmpty 
+    ? content(context) 
+    : FutureBuilder(
+      future: SharedFunction.getData(_dataUrl, _headers),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        // Connection state of getting the data
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Text("check internet");
+          case ConnectionState.waiting: // Retrieving
+            return Loading();
+          default: // Success of connecting to back end
+            // check if snapshot has an error
+            if (snapshot.hasError) {
+              return Text("Error: ${snapshot.error}");
+            }
+
+            // get response
+            response = snapshot.data;
+            responseBody = response['body'];
+            print(responseBody);
+            print("==============================================================");
+
+            if (responseBody["locations"].length > 0) {
+              locations = json.decode(responseBody["locations"]);
+            }
+
+            selectedAddress = responseBody["selected_location"];
+
+            return content(context);
+        }
+      }
+    );
   }
 
   Widget content(BuildContext context){
@@ -77,8 +107,8 @@ class _ListOfLocationsState extends State<ListOfLocations> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 addAddress(),
-                for (var _address in addresses) ... [
-                  address(_address)
+                for (var _location in locations) ... [
+                  address(_location)
                 ]
               ],
             ),
@@ -88,11 +118,11 @@ class _ListOfLocationsState extends State<ListOfLocations> {
     );
   }
 
-  Widget address(Map _address){
+  Widget address(Map _location){
     return Container(
       width: SharedFunction.scaleWidth(addressWidth, width),
       height: SharedFunction.scaleHeight(addressHeight, height),
-      decoration: selectedAddress == _address['id'] ? ListOfLocationsStyle.addressSelectedContainer : ListOfLocationsStyle.addressUnselectedContainer,
+      decoration: selectedAddress == _location['id'] ? ListOfLocationsStyle.addressSelectedContainer : ListOfLocationsStyle.addressUnselectedContainer,
       child: Padding(
         padding: EdgeInsets.only(
           left: SharedFunction.scaleWidth(15, width),
@@ -103,30 +133,32 @@ class _ListOfLocationsState extends State<ListOfLocations> {
           children: [
             // radio button
             // address details
-            addressDetails(_address),
+            addressDetails(_location),
             // edit button
-            addressEditBtn(_address)
+            addressEditBtn(_location)
           ],
         ),
       ),
     );
   }
 
-  Widget addressDetails(Map _address){
+  Widget addressDetails(Map _location){
     return GestureDetector(
       onTap: () {
         setState(() {
-          selectedAddress = _address['id'];
+          selectedAddress = _location['id'];
         });
+        String _rawUrl = _selectAddressUrl + "/select_location?id=$selectedAddress";
+        var _response = SharedFunction.sendData(_rawUrl, _headers, {});
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // address name with icon
-          addressName(_address['name']),
+          addressName(_location['name']),
           // address location
-          addressLocation(_address['details'])
+          addressLocation(_location['details'])
         ],
       ),
     );
@@ -151,17 +183,21 @@ class _ListOfLocationsState extends State<ListOfLocations> {
   }
 
   Widget addressLocation(String _location){
-    return Text(
-      _location,
-      style: ListOfLocationsStyle.addressLocation,
+    return Container(
+      width: SharedFunction.scaleWidth(addressDetailWidth, width),
+      child: Text(
+        _location,
+        style: ListOfLocationsStyle.addressLocation,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 
-  Widget addressEditBtn(Map _address){
+  Widget addressEditBtn(Map _location){
     return Center(
       child: IconButton(
         onPressed: (){
-          print("object");
+          print(_location['id']);
         },
         icon: Icon(
           Icons.edit
