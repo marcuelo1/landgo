@@ -9,4 +9,10 @@ class Buyer < ActiveRecord::Base
 
   has_many :carts
   has_many :locations, as: :user
+
+  def selected_location
+    loc = self.locations.where(selected: true).first
+
+    return loc ? loc.id : 0
+  end
 end
