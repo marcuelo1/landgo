@@ -1,7 +1,7 @@
 class LocationBlueprint < Blueprinter::Base
-    fields :id, :name, :latitude, :longitude
+    fields :id, :name, :latitude, :longitude, :details
 
-    field :details do |location|
+    field :description do |location|
         location.address
     end
 end

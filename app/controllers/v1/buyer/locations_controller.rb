@@ -1,7 +1,7 @@
 class V1::Buyer::LocationsController < ApiController
     before_action :authenticate_v1_buyer!
     before_action :set_buyer
-    before_action :set_location, only: [:select_location]
+    before_action :set_location, only: [:select_location, :update]
     before_action :set_locations, only: [:index, :select_location]
 
     def index
@@ -25,6 +25,12 @@ class V1::Buyer::LocationsController < ApiController
         else
             render json: {error: @location.errors}, status: 500
         end
+    end
+
+    def update
+        @location.update(location_params)
+
+        render json: {success: true}, status: 200
     end
 
     def select_location
