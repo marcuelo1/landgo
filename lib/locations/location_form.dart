@@ -6,14 +6,14 @@ import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/shared/shared_widgets.dart';
 
-class AddLocation extends StatefulWidget {
+class LocationForm extends StatefulWidget {
   static const String routeName = "add_location";
 
   @override
-  _AddLocationState createState() => _AddLocationState();
+  _LocationFormState createState() => _LocationFormState();
 }
 
-class _AddLocationState extends State<AddLocation> {
+class _LocationFormState extends State<LocationForm> {
   // url
   String _dataUrlAddLoc = "${SharedUrl.root}/${SharedUrl.version}/buyer/locations";
 
@@ -29,11 +29,6 @@ class _AddLocationState extends State<AddLocation> {
   late double height;
   late double scale;
 
-  final _initialCameraPosition = CameraPosition(
-    target: LatLng(10.6315881, 122.9738012),
-    zoom: 15
-  );
-
   // controller
   late GoogleMapController _googleMapController;
 
@@ -45,6 +40,8 @@ class _AddLocationState extends State<AddLocation> {
   var coordinates;
   var _details;
   var _name;
+  var location;
+  var _initialCameraPosition;
 
   // headers
   Map<String, String> _headers = {};
@@ -66,6 +63,23 @@ class _AddLocationState extends State<AddLocation> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
+
+    // arguments
+    final Map args = ModalRoute.of(context)!.settings.arguments as Map;
+    // ignore: unnecessary_null_comparison
+    if(args != null){
+      location = args['location'];
+      _initialCameraPosition = CameraPosition(
+        target: LatLng(location['latitude'], location['longitude']),
+        zoom: 15
+      );
+    }else{
+      _initialCameraPosition = CameraPosition(
+        target: LatLng(10.6315881, 122.9738012),
+        zoom: 15
+      );
+    }
+
 
     return SafeArea(
       child: Scaffold(
@@ -131,6 +145,7 @@ class _AddLocationState extends State<AddLocation> {
       zoomControlsEnabled: true,
       initialCameraPosition: _initialCameraPosition,
       onMapCreated: (controller) => _googleMapController = controller,
+      myLocationEnabled: true,
       markers: {
         if (pinMarker != null) pinMarker
       },
@@ -190,8 +205,19 @@ class _AddLocationState extends State<AddLocation> {
             "name": _name,
             "details": _details,
           };
+          
+          late String _rawUrl;
+          var _response;
 
-          var _response = await SharedFunction.sendData(_dataUrlAddLoc, _headers, _data);
+          if(location != null){
+            _rawUrl = _dataUrlAddLoc +  "/${location['id']}";
+
+            _response = await SharedFunction.sendData(_rawUrl, _headers, _data, "put");
+          }else{
+            _rawUrl = _dataUrlAddLoc;
+
+            _response = await SharedFunction.sendData(_rawUrl, _headers, _data);
+          }
           print(_response);
 
           if(_response['status'] == 200){
@@ -201,7 +227,7 @@ class _AddLocationState extends State<AddLocation> {
         style: SharedStyle.yellowBtn,
         child: Center(
           child: Text(
-            "Add Location",
+            "Save Location",
             style: SharedStyle.yellowBtnText,
           ),
         ),
@@ -212,6 +238,7 @@ class _AddLocationState extends State<AddLocation> {
   Widget nameInput(){
     return TextFormField(
       decoration: InputDecoration(labelText: "Name"),
+      initialValue: location != null ? location['name'] : "",
       validator: (value) {
         if(value!.isEmpty){
           return "Name is required";
@@ -224,6 +251,7 @@ class _AddLocationState extends State<AddLocation> {
   Widget detailsInput(){
     return TextFormField(
       decoration: InputDecoration(labelText: "Floor/Unit/Room #"),
+      initialValue: location != null ? location['details'] : "",
       onSaved: (value) => _details = value,
     );
   }

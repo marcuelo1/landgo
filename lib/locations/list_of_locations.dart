@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:ryve_mobile/locations/add_location.dart';
+import 'package:ryve_mobile/locations/location_form.dart';
 import 'package:ryve_mobile/locations/list_of_locations_style.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
@@ -158,7 +158,7 @@ class _ListOfLocationsState extends State<ListOfLocations> {
           // address name with icon
           addressName(_location['name']),
           // address location
-          addressLocation(_location['details'])
+          addressLocation(_location['description'])
         ],
       ),
     );
@@ -198,6 +198,7 @@ class _ListOfLocationsState extends State<ListOfLocations> {
       child: IconButton(
         onPressed: (){
           print(_location['id']);
+          Navigator.pushNamed(context, LocationForm.routeName, arguments: {"location": _location});
         },
         icon: Icon(
           Icons.edit
@@ -212,7 +213,7 @@ class _ListOfLocationsState extends State<ListOfLocations> {
       height: SharedFunction.scaleHeight(addBtnHeight, height),
       child: ElevatedButton(
         onPressed: () {
-          Navigator.pushNamed(context, AddLocation.routeName);
+          Navigator.pushNamed(context, LocationForm.routeName);
         }, 
         style: SharedStyle.yellowBtn,
         child: Center(
