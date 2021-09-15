@@ -35,6 +35,8 @@ class _SellersState extends State<Sellers> {
   List recent_sellers = [];
   // all sellers
   List all_sellers = [];
+  
+  Map location = {};
 
   // response
   Map response = {};
@@ -55,9 +57,9 @@ class _SellersState extends State<Sellers> {
 
     final Map category = ModalRoute.of(context)!.settings.arguments as Map;
     print(category);
-    _dataUrl = _dataUrl + "?id=${category['id']}";
+    
     return FutureBuilder(
-      future: SharedFunction.getData(_dataUrl, _headers),
+      future: SharedFunction.getDataWithLoc(_dataUrl, _headers, location, {"id": category['id']}),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         // Connection state of getting the data
         switch (snapshot.connectionState) {

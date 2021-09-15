@@ -26,7 +26,7 @@ class SharedFunction {
     }
   }
   
-  static Future<Map> getDataWithLoc(String rawUrl, Map<String,String> headers, Map _location) async {
+  static Future<Map> getDataWithLoc(String rawUrl, Map<String,String> headers, Map _location, [body]) async {
     // location
     var _latitude;
     var _longitude;
@@ -37,13 +37,19 @@ class SharedFunction {
       _latitude = currentCoordinates.latitude;
       _longitude = currentCoordinates.longitude;
       _isCurrent = true;
+
+      rawUrl += "?latitude=$_latitude&longitude=$_longitude&is_current=$_isCurrent";
     }else{
-      _latitude = _location['latitude'];
-      _longitude = _location['longitude'];
       _isCurrent = false;
+
+      rawUrl += "?location_id=${_location['id']}&is_current=$_isCurrent";
     }
 
-    rawUrl += "?latitude=$_latitude&longitude=$_longitude&is_current=$_isCurrent";
+    if(body != null){
+      body.forEach((key, value) {
+        rawUrl += "&$key=$value";
+      });
+    }
     
     try {
       var url = Uri.parse(rawUrl);
