@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
@@ -34,7 +35,6 @@ class _LocationFormState extends State<LocationForm> {
 
   // form key
   final formKey = GlobalKey<FormState>();
-
   // variables
   var pinMarker;
   var coordinates;
@@ -42,6 +42,21 @@ class _LocationFormState extends State<LocationForm> {
   var _name;
   var location;
   var _initialCameraPosition;
+  
+  // get current location
+  late LatLng currentLocation;
+
+  void locatePosition() async {
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    LatLng currentCoordinates = LatLng(position.latitude, position.longitude);
+
+    CameraPosition currentCamPos = new CameraPosition(
+      target: currentCoordinates,
+      zoom: 15
+    );
+    
+    _googleMapController.animateCamera(CameraUpdate.newCameraPosition(currentCamPos));
+  }
 
   // headers
   Map<String, String> _headers = {};
@@ -144,8 +159,13 @@ class _LocationFormState extends State<LocationForm> {
       myLocationButtonEnabled: false,
       zoomControlsEnabled: true,
       initialCameraPosition: _initialCameraPosition,
-      onMapCreated: (controller) => _googleMapController = controller,
-      myLocationEnabled: true,
+      onMapCreated: (controller){
+        _googleMapController = controller;
+
+        if(location == null){
+          locatePosition();
+        }
+      },
       markers: {
         if (pinMarker != null) pinMarker
       },
