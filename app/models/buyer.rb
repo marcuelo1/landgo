@@ -25,4 +25,8 @@ class Buyer < ActiveRecord::Base
       selected: true
     )
   end
+
+  def current_loc
+    self.locations.where(name: "Current Location").first
+  end
 end
