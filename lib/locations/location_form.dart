@@ -42,21 +42,6 @@ class _LocationFormState extends State<LocationForm> {
   var _name;
   var location;
   var _initialCameraPosition;
-  
-  // get current location
-  late LatLng currentLocation;
-
-  void locatePosition() async {
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    LatLng currentCoordinates = LatLng(position.latitude, position.longitude);
-
-    CameraPosition currentCamPos = new CameraPosition(
-      target: currentCoordinates,
-      zoom: 15
-    );
-    
-    _googleMapController.animateCamera(CameraUpdate.newCameraPosition(currentCamPos));
-  }
 
   // headers
   Map<String, String> _headers = {};
@@ -159,11 +144,18 @@ class _LocationFormState extends State<LocationForm> {
       myLocationButtonEnabled: false,
       zoomControlsEnabled: true,
       initialCameraPosition: _initialCameraPosition,
-      onMapCreated: (controller){
+      onMapCreated: (controller) async {
         _googleMapController = controller;
 
         if(location == null){
-          locatePosition();
+          LatLng currentCoordinates = await SharedFunction.getCurrentCoordinates();
+
+          CameraPosition currentCamPos = new CameraPosition(
+            target: currentCoordinates,
+            zoom: 15
+          );
+          
+          _googleMapController.animateCamera(CameraUpdate.newCameraPosition(currentCamPos));
         }
       },
       markers: {

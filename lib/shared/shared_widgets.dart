@@ -19,7 +19,7 @@ class SharedWidgets {
         SizedBox(width: 10,),
         _shoppingCart(context),
         // _search(),
-        SizedBox(width: 50,),
+        SizedBox(width: 10,),
       ],
       actionsIconTheme: IconThemeData(color: SharedStyle.yellow),
     );

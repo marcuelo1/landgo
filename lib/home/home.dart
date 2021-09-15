@@ -91,6 +91,8 @@ class _HomeState extends State<Home> {
     }
   ];
 
+  Map location = {};
+
   Map<String,String> _headers = {};
   Map response = {};
 
@@ -108,7 +110,7 @@ class _HomeState extends State<Home> {
     scale = SharedStyle.referenceWidth / width;
     
     return FutureBuilder(
-      future: SharedFunction.getData(_dataUrl, _headers),
+      future: SharedFunction.getDataWithLoc(_dataUrl, _headers, location),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         // Connection state of getting the data
         switch (snapshot.connectionState) {
@@ -126,31 +128,35 @@ class _HomeState extends State<Home> {
               Map responseBody = response['body'];
               categories = json.decode(responseBody['categories']);
               
-              return SafeArea(
-                child: Scaffold(
-                  appBar: SharedWidgets.appBar(context),
-                  drawer: Drawer(
-                    child: SharedWidgets.sideBar(),
-                  ),
-                  body: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    decoration: BoxDecoration(color: SharedStyle.yellow),
-                    child: Stack(
-                      children: [
-                        // static page
-                        staticPage(),
-                        // draggable page
-                        draggablePage()
-                      ],
-                    ),
-                  ),
-                ),
-              );
+              return content();
             }
         }
       }
     ); 
+  }
+
+  Widget content(){
+    return SafeArea(
+      child: Scaffold(
+        appBar: SharedWidgets.appBar(context),
+        drawer: Drawer(
+          child: SharedWidgets.sideBar(),
+        ),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(color: SharedStyle.yellow),
+          child: Stack(
+            children: [
+              // static page
+              staticPage(),
+              // draggable page
+              draggablePage()
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget staticPage(){

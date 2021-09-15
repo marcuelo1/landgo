@@ -269,33 +269,24 @@ class _SignUpState extends State<SignUp> {
         formKey.currentState!.save();
 
         // Sends data to back end
-        var url = Uri.parse('${SharedUrl.root}/${SharedUrl.version}/buyers');
-        try {
-          var response = await http.post(
-            url, 
-            body: {
-              "email": _email,
-              "password": _password,
-              "first_name": _firstName,
-              "last_name": _lastName,
-              "phone_number": _mobileNumber
-            }
-          );
-          // Convert response body to MAP
-          Map responseBody = json.decode(response.body);
+        var url = '${SharedUrl.root}/${SharedUrl.version}/buyers';
+        var data = {
+          "email": _email,
+          "password": _password,
+          "first_name": _firstName,
+          "last_name": _lastName,
+          "phone_number": _mobileNumber
+        };
+        var _response = await SharedFunction.sendData(url, {}, data);
+        Map responseBody = _response['body'];
 
-          setState(() => loading = false);
-          if(response.statusCode == 200){ // successful
-            Navigator.pushNamed(context, 'home');
-          }else if(response.statusCode == 422){ // email has already been taken
-            PopUp.error(context, responseBody['errors']['full_messages'][0]);
-          }else{  // 500 error
-            PopUp.error(context);
-          }
-        } catch (e) {
-          // end loading page
-          setState(() => loading = false);
-          // No internet connection
+        setState(() => loading = false);
+
+        if(_response['status'] == 200){ // successful
+          Navigator.pushNamed(context, 'signin');
+        }else if(_response['status'] == 422){ // email has already been taken
+          PopUp.error(context, responseBody['errors']['full_messages'][0]);
+        }else{  // 500 error
           PopUp.error(context);
         }
       },

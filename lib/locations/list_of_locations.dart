@@ -131,11 +131,12 @@ class _ListOfLocationsState extends State<ListOfLocations> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // radio button
             // address details
             addressDetails(_location),
             // edit button
-            addressEditBtn(_location)
+            if (_location['name'] != "Current Location") ... [
+              addressEditBtn(_location)
+            ]
           ],
         ),
       ),
@@ -143,6 +144,8 @@ class _ListOfLocationsState extends State<ListOfLocations> {
   }
 
   Widget addressDetails(Map _location){
+    bool isCurrent = _location['name'] == "Current Location" ? true : false;
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -156,7 +159,7 @@ class _ListOfLocationsState extends State<ListOfLocations> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // address name with icon
-          addressName(_location['name']),
+          addressName(_location['name'], isCurrent),
           // address location
           addressLocation(_location['description'])
         ],
@@ -164,12 +167,12 @@ class _ListOfLocationsState extends State<ListOfLocations> {
     );
   }
 
-  Widget addressName(String _name){
+  Widget addressName(String _name, bool isCurrent){
     return Row(
       children: [
         // icon
         Icon(
-          Icons.home,
+          isCurrent ? Icons.location_on : Icons.home,
         ),
         // space
         SizedBox(width: SharedFunction.scaleWidth(10, width),),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'shared_style.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -21,6 +23,35 @@ class SharedFunction {
       return SharedStyle.referenceWidth / width;
     }else{
       return width / SharedStyle.referenceWidth;
+    }
+  }
+  
+  static Future<Map> getDataWithLoc(String rawUrl, Map<String,String> headers, Map _location) async {
+    // location
+    var _latitude;
+    var _longitude;
+    bool _isCurrent;
+
+    if(_location.isEmpty || _location['name'] == "Current Location"){
+      LatLng currentCoordinates = await getCurrentCoordinates();
+      _latitude = currentCoordinates.latitude;
+      _longitude = currentCoordinates.longitude;
+      _isCurrent = true;
+    }else{
+      _latitude = _location['latitude'];
+      _longitude = _location['longitude'];
+      _isCurrent = false;
+    }
+
+    rawUrl += "?latitude=$_latitude&longitude=$_longitude&is_current=$_isCurrent";
+    
+    try {
+      var url = Uri.parse(rawUrl);
+      var data = await http.get(url, headers: headers);
+
+      return {"status": data.statusCode, "body": json.decode(data.body)};
+    } catch (e) {
+      return {"status": 500};
     }
   }
   
@@ -58,5 +89,11 @@ class SharedFunction {
       print("==================================");
       return {"status": 500};
     }
+  }
+
+  static Future<LatLng> getCurrentCoordinates() async {
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    LatLng currentCoordinates = LatLng(position.latitude, position.longitude);
+    return currentCoordinates;
   }
 }
