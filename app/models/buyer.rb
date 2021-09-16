@@ -29,4 +29,9 @@ class Buyer < ActiveRecord::Base
   def current_loc
     self.locations.where(name: "Current Location").first
   end
+
+  def name
+    "#{first_name} #{last_name}"
+  end
+  
 end
