@@ -1,8 +1,11 @@
 class V1::Buyer::BuyerController < ApiController
     before_action :authenticate_v1_buyer!
     before_action :set_buyer
+    before_action :updateCurrentLocation, only: [:home_page, :list_of_stores]
+    before_action :set_location, only: [:home_page, :list_of_stores]
     
     def home_page
+        # location
         @categories = Category.where.not(status: 0)
 
         render json: {
@@ -41,5 +44,22 @@ class V1::Buyer::BuyerController < ApiController
             sizes: ProductPriceBlueprint.render(product.product_prices),
             add_on_groups: AddOnGroupBlueprint.render(product.product_add_ons)
         }
+    end
+
+    private
+
+    def updateCurrentLocation
+        if params[:is_current]
+            current_loc = @buyer.current_loc
+            current_loc.update(latitude: params[:latitude], longitude: params[:longitude])
+        end
+    end
+
+    def set_location
+        if params[:is_current] 
+            @buyer.current_loc
+        else
+            Location.find(params[:location_id])
+        end
     end
 end

@@ -8,5 +8,25 @@ class Buyer < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   has_many :carts
-  has_many :locations, as: :user
+  has_many :locations, as: :user, dependent: :destroy
+
+  after_create :create_current_location
+
+  def selected_location
+    loc = self.locations.where(selected: true).first
+
+    return loc ? loc.id : 0
+  end
+
+  def create_current_location
+    Location.create(
+      user: self,
+      name: "Current Location",
+      selected: true
+    )
+  end
+
+  def current_loc
+    self.locations.where(name: "Current Location").first
+  end
 end

@@ -1,11 +1,11 @@
 class V1::Buyer::LocationsController < ApiController
     before_action :authenticate_v1_buyer!
     before_action :set_buyer
+    before_action :set_location, only: [:select_location, :update]
+    before_action :set_locations, only: [:index, :select_location]
 
     def index
-        @locations = @buyer.locations 
-
-        render json: {locations: @locations}, status: 200
+        render json: {locations: LocationBlueprint.render(@locations), selected_location: @buyer.selected_location}, status: 200
     end
 
     def create
@@ -27,8 +27,30 @@ class V1::Buyer::LocationsController < ApiController
         end
     end
 
+    def update
+        @location.update(location_params)
+
+        render json: {success: true}, status: 200
+    end
+
+    def select_location
+        @locations.update(selected: false)
+
+        @location.update(selected: true)
+
+        render json: {success: true}, status: 200
+    end
+
     private
     def location_params
         params.permit(:latitude, :longitude, :details, :name)
+    end
+
+    def set_location
+        @location = Location.find(params[:id])
+    end
+
+    def set_locations
+        @locations = @buyer.locations 
     end
 end
