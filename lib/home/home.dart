@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
   ];
 
   Map location = {};
-
+  Map _buyer = {};
   Map<String,String> _headers = {};
   Map response = {};
 
@@ -110,7 +110,8 @@ class _HomeState extends State<Home> {
     scale = SharedStyle.referenceWidth / width;
     
     return FutureBuilder(
-      future: SharedFunction.getDataWithLoc(_dataUrl, _headers, location),
+      // future: SharedFunction.getDataWithLoc(_dataUrl, _headers, location),
+      future: SharedFunction.getData(_dataUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         // Connection state of getting the data
         switch (snapshot.connectionState) {
@@ -127,6 +128,7 @@ class _HomeState extends State<Home> {
               // check status of response
               Map responseBody = response['body'];
               categories = json.decode(responseBody['categories']);
+              _buyer = json.decode(responseBody['buyer']);
               
               return content();
             }
@@ -140,7 +142,7 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         appBar: SharedWidgets.appBar(context),
         drawer: Drawer(
-          child: SharedWidgets.sideBar(),
+          child: SharedWidgets.sideBar(context, _buyer),
         ),
         body: Container(
           width: double.infinity,
@@ -222,8 +224,10 @@ class _HomeState extends State<Home> {
     }
 
     return GestureDetector(
-      onTap: (){
-        Navigator.pushNamed(context, Sellers.routeName, arguments: {'id': category['id'], 'name': "${category['name']} Delivery"});
+      onTap: () async {
+        await Navigator.pushNamed(context, Sellers.routeName, arguments: {'id': category['id'], 'name': "${category['name']} Delivery"});
+        
+        setState(() { });
       },
       child: Stack(
         children: [

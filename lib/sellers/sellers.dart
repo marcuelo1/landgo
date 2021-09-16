@@ -60,6 +60,7 @@ class _SellersState extends State<Sellers> {
     
     return FutureBuilder(
       future: SharedFunction.getDataWithLoc(_dataUrl, _headers, location, {"id": category['id']}),
+      // future: SharedFunction.getData(_dataUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         // Connection state of getting the data
         switch (snapshot.connectionState) {

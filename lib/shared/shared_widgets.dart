@@ -3,6 +3,7 @@ import 'package:ryve_mobile/cart/cart.dart';
 import 'package:ryve_mobile/locations/list_of_locations.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/sidebar/profile.dart';
 
 class SharedWidgets {
   /////////////////////
@@ -47,6 +48,7 @@ class SharedWidgets {
       child: Icon(Icons.search),
     );
   }
+
   static Widget _locations(BuildContext context){
     return GestureDetector(
       onTap: (){
@@ -59,32 +61,51 @@ class SharedWidgets {
   /////////////////////
   /// S I D E  B A R
   /////////////////////
-  static Widget sideBar(){
+  static List menus = [
+    ["Profile", Profile.routeName, Icon(Icons.person)],
+    ["Transactions", "route", Icon(Icons.person)],
+    ["Addresses", "route", Icon(Icons.location_on)],
+    ["Invite Friends", "route", Icon(Icons.groups)],
+    ["Settings", "route", Icon(Icons.settings)],
+    ["Help Center", "route", Icon(Icons.info_outline)],
+    ["Terms & Conditions", "route", Icon(Icons.info_outline)],
+  ];
+  static Widget sideBar(BuildContext context, Map _buyer){
     return ListView(
       // Important: Remove any padding from the ListView.
       padding: EdgeInsets.zero,
       children: [
-        const DrawerHeader(
-          decoration: BoxDecoration(
-            color: Colors.blue,
-          ),
-          child: Text('Drawer Header'),
-        ),
-        ListTile(
-          title: const Text('Item 1'),
-          onTap: () {
-            // Update the state of the app.
-            // ...
-          },
-        ),
-        ListTile(
-          title: const Text('Item 2'),
-          onTap: () {
-            // Update the state of the app.
-            // ...
-          },
-        ),
+        buyerName(_buyer),
+        // Divider
+        Divider(color: SharedStyle.black,height: 1,),
+        for (var menu in menus) ... [
+          sideBarMenu(context, menu, _buyer)
+        ]
       ],
+    );
+  }
+
+  static Widget buyerName(Map _buyer){
+    return Container(
+      width: double.infinity,
+      child: Text(
+        _buyer['name']
+      ),
+    );
+  }
+
+  static Widget sideBarMenu(BuildContext context, List _menu, Map _buyer){
+    return ListTile(
+      title: Row(
+        children: [
+          _menu[2],
+          SizedBox(width: 10,),
+          Text(_menu[0])
+        ],
+      ),
+      onTap: () {
+        Navigator.pushNamed(context, _menu[1], arguments: _buyer);
+      },
     );
   }
 
