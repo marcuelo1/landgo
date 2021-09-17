@@ -1,6 +1,6 @@
 class V1::Buyer::BuyersController < BuyerController
-    # before_action :updateCurrentLocation, only: [:home_page, :list_of_stores]
-    # before_action :set_location, only: [:home_page, :list_of_stores]
+    # before_action :updateCurrentLocation, only: [:home_page]
+    # before_action :set_location, only: [:home_page]
     
     def home_page
         # location
@@ -25,20 +25,20 @@ class V1::Buyer::BuyersController < BuyerController
 
     def update
         case params[:update_type]
-        when :name
+        when "name"
             @buyer.update(
                 first_name: params[:first_name],
                 last_name: params[:last_name]
             )
 
             render json: {success: true}, status: 200
-        when :email
+        when "email"
             @buyer.update(
                 email: params[:email],
             )
 
             render json: {success: true}, status: 200
-        when :mobile
+        when "mobile"
             @buyer.update(
                 phone_number: params[:mobile],
             )
