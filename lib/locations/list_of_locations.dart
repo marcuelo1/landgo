@@ -37,6 +37,7 @@ class _ListOfLocationsState extends State<ListOfLocations> {
   // response
   Map response = {};
   Map responseBody = {};
+  bool refresh = true;
 
   List locations = [];
   int selectedAddress = 0;
@@ -56,9 +57,7 @@ class _ListOfLocationsState extends State<ListOfLocations> {
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
 
-    return responseBody.isNotEmpty 
-    ? content(context) 
-    : FutureBuilder(
+    return !refresh ? content(context) : FutureBuilder(
       future: SharedFunction.getData(_dataUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         // Connection state of getting the data
@@ -150,6 +149,7 @@ class _ListOfLocationsState extends State<ListOfLocations> {
       onTap: () {
         setState(() {
           selectedAddress = _location['id'];
+          refresh = false;
         });
         String _rawUrl = _selectAddressUrl + "/select_location?id=$selectedAddress";
         var _response = SharedFunction.sendData(_rawUrl, _headers, {});
@@ -199,9 +199,10 @@ class _ListOfLocationsState extends State<ListOfLocations> {
   Widget addressEditBtn(Map _location){
     return Center(
       child: IconButton(
-        onPressed: (){
+        onPressed: () async {
           print(_location['id']);
-          Navigator.pushNamed(context, LocationForm.routeName, arguments: {"location": _location});
+          await Navigator.pushNamed(context, LocationForm.routeName, arguments: {"location": _location});
+          setState(() => refresh = true);
         },
         icon: Icon(
           Icons.edit
@@ -215,8 +216,9 @@ class _ListOfLocationsState extends State<ListOfLocations> {
       width: SharedFunction.scaleWidth(addBtnWidth, width),
       height: SharedFunction.scaleHeight(addBtnHeight, height),
       child: ElevatedButton(
-        onPressed: () {
-          Navigator.pushNamed(context, LocationForm.routeName);
+        onPressed: () async {
+          await Navigator.pushNamed(context, LocationForm.routeName);
+          setState(() => refresh = true);
         }, 
         style: SharedStyle.yellowBtn,
         child: Center(
