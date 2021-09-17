@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:ryve_mobile/sellers/list_of_products.dart';
+import 'package:ryve_mobile/sellers/show_seller.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
@@ -18,7 +18,7 @@ class Sellers extends StatefulWidget {
 
 class _SellersState extends State<Sellers> {
   // url
-  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyer/list_of_stores";
+  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyer/sellers";
   // variables for scale functions
   late double width;
   late double height;
@@ -226,7 +226,7 @@ class _SellersState extends State<Sellers> {
         for (var seller in all_sellers) ... [
           GestureDetector(
             onTap: (){
-              Navigator.pushNamed(context, ListOfProducts.routeName, arguments: seller);
+              Navigator.pushNamed(context, ShowSeller.routeName, arguments: seller);
             },
             child: SharedWidgets.seller(seller, width, height)
           )
@@ -259,7 +259,7 @@ class _SellersState extends State<Sellers> {
               padding: EdgeInsets.only(right: SharedFunction.scaleWidth(15, width)),
               child: GestureDetector(
                 onTap: (){
-                  Navigator.pushNamed(context, ListOfProducts.routeName, arguments: seller);
+                  Navigator.pushNamed(context, ShowSeller.routeName, arguments: seller);
                 },
                 child: SharedWidgets.seller(seller, width, height)
               ),

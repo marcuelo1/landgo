@@ -3,7 +3,7 @@ import 'package:ryve_mobile/cart/cart.dart';
 import 'package:ryve_mobile/home/home.dart';
 import 'package:ryve_mobile/locations/location_form.dart';
 import 'package:ryve_mobile/locations/list_of_locations.dart';
-import 'package:ryve_mobile/sellers/list_of_products.dart';
+import 'package:ryve_mobile/sellers/show_seller.dart';
 import 'package:ryve_mobile/sellers/product.dart';
 import 'package:ryve_mobile/sellers/sellers.dart';
 import 'package:ryve_mobile/shared/headers.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         SignIn.routeName: (context) => SignIn(),
         Home.routeName: (context) => Home(),
         Sellers.routeName: (context) => Sellers(),
-        ListOfProducts.routeName: (context) => ListOfProducts(),
+        ShowSeller.routeName: (context) => ShowSeller(),
         Product.routeName: (context) => Product(),
         Cart.routeName: (context) => Cart(),
         ListOfLocations.routeName: (context) => ListOfLocations(),

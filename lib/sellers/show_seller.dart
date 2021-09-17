@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:ryve_mobile/sellers/list_of_products_style.dart';
+import 'package:ryve_mobile/sellers/show_seller_style.dart';
 import 'package:ryve_mobile/sellers/product.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
@@ -9,16 +9,16 @@ import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/shared/shared_widgets.dart';
 
-class ListOfProducts extends StatefulWidget {
-  static const String routeName = "list_of_products";
+class ShowSeller extends StatefulWidget {
+  static const String routeName = "show_seller";
 
   @override
-  _ListOfProductsState createState() => _ListOfProductsState();
+  _ShowSellerState createState() => _ShowSellerState();
 }
 
-class _ListOfProductsState extends State<ListOfProducts> {
+class _ShowSellerState extends State<ShowSeller> {
   // url
-  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyer/list_of_products";
+  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyer/sellers";
   // variables for scale functions
   late double width;
   late double height;
@@ -52,7 +52,7 @@ class _ListOfProductsState extends State<ListOfProducts> {
     scale = SharedStyle.referenceWidth / width;
     seller = ModalRoute.of(context)!.settings.arguments as Map;
     print(seller);
-    _dataUrl = _dataUrl + "?id=${seller['id']}";
+    _dataUrl = _dataUrl + "/${seller['id']}";
 
     return FutureBuilder(
       future: SharedFunction.getData(_dataUrl, _headers),
@@ -137,7 +137,7 @@ class _ListOfProductsState extends State<ListOfProducts> {
         child: Center(
           child: Text(
             name,
-            style: ListOfProductsStyle.productCategoryName,
+            style: ShowSellerStyle.productCategoryName,
           ),
         ),
       ),
