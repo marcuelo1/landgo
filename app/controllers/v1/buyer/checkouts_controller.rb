@@ -1,6 +1,4 @@
-class V1::Buyer::CheckoutsController < ApiController
-    before_action :authenticate_v1_buyer!
-    before_action :set_buyer
+class V1::Buyer::CheckoutsController < BuyerController
     before_action :set_checkout, only: [:create]
 
     def create

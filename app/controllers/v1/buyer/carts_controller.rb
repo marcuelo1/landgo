@@ -1,6 +1,4 @@
-class V1::Buyer::CartsController < ApiController
-    before_action :authenticate_v1_buyer!
-    before_action :set_buyer
+class V1::Buyer::CartsController < BuyerController
 
     def list_of_sellers
         seller_ids = Cart.where(buyer_id: @buyer.id).pluck(:seller_id).uniq

@@ -1,6 +1,4 @@
-class V1::Buyer::LocationsController < ApiController
-    before_action :authenticate_v1_buyer!
-    before_action :set_buyer
+class V1::Buyer::LocationsController < BuyerController
     before_action :set_location, only: [:select_location, :update]
     before_action :set_locations, only: [:index, :select_location]
 

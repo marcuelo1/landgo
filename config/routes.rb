@@ -53,13 +53,14 @@ Rails.application.routes.draw do
     }
 
     namespace :buyer do
-      resources :buyers, path: "" do
+      resources :buyers, except: [:show], path: "" do
         collection do
           get :home_page
-          get :list_of_stores
-          get :list_of_products
           get :product_details
         end
+      end
+
+      resources :sellers do
       end
 
       resources :carts do
