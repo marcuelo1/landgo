@@ -142,7 +142,7 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         appBar: SharedWidgets.appBar(context),
         drawer: Drawer(
-          child: SharedWidgets.sideBar(context, _buyer),
+          child: SharedWidgets.sideBar(context, _buyer, _headers),
         ),
         body: Container(
           width: double.infinity,

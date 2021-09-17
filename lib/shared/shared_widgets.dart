@@ -3,7 +3,9 @@ import 'package:ryve_mobile/cart/cart.dart';
 import 'package:ryve_mobile/locations/list_of_locations.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/sidebar/profile.dart';
+import 'package:ryve_mobile/sign_in/sign_in.dart';
 
 class SharedWidgets {
   /////////////////////
@@ -70,7 +72,10 @@ class SharedWidgets {
     ["Help Center", "route", Icon(Icons.info_outline)],
     ["Terms & Conditions", "route", Icon(Icons.info_outline)],
   ];
-  static Widget sideBar(BuildContext context, Map _buyer){
+  static Map<String, String> headers = {};
+  static Widget sideBar(BuildContext context, Map _buyer, Map<String, String> _headers){
+    headers = _headers;
+
     return ListView(
       // Important: Remove any padding from the ListView.
       padding: EdgeInsets.zero,
@@ -80,7 +85,10 @@ class SharedWidgets {
         Divider(color: SharedStyle.black,height: 1,),
         for (var menu in menus) ... [
           sideBarMenu(context, menu, _buyer)
-        ]
+        ],
+        // Divider
+        Divider(color: SharedStyle.black,height: 1,),
+        logoutBtn(context)
       ],
     );
   }
@@ -105,6 +113,36 @@ class SharedWidgets {
       ),
       onTap: () {
         Navigator.pushNamed(context, _menu[1], arguments: _buyer);
+      },
+    );
+  }
+
+  static Widget logoutBtn(BuildContext context){
+    return ListTile(
+      title: Row(
+        children: [
+          Icon(
+            Icons.logout
+          ),
+          SizedBox(width: 10,),
+          Text("Logout")
+        ],
+      ),
+      onTap: () async {
+        String rawUrl = "${SharedUrl.root}/${SharedUrl.version}/buyers/sign_out";
+        
+        Map _response = await SharedFunction.sendData(rawUrl, headers, {}, "delete");
+        
+        
+        if (_response['status'] == 200) {
+          Navigator.pushAndRemoveUntil(
+            context, 
+            MaterialPageRoute(
+              builder: (context) => SignIn()
+            ), 
+            (route) => false
+          );
+        }
       },
     );
   }
