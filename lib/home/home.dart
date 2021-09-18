@@ -111,7 +111,6 @@ class _HomeState extends State<Home> {
     
     return FutureBuilder(
       future: SharedFunction.getDataWithLoc(_dataUrl, _headers),
-      // future: SharedFunction.getData(_dataUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         // Connection state of getting the data
         switch (snapshot.connectionState) {

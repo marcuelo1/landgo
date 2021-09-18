@@ -10,6 +10,7 @@ import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/sidebar/profile.dart';
 import 'package:ryve_mobile/sign_in/sign_in.dart';
 import 'package:ryve_mobile/sign_up/sign_up.dart';
+import 'package:ryve_mobile/splash/splash.dart';
 import 'welcome_page/welcome_page.dart';
 
 void main() async {
@@ -23,9 +24,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: 'home',
+      initialRoute: Splash.routeName,
       debugShowCheckedModeBanner: false,
       routes: {
+        Splash.routeName: (context) => Splash(),
         WelcomePage.routeName: (context) => WelcomePage(),
         SignUp.routeName: (context) => SignUp(),
         SignIn.routeName: (context) => SignIn(),
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
         Cart.routeName: (context) => Cart(),
         ListOfLocations.routeName: (context) => ListOfLocations(),
         LocationForm.routeName: (context) => LocationForm(),
-         Profile.routeName: (context) => Profile(),
+        Profile.routeName: (context) => Profile(),
       },
     );
   }
