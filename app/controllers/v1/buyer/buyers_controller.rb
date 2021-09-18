@@ -14,6 +14,10 @@ class V1::Buyer::BuyersController < BuyerController
         }, status: 200
     end
 
+    def is_signed_in
+        render json: {success: true}, status: 200
+    end
+
     def product_details
         product = Product.find(params[:id])
 

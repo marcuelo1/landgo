@@ -57,6 +57,7 @@ Rails.application.routes.draw do
         collection do
           get :home_page
           get :product_details
+          get :is_signed_in
         end
       end
 
