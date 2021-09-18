@@ -91,7 +91,7 @@ class _HomeState extends State<Home> {
     }
   ];
 
-  Map location = {};
+  Map selected_location = {};
   Map _buyer = {};
   Map<String,String> _headers = {};
   Map response = {};
@@ -110,8 +110,8 @@ class _HomeState extends State<Home> {
     scale = SharedStyle.referenceWidth / width;
     
     return FutureBuilder(
-      // future: SharedFunction.getDataWithLoc(_dataUrl, _headers, location),
-      future: SharedFunction.getData(_dataUrl, _headers),
+      future: SharedFunction.getDataWithLoc(_dataUrl, _headers),
+      // future: SharedFunction.getData(_dataUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         // Connection state of getting the data
         switch (snapshot.connectionState) {
@@ -129,6 +129,8 @@ class _HomeState extends State<Home> {
               Map responseBody = response['body'];
               categories = json.decode(responseBody['categories']);
               _buyer = json.decode(responseBody['buyer']);
+              selected_location = json.decode(responseBody['selected_location']);
+              print(selected_location);
               
               return content();
             }
@@ -225,7 +227,7 @@ class _HomeState extends State<Home> {
 
     return GestureDetector(
       onTap: () async {
-        await Navigator.pushNamed(context, Sellers.routeName, arguments: {'id': category['id'], 'name': "${category['name']} Delivery"});
+        await Navigator.pushNamed(context, Sellers.routeName, arguments: {'category': category, 'selected_location': selected_location});
         
         setState(() { });
       },

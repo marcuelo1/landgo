@@ -41,6 +41,7 @@ class _ListOfLocationsState extends State<ListOfLocations> {
 
   List locations = [];
   int selectedAddress = 0;
+  Map currentLocation = {};
 
   // headers
   Map<String, String> _headers = {};
@@ -83,6 +84,7 @@ class _ListOfLocationsState extends State<ListOfLocations> {
             }
 
             selectedAddress = responseBody["selected_location"];
+            currentLocation = json.decode(responseBody["current_location"]);
 
             return content(context);
         }
@@ -217,7 +219,7 @@ class _ListOfLocationsState extends State<ListOfLocations> {
       height: SharedFunction.scaleHeight(addBtnHeight, height),
       child: ElevatedButton(
         onPressed: () async {
-          await Navigator.pushNamed(context, LocationForm.routeName);
+          await Navigator.pushNamed(context, LocationForm.routeName, arguments: {"location": currentLocation});
           setState(() => refresh = true);
         }, 
         style: SharedStyle.yellowBtn,

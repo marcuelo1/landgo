@@ -35,8 +35,8 @@ class _SellersState extends State<Sellers> {
   List recent_sellers = [];
   // all sellers
   List all_sellers = [];
-  
-  Map location = {};
+  Map category = {};
+  Map selected_location = {};
 
   // response
   Map response = {};
@@ -55,12 +55,13 @@ class _SellersState extends State<Sellers> {
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
 
-    final Map category = ModalRoute.of(context)!.settings.arguments as Map;
-    print(category);
+    final Map args = ModalRoute.of(context)!.settings.arguments as Map;
+    category = args['category'];
+    selected_location = args['selected_location'];
     
+    String _rawUrl = _dataUrl + "?id=${category['id']}";
     return FutureBuilder(
-      future: SharedFunction.getDataWithLoc(_dataUrl, _headers, location, {"id": category['id']}),
-      // future: SharedFunction.getData(_dataUrl, _headers),
+      future: SharedFunction.getData(_rawUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         // Connection state of getting the data
         switch (snapshot.connectionState) {
@@ -94,42 +95,46 @@ class _SellersState extends State<Sellers> {
               all_sellers = json.decode(responseBody['all_sellers']);
             }
 
-            return SafeArea(
-              child: Scaffold(
-                body: Scaffold(
-                  appBar: SharedWidgets.appBar(context, category['name']),
-                  body: SingleChildScrollView(
-                    child: Container(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(
-                          SharedFunction.scaleWidth(10, width), 
-                          SharedFunction.scaleHeight(19, height), 
-                          SharedFunction.scaleWidth(10, width), 
-                          SharedFunction.scaleHeight(0, height)
-                        ),
-                        child: Column(
-                          children: [
-                            // search bar
-                            // category deals
-                            categoryDeals(),
-                            // top stores
-                            topSellers(),
-                            // recent stores
-                            recentSellers(),
-                            // all stores
-                            allStores()
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            );
+            return content(context);
         }
       }
       );
+  }
+
+  Widget content(BuildContext context){
+    return SafeArea(
+      child: Scaffold(
+        body: Scaffold(
+          appBar: SharedWidgets.appBar(context, category['name']),
+          body: SingleChildScrollView(
+            child: Container(
+              width: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  SharedFunction.scaleWidth(10, width), 
+                  SharedFunction.scaleHeight(19, height), 
+                  SharedFunction.scaleWidth(10, width), 
+                  SharedFunction.scaleHeight(0, height)
+                ),
+                child: Column(
+                  children: [
+                    // search bar
+                    // category deals
+                    categoryDeals(),
+                    // top stores
+                    topSellers(),
+                    // recent stores
+                    recentSellers(),
+                    // all stores
+                    allStores()
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      )
+    );
   }
 
   Widget categoryDeals(){
@@ -192,7 +197,6 @@ class _SellersState extends State<Sellers> {
   }
 
   Widget topSellers(){
-    print("Top Sellers");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -243,7 +247,6 @@ class _SellersState extends State<Sellers> {
   }
 
   Widget sellerSliders(BuildContext context, List _sellers){
-    print(_sellers);
     return Container(
       constraints: BoxConstraints.tightFor(width: double.infinity),
       child: CarouselSlider(

@@ -26,24 +26,18 @@ class SharedFunction {
     }
   }
   
-  static Future<Map> getDataWithLoc(String rawUrl, Map<String,String> headers, Map _location, [body]) async {
+  static Future<Map> getDataWithLoc(String rawUrl, Map<String,String> headers, [body]) async {
     // location
     var _latitude;
     var _longitude;
     bool _isCurrent;
 
-    if(_location.isEmpty || _location['name'] == "Current Location"){
-      LatLng currentCoordinates = await getCurrentCoordinates();
-      _latitude = currentCoordinates.latitude;
-      _longitude = currentCoordinates.longitude;
-      _isCurrent = true;
+    LatLng currentCoordinates = await getCurrentCoordinates();
+    _latitude = currentCoordinates.latitude;
+    _longitude = currentCoordinates.longitude;
+    _isCurrent = true;
 
-      rawUrl += "?latitude=$_latitude&longitude=$_longitude&is_current=$_isCurrent";
-    }else{
-      _isCurrent = false;
-
-      rawUrl += "?location_id=${_location['id']}&is_current=$_isCurrent";
-    }
+    rawUrl += "?latitude=$_latitude&longitude=$_longitude&is_current=$_isCurrent";
 
     if(body != null){
       body.forEach((key, value) {
@@ -98,7 +92,7 @@ class SharedFunction {
   }
 
   static Future<LatLng> getCurrentCoordinates() async {
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
     LatLng currentCoordinates = LatLng(position.latitude, position.longitude);
     return currentCoordinates;
   }

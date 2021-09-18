@@ -67,18 +67,11 @@ class _LocationFormState extends State<LocationForm> {
     // arguments
     final Map args = ModalRoute.of(context)!.settings.arguments as Map;
     // ignore: unnecessary_null_comparison
-    if(args != null){
-      location = args['location'];
-      _initialCameraPosition = CameraPosition(
-        target: LatLng(location['latitude'], location['longitude']),
-        zoom: 15
-      );
-    }else{
-      _initialCameraPosition = CameraPosition(
-        target: LatLng(10.6315881, 122.9738012),
-        zoom: 15
-      );
-    }
+    location = args['location'];
+    _initialCameraPosition = CameraPosition(
+      target: LatLng(location['latitude'], location['longitude']),
+      zoom: 18
+    );
 
 
     return SafeArea(
@@ -144,20 +137,7 @@ class _LocationFormState extends State<LocationForm> {
       myLocationButtonEnabled: false,
       zoomControlsEnabled: true,
       initialCameraPosition: _initialCameraPosition,
-      onMapCreated: (controller) async {
-        _googleMapController = controller;
-
-        if(location == null){
-          LatLng currentCoordinates = await SharedFunction.getCurrentCoordinates();
-
-          CameraPosition currentCamPos = new CameraPosition(
-            target: currentCoordinates,
-            zoom: 15
-          );
-          
-          _googleMapController.animateCamera(CameraUpdate.newCameraPosition(currentCamPos));
-        }
-      },
+      onMapCreated: (controller) => _googleMapController = controller,
       markers: {
         if (pinMarker != null) pinMarker
       },
@@ -221,7 +201,7 @@ class _LocationFormState extends State<LocationForm> {
           late String _rawUrl;
           var _response;
 
-          if(location != null){
+          if(location['name'] != "Current Location"){
             _rawUrl = _dataUrlAddLoc +  "/${location['id']}";
 
             _response = await SharedFunction.sendData(_rawUrl, _headers, _data, "put");
@@ -250,7 +230,7 @@ class _LocationFormState extends State<LocationForm> {
   Widget nameInput(){
     return TextFormField(
       decoration: InputDecoration(labelText: "Name"),
-      initialValue: location != null ? location['name'] : "",
+      initialValue: location['name'] != "Current Location" ? location['name'] : "",
       validator: (value) {
         if(value!.isEmpty){
           return "Name is required";
@@ -263,7 +243,7 @@ class _LocationFormState extends State<LocationForm> {
   Widget detailsInput(){
     return TextFormField(
       decoration: InputDecoration(labelText: "Floor/Unit/Room #"),
-      initialValue: location != null ? location['details'] : "",
+      initialValue: location['details'] != null ? location['details'] : "",
       onSaved: (value) => _details = value,
     );
   }
