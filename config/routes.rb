@@ -83,6 +83,6 @@ Rails.application.routes.draw do
     mount_devise_token_auth_for 'Seller', at: 'sellers'
   end
 
-  # default_url_options :host => "http://192.168.1.9:3000"
-  default_url_options :host => "http://localhost:3000"
+  default_url_options :host => "http://192.168.1.9:3000"
+  # default_url_options :host => "http://localhost:3000"
 end

@@ -13,9 +13,7 @@ class Buyer < ActiveRecord::Base
   after_create :create_current_location
 
   def selected_location
-    loc = self.locations.where(selected: true).first
-
-    return loc ? loc.id : 0
+    self.locations.where(selected: true).first
   end
 
   def create_current_location

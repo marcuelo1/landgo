@@ -3,7 +3,7 @@ class V1::Buyer::LocationsController < BuyerController
     before_action :set_locations, only: [:index, :select_location]
 
     def index
-        render json: {locations: LocationBlueprint.render(@locations), selected_location: @buyer.selected_location}, status: 200
+        render json: {locations: LocationBlueprint.render(@locations), selected_location: @buyer.selected_location ? @buyer.selected_location.id : 0, current_location: LocationBlueprint.render(@buyer.current_loc)}, status: 200
     end
 
     def create

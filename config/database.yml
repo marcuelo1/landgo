@@ -16,10 +16,8 @@ development:
   encoding: unicode
   database: landgo
   pool: 5
-  username: postgres
-  password: marcuelo1
-  # username: kk40
-  # password: 
+  username: landgo
+  password:
   timeout: 5000
   host: localhost
 

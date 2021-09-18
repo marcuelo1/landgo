@@ -10,12 +10,4 @@ class BuyerController < ApiController
             current_loc.update(latitude: params[:latitude], longitude: params[:longitude])
         end
     end
-
-    def set_location
-        if params[:is_current] 
-            @buyer.current_loc
-        else
-            Location.find(params[:location_id])
-        end
-    end
 end

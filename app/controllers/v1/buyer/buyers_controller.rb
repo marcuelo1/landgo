@@ -1,6 +1,5 @@
 class V1::Buyer::BuyersController < BuyerController
-    # before_action :updateCurrentLocation, only: [:home_page]
-    # before_action :set_location, only: [:home_page]
+    before_action :updateCurrentLocation, only: [:home_page]
     
     def home_page
         # location
@@ -8,6 +7,7 @@ class V1::Buyer::BuyersController < BuyerController
 
         render json: {
             buyer: BuyerBlueprint.render(@buyer),
+            selected_location: LocationBlueprint.render(@buyer.selected_location),
             categories: CategoryBlueprint.render(@categories),
             products: [],
             sellers: []

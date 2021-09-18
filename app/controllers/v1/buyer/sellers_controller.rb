@@ -1,6 +1,4 @@
 class V1::Buyer::SellersController < BuyerController
-    before_action :updateCurrentLocation, only: [:index]
-    before_action :set_location, only: [:index]
 
     def index
         category = Category.find(params[:id])
