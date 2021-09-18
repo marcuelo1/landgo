@@ -14,7 +14,9 @@ class Seller < ActiveRecord::Base
   has_many :product_sizes
   has_many :add_on_groups
   has_many :add_ons, through: :add_on_groups
-  has_many :locations, as: :user
+  has_one :location, as: :user, dependent: :destroy
+
+  DISTANCE = 5
 
   def rating
     4.8
@@ -28,8 +30,10 @@ class Seller < ActiveRecord::Base
     Seller.all
   end
 
-  def self.all_sellers
-    Seller.all
+  def self.all_sellers buyer
+    buyer_coordinates = [buyer.selected_location.latitude, buyer.selected_location.longitude]
+    seller_ids = Location.where(user_type: "Seller").near(buyer_coordinates, DISTANCE, units: :km).map{|l| l.user_id}
+    Seller.find(seller_ids)
   end
   
 end
