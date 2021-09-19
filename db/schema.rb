@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_13_123822) do
+ActiveRecord::Schema.define(version: 2021_09_19_143912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,17 +167,22 @@ ActiveRecord::Schema.define(version: 2021_09_13_123822) do
     t.float "total"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "status", default: 0
     t.index ["checkout_id"], name: "index_checkout_sellers_on_checkout_id"
     t.index ["seller_id"], name: "index_checkout_sellers_on_seller_id"
   end
 
   create_table "checkouts", force: :cascade do |t|
     t.bigint "buyer_id", null: false
-    t.integer "status"
     t.float "total"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.float "latitude"
+    t.float "longitude"
+    t.string "details"
+    t.bigint "payment_method_id", null: false
     t.index ["buyer_id"], name: "index_checkouts_on_buyer_id"
+    t.index ["payment_method_id"], name: "index_checkouts_on_payment_method_id"
   end
 
   create_table "locations", force: :cascade do |t|
@@ -195,6 +200,12 @@ ActiveRecord::Schema.define(version: 2021_09_13_123822) do
     t.string "state"
     t.boolean "selected", default: false
     t.index ["user_type", "user_id"], name: "index_locations_on_user_type_and_user_id"
+  end
+
+  create_table "payment_methods", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "product_add_ons", force: :cascade do |t|
@@ -291,6 +302,7 @@ ActiveRecord::Schema.define(version: 2021_09_13_123822) do
   add_foreign_key "checkout_sellers", "checkouts"
   add_foreign_key "checkout_sellers", "sellers"
   add_foreign_key "checkouts", "buyers"
+  add_foreign_key "checkouts", "payment_methods"
   add_foreign_key "product_add_ons", "add_on_groups"
   add_foreign_key "product_add_ons", "products"
   add_foreign_key "product_categories", "sellers"
