@@ -9,6 +9,8 @@ class Buyer < ActiveRecord::Base
 
   has_many :carts
   has_many :locations, as: :user, dependent: :destroy
+  has_many :checkouts, dependent: :destroy
+  has_many :checkout_sellers, through: :checkouts
 
   after_create :create_current_location
 
@@ -32,4 +34,9 @@ class Buyer < ActiveRecord::Base
     "#{first_name} #{last_name}"
   end
   
+  def recent_sellers
+    seller_ids = self.checkout_sellers.where('checkout_sellers.created_at > ?', 1.weeks.ago).order(created_at: :desc).pluck(:seller_id)
+
+    Seller.where(id: seller_ids)
+  end
 end

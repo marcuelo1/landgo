@@ -7,7 +7,7 @@ class V1::Buyer::SellersController < BuyerController
         render json: {
             category_deals: CategoryDealBlueprint.render(category_deals),
             top_sellers: SellerBlueprint.render(Seller.top_sellers),
-            recent_sellers: SellerBlueprint.render(Seller.recent_sellers),
+            recent_sellers: SellerBlueprint.render(@buyer.recent_sellers),
             all_sellers: SellerBlueprint.render(Seller.all_sellers),
         }
     end

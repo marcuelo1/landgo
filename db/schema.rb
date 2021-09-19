@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_19_143912) do
+ActiveRecord::Schema.define(version: 2021_09_19_150702) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -277,6 +277,7 @@ ActiveRecord::Schema.define(version: 2021_09_19_143912) do
     t.string "phone_number"
     t.bigint "category_id", null: false
     t.string "address"
+    t.integer "num_of_completed_checkouts", default: 0
     t.index ["category_id"], name: "index_sellers_on_category_id"
     t.index ["confirmation_token"], name: "index_sellers_on_confirmation_token", unique: true
     t.index ["email"], name: "index_sellers_on_email", unique: true

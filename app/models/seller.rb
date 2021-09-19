@@ -15,6 +15,7 @@ class Seller < ActiveRecord::Base
   has_many :add_on_groups
   has_many :add_ons, through: :add_on_groups
   has_one :location, as: :user, dependent: :destroy
+  has_many :checkout_sellers, dependent: :destroy
 
   DISTANCE = 5
 
@@ -23,11 +24,7 @@ class Seller < ActiveRecord::Base
   end
 
   def self.top_sellers
-    Seller.all
-  end
-
-  def self.recent_sellers
-    Seller.all
+    Seller.all.order(num_of_completed_checkouts: :desc).limit(10)
   end
 
   def self.all_sellers buyer
