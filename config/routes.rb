@@ -58,6 +58,8 @@ Rails.application.routes.draw do
           get :home_page
           get :product_details
           get :is_signed_in
+          get :check
+          get :review_payment_location
         end
       end
 

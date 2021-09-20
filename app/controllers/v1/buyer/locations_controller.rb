@@ -47,8 +47,4 @@ class V1::Buyer::LocationsController < BuyerController
     def set_location
         @location = Location.find(params[:id])
     end
-
-    def set_locations
-        @locations = @buyer.locations 
-    end
 end

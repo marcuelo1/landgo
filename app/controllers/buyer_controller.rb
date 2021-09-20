@@ -10,4 +10,12 @@ class BuyerController < ApiController
             current_loc.update(latitude: params[:latitude], longitude: params[:longitude])
         end
     end
+
+    def set_locations
+        @locations = @buyer.locations 
+    end
+
+    def set_payment_methods
+        @payment_methods = PaymentMethod.all
+    end
 end

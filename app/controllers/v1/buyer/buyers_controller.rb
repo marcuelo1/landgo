@@ -1,5 +1,11 @@
 class V1::Buyer::BuyersController < BuyerController
     before_action :updateCurrentLocation, only: [:home_page]
+    before_action :set_locations, only: [:review_payment_location]
+    before_action :set_payment_methods, only: [:review_payment_location]
+    
+    def check
+        render json: {success: true}, status: 200
+    end
     
     def home_page
         # location
@@ -16,6 +22,10 @@ class V1::Buyer::BuyersController < BuyerController
 
     def is_signed_in
         render json: {success: true}, status: 200
+    end
+
+    def review_payment_location
+        render json: {locations: LocationBlueprint.render(@locations), payment_methods: PaymentMethodBlueprint.render(@payment_methods)}
     end
 
     def product_details
