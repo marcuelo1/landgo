@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ryve_mobile/cart/cart.dart';
+import 'package:ryve_mobile/cart/review_payment_location.dart';
 import 'package:ryve_mobile/home/home.dart';
 import 'package:ryve_mobile/locations/location_form.dart';
 import 'package:ryve_mobile/locations/list_of_locations.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: Splash.routeName,
+      initialRoute: 'home',
       debugShowCheckedModeBanner: false,
       routes: {
         Splash.routeName: (context) => Splash(),
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         ListOfLocations.routeName: (context) => ListOfLocations(),
         LocationForm.routeName: (context) => LocationForm(),
         Profile.routeName: (context) => Profile(),
+        ReviewPaymentLocation.routeName: (context) => ReviewPaymentLocation(),
       },
     );
   }

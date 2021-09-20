@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/cart/review_payment_location.dart';
 import 'package:ryve_mobile/sellers/product_style.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
+import 'package:ryve_mobile/shared/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
@@ -19,7 +21,7 @@ class _CartState extends State<Cart> {
   // url
   String _dataUrl ="${SharedUrl.root}/${SharedUrl.version}/buyer/carts/list_of_sellers";
   String _dataUrlCartProduct ="${SharedUrl.root}/${SharedUrl.version}/buyer/carts";
-  String _dataUrlCheckout ="${SharedUrl.root}/${SharedUrl.version}/buyer/checkouts";
+  
   // variables for scale functions
   late double width;
   late double height;
@@ -82,8 +84,7 @@ class _CartState extends State<Cart> {
                   response = snapshot.data;
                   responseBody = response['body'];
                   print(responseBody);
-                  print(
-                      "==============================================================");
+                  print("==============================================================");
 
                   if (responseBody["sellers"].length > 0) {
                     sellers = json.decode(responseBody["sellers"]);
@@ -298,15 +299,11 @@ class _CartState extends State<Cart> {
               cart_totals[_cart['id']] = cartPrice * cart_quantities[_cart['id']];
             });
             String _rawUrl = _dataUrlCartProduct + "/${_cart['id']}";
-            var response = SharedFunction.sendData(
-                              _rawUrl, 
-                              _headers, 
-                              {
-                                "quantity": cart_quantities[_cart['id']],
-                                "total": cart_totals[_cart['id']],
-                              }, 
-                              "put"
-                            );
+            Map _data = {
+              "quantity": cart_quantities[_cart['id']],
+              "total": cart_totals[_cart['id']],
+            };
+            var response = SharedFunction.sendData(_rawUrl, _headers, _data, "put");
           }
         },
         icon: Icon(
@@ -327,15 +324,11 @@ class _CartState extends State<Cart> {
             cart_totals[_cart['id']] = cartPrice * cart_quantities[_cart['id']];
           });
           String _rawUrl = _dataUrlCartProduct + "/${_cart['id']}";
-            var response = SharedFunction.sendData(
-                              _rawUrl, 
-                              _headers, 
-                              {
-                                "quantity": cart_quantities[_cart['id']],
-                                "total": cart_totals[_cart['id']],
-                              }, 
-                              "put"
-                            );
+          Map _data ={
+            "quantity": cart_quantities[_cart['id']],
+            "total": cart_totals[_cart['id']],
+          };
+          var response = SharedFunction.sendData(_rawUrl, _headers, _data, "put");
         },
         icon: Icon(Icons.add),
         color: SharedStyle.yellow,
@@ -386,10 +379,8 @@ class _CartState extends State<Cart> {
         Map rawBody = {
           "sellers": selectedSeller
         };
-        Map _response = await SharedFunction.sendData(_dataUrlCheckout, _headers, rawBody);
-        Map _responseBody = _response['body'];
-        print(_responseBody);
-        print("============================");
+        
+        Navigator.pushNamed(context, ReviewPaymentLocation.routeName, arguments: rawBody);
       }, 
       style: SharedStyle.yellowBtn,
       child: Container(
