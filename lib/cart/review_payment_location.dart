@@ -17,6 +17,8 @@ class ReviewPaymentLocation extends StatefulWidget {
 
 class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   String _dataUrl ="${SharedUrl.root}/${SharedUrl.version}/buyer/review_payment_location";
+  String _selectAddressUrl ="${SharedUrl.root}/${SharedUrl.version}/buyer/locations/select_location";
+  String _selectPaymentUrl ="${SharedUrl.root}/${SharedUrl.version}/buyer/payment_methods/select_payment_method";
   String _dataUrlCheckout ="${SharedUrl.root}/${SharedUrl.version}/buyer/checkouts";
   
   // variables for scale functions
@@ -25,7 +27,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   late double scale;
 
   // dimensions
-  static final double cardHeight = 100;
+  static final double cardHeight = 150;
   static final double cardWidth = 327;
 
   // variables
@@ -34,6 +36,8 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   List paymentMethods = [];
   bool refresh = true;
   bool changeLocation = false;
+  bool changePayment = false;
+  int selectedPayment = 0;
 
   // headers
   Map<String, String> _headers = {};
@@ -69,6 +73,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
             if (snapshot.hasError) {
               return Text("Error: ${snapshot.error}");
             }
+            refresh = false;
 
             // get response
             var response = snapshot.data;
@@ -83,6 +88,8 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
             if(responseBody['payment_methods'].length > 0){
               paymentMethods = json.decode(responseBody["payment_methods"]);
             }
+
+            selectedPayment = responseBody["selected_payment_method"];
 
             return content();
         }
@@ -118,7 +125,6 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   Widget locationContainer(){
     return Container(
       width: SharedFunction.scaleWidth(cardWidth, width),
-      height: SharedFunction.scaleHeight(cardHeight, height),
       color: SharedStyle.white,
       child: Column(
         children: [
@@ -130,6 +136,8 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
                 selectedLocation(_location)
               ]
             ]
+          ]else ... [
+            locationList()
           ]
         ],
       ),
@@ -139,14 +147,19 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   Widget paymentMethodContainer(){
     return Container(
       width: SharedFunction.scaleWidth(cardWidth, width),
-      height: SharedFunction.scaleHeight(cardHeight, height),
       color: SharedStyle.white,
       child: Column(
         children: [
           cardHeader(Icon(Icons.account_balance_wallet_outlined), "Payment Method"),
           SizedBox(height: SharedFunction.scaleHeight(10, height),),
-          for (var _paymentMethod in paymentMethods) ... [
-            selectedPaymentMethod(_paymentMethod)
+          if(!changePayment) ... [
+            for (var _paymentMethod in paymentMethods) ... [
+              if(_paymentMethod['id'] == selectedPayment) ... [
+                selectedPaymentMethod(_paymentMethod)
+              ]
+            ]
+          ]else ... [
+            paymentMethodList()
           ]
         ],
       ),
@@ -158,7 +171,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
       children: [
         icon,
         cardHeaderName(name),
-        editBtn()
+        editBtn(name)
       ],
     );
   }
@@ -169,12 +182,21 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
     );
   }
 
-  Widget editBtn(){
+  Widget editBtn(String name){
     return Expanded(
       child: Container(
         alignment: Alignment.centerRight,
-        child: Icon(
-          Icons.edit,
+        child: IconButton(
+          onPressed: () {
+            if(name == "Payment Method"){
+              setState(() => changePayment = true);
+            }else{
+              setState(() => changeLocation = true);
+            }
+          },
+          icon: Icon(
+            Icons.edit,
+          ),
         ),
       )
     );
@@ -190,6 +212,84 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   }
 
   Widget selectedPaymentMethod(Map _paymentMethod){
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Text(_paymentMethod['name'])
+      ],
+    );
+  }
+
+  Widget locationList(){
+    return Container(
+      height: SharedFunction.scaleHeight(100, height),
+      child: ListView(
+        children: [
+          for (var _location in locations) ... [
+            ListTile(
+              onTap: () async {
+                var _response = await SharedFunction.sendData(_selectAddressUrl, _headers, {"id": _location['id']});
+
+                if (_response['status'] == 200){
+                  setState(() {
+                    if(_response['body']['locations'].length > 0){
+                      locations = json.decode(_response['body']['locations']);
+                    }
+                    changeLocation = false;
+                  });
+
+                  print(locations);
+                }
+              },
+              title: Container(
+                color: _location['selected'] ? SharedStyle.yellow : SharedStyle.white,
+                child: location(_location),
+              ),
+            )
+          ]
+        ],
+      ),
+    );
+  }
+
+  Widget paymentMethodList(){
+    return Container(
+      height: SharedFunction.scaleHeight(100, height),
+      child: ListView(
+        children: [
+          for (var _paymentMethod in paymentMethods) ... [
+            ListTile(
+              onTap: () async {
+                var _response = await SharedFunction.sendData(_selectPaymentUrl, _headers, {"id": _paymentMethod['id']});
+
+                if (_response['status'] == 200){
+                  setState(() {
+                    selectedPayment = _paymentMethod['id'];
+                    changePayment = false;
+                  });
+                }
+              },
+              title: Container(
+                color: _paymentMethod['id'] == selectedPayment ? SharedStyle.yellow : SharedStyle.white,
+                child: paymentMethod(_paymentMethod),
+              ),
+            )
+          ]
+        ],
+      ),
+    );
+  }
+
+  Widget location(Map _location){
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Text(_location['name'])
+      ],
+    );
+  }
+
+  Widget paymentMethod(Map _paymentMethod){
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
