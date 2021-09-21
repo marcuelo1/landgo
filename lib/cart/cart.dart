@@ -168,6 +168,10 @@ class _CartState extends State<Cart> {
       children: [
         // products
         for (var _cart in _carts) ...[cartProduct(_cart)],
+        deliveryFee(),
+        SizedBox(height: SharedFunction.scaleHeight(5, height)),
+        vatFee(),
+        SizedBox(height: SharedFunction.scaleHeight(5, height)),
         // total
         sellerTotal(_carts, seller_id)
       ],
@@ -359,8 +363,28 @@ class _CartState extends State<Cart> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("Total", style: SharedStyle.subTitle,),
+        Text("Sub Total", style: SharedStyle.subTitle,),
         Text("₱$_totalPriceString", style: SharedStyle.subTitleYellow,)
+      ],
+    );
+  }
+
+  Widget deliveryFee(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text("Delivery Fee", style: SharedStyle.subTitle,),
+        Text("₱0", style: SharedStyle.subTitleYellow,)
+      ],
+    );
+  }
+
+  Widget vatFee(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text("VAT", style: SharedStyle.subTitle,),
+        Text("₱0", style: SharedStyle.subTitleYellow,)
       ],
     );
   }
