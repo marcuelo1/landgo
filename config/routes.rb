@@ -80,6 +80,12 @@ Rails.application.routes.draw do
           post :select_location
         end
       end
+
+      resources :payment_methods do
+        collection do
+          post :select_payment_method
+        end
+      end
     end
 
     ###############################################

@@ -25,7 +25,7 @@ class V1::Buyer::BuyersController < BuyerController
     end
 
     def review_payment_location
-        render json: {locations: LocationBlueprint.render(@locations), payment_methods: PaymentMethodBlueprint.render(@payment_methods)}
+        render json: {locations: LocationBlueprint.render(@locations), payment_methods: PaymentMethodBlueprint.render(@payment_methods), selected_payment_method: @buyer.selected_payment_method ? @buyer.selected_payment_method.id : PaymentMethod.find_by(name: "Cash").id}
     end
 
     def product_details

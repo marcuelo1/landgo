@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_19_150702) do
+ActiveRecord::Schema.define(version: 2021_09_21_132247) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,16 @@ ActiveRecord::Schema.define(version: 2021_09_19_150702) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
+  end
+
+  create_table "buyer_payment_methods", force: :cascade do |t|
+    t.bigint "buyer_id", null: false
+    t.bigint "payment_method_id", null: false
+    t.boolean "selected", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["buyer_id"], name: "index_buyer_payment_methods_on_buyer_id"
+    t.index ["payment_method_id"], name: "index_buyer_payment_methods_on_payment_method_id"
   end
 
   create_table "buyers", force: :cascade do |t|
@@ -288,6 +298,8 @@ ActiveRecord::Schema.define(version: 2021_09_19_150702) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "add_on_groups", "sellers"
   add_foreign_key "add_ons", "add_on_groups"
+  add_foreign_key "buyer_payment_methods", "buyers"
+  add_foreign_key "buyer_payment_methods", "payment_methods"
   add_foreign_key "cart_add_ons", "add_ons"
   add_foreign_key "cart_add_ons", "carts"
   add_foreign_key "carts", "buyers"

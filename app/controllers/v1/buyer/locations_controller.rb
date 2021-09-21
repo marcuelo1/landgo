@@ -33,10 +33,10 @@ class V1::Buyer::LocationsController < BuyerController
 
     def select_location
         @locations.update(selected: false)
-
         @location.update(selected: true)
-
-        render json: {success: true}, status: 200
+        @locations.reload
+        
+        render json: {success: true, locations: LocationBlueprint.render(@locations)}, status: 200
     end
 
     private
