@@ -34,6 +34,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   Map checkoutData = {};
   List locations = [];
   List paymentMethods = [];
+  List orederSummary = [];
   bool refresh = true;
   bool changeLocation = false;
   bool changePayment = false;
@@ -59,8 +60,10 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
       checkoutData[key] = value;
     });
 
+    String rawUrl = _dataUrl + "?seller_ids=${checkoutData['sellers'].join(',')}";
+
     return !refresh ? content() : FutureBuilder(
-      future: SharedFunction.getData(_dataUrl, _headers),
+      future: SharedFunction.getData(rawUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         // Connection state of getting the data
         switch (snapshot.connectionState) {
@@ -79,17 +82,25 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
             var response = snapshot.data;
             var responseBody = response['body'];
             print(responseBody);
-            print("==============================================================");
+            print("============================================================== response body");
 
             if(responseBody['locations'].length > 0){
               locations = json.decode(responseBody["locations"]);
             }
+            print("============================================================== locations");
 
             if(responseBody['payment_methods'].length > 0){
               paymentMethods = json.decode(responseBody["payment_methods"]);
             }
+            print("============================================================== payment methods");
+
+            if(responseBody['order_summary'].length > 0){
+              orederSummary = responseBody["order_summary"];
+            }
+            print("============================================================== order summary");
 
             selectedPayment = responseBody["selected_payment_method"];
+            print("============================================================== selected payment method");
 
             return content();
         }
@@ -115,6 +126,10 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
               locationContainer(),
               SizedBox(height: SharedFunction.scaleHeight(20, height),),
               paymentMethodContainer(),
+              SizedBox(height: SharedFunction.scaleHeight(20, height),),
+              orderSummaryContainer(),
+              SizedBox(height: SharedFunction.scaleHeight(20, height),),
+              placeOrderBtn()
             ],
           ),
         )
@@ -166,12 +181,32 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
     );
   }
 
-  Widget cardHeader(Icon icon, String name){
+  Widget orderSummaryContainer(){
+    print("================================= orderSummaryContainer");
+    return Container(
+      width: SharedFunction.scaleWidth(cardWidth, width),
+      color: SharedStyle.white,
+      child: Column(
+        children: [
+          cardHeader(Icon(Icons.receipt), "Order summary", false),
+          SizedBox(height: SharedFunction.scaleHeight(10, height),),
+          for (var os in orederSummary) ... [
+            orderSummaryContent(os),
+            SizedBox(height: SharedFunction.scaleHeight(10, height),),
+          ]
+        ],
+      ),
+    );
+  }
+
+  Widget cardHeader(Icon icon, String name, [bool showEdit = true]){
     return Row(
       children: [
         icon,
         cardHeaderName(name),
-        editBtn(name)
+        if (showEdit) ... [
+          editBtn(name)
+        ]
       ],
     );
   }
@@ -203,6 +238,8 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   }
 
   Widget selectedLocation(Map _location){
+    checkoutData['location_id'] = _location['id'];
+
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -212,6 +249,8 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   }
 
   Widget selectedPaymentMethod(Map _paymentMethod){
+    checkoutData['payment_method_id'] = _paymentMethod['id'];
+
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -295,6 +334,68 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
       children: [
         Text(_paymentMethod['name'])
       ],
+    );
+  }
+
+  Widget orderSummaryContent(Map _orderSummary){
+    print("================================= orderSummaryContent");
+    List _carts = json.decode(_orderSummary['carts']);
+    print("================================= orderSummaryContent after decode");
+    Map _seller = json.decode(_orderSummary['seller']);
+
+    return Column(
+      children: [
+        orderSummarySeller(_seller),
+        for (var _cart in _carts) ... [
+          orderSummaryItems(_cart)
+        ]
+      ],
+    );
+  }
+
+  Widget orderSummarySeller(Map _seller){
+    print("================================= orderSummarySeller");
+    return Row(
+      children: [
+        Text("Store: "),
+        Text(_seller['name'])
+      ],
+    );
+  }
+
+  Widget orderSummaryItems(Map _cart){
+    print("================================= orderSummaryItems");
+    Map _product = json.decode(_cart['product']);
+
+    return Row(
+      children: [
+        Text("${_cart['quantity'].toString()}x"),
+        Column(
+          children: [
+            Text(_product['name']),
+            Text(_cart['product_description'])
+          ],
+        ),
+        Text("${_cart['total'].toString()}")
+      ],
+    );
+  }
+
+  Widget placeOrderBtn(){
+    return ElevatedButton(
+      onPressed: () async {
+        Map _response = await SharedFunction.sendData(_dataUrlCheckout, _headers, checkoutData);
+        if(_response['status'] == 200){
+          
+        }
+      }, 
+      style: SharedStyle.yellowBtn,
+      child: Center(
+        child: Text(
+          "Place Order",
+          style: SharedStyle.yellowBtnText,
+        ),
+      )
     );
   }
   
