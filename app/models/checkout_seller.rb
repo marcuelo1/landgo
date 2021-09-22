@@ -3,5 +3,5 @@ class CheckoutSeller < ApplicationRecord
   belongs_to :seller
   has_many :checkout_products, dependent: :destroy
 
-  enum status: {:"In Progress" => 0, :Pending => 1, :Current => 2, :Completed => 3}
+  enum status: {:Pending => 0, :Current => 2, :Completed => 3}
 end
