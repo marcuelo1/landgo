@@ -8,6 +8,7 @@ import 'package:ryve_mobile/sellers/show_seller.dart';
 import 'package:ryve_mobile/sellers/product.dart';
 import 'package:ryve_mobile/sellers/sellers.dart';
 import 'package:ryve_mobile/shared/headers.dart';
+import 'package:ryve_mobile/sidebar/list_of_transactions.dart';
 import 'package:ryve_mobile/sidebar/profile.dart';
 import 'package:ryve_mobile/sign_in/sign_in.dart';
 import 'package:ryve_mobile/sign_up/sign_up.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         LocationForm.routeName: (context) => LocationForm(),
         Profile.routeName: (context) => Profile(),
         ReviewPaymentLocation.routeName: (context) => ReviewPaymentLocation(),
+        ListOfTransactions.routeName: (context) => ListOfTransactions()
       },
     );
   }

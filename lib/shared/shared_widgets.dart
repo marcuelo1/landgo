@@ -4,6 +4,7 @@ import 'package:ryve_mobile/locations/list_of_locations.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
+import 'package:ryve_mobile/sidebar/list_of_transactions.dart';
 import 'package:ryve_mobile/sidebar/profile.dart';
 import 'package:ryve_mobile/sign_in/sign_in.dart';
 
@@ -65,7 +66,7 @@ class SharedWidgets {
   /////////////////////
   static List menus = [
     ["Profile", Profile.routeName, Icon(Icons.person)],
-    ["Transactions", "route", Icon(Icons.person)],
+    ["Transactions", ListOfTransactions.routeName, Icon(Icons.person)],
     ["Addresses", "route", Icon(Icons.location_on)],
     ["Invite Friends", "route", Icon(Icons.groups)],
     ["Settings", "route", Icon(Icons.settings)],
