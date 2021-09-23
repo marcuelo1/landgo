@@ -1,6 +1,16 @@
 class V1::Buyer::CheckoutsController < BuyerController
     before_action :set_checkout, only: [:create]
 
+    def index
+        completed_sellers = @buyer.checkout_sellers.where(status: 3)
+        canceled_sellers = @buyer.checkout_sellers.where(status: 4)
+
+        render json: {
+            completed: ListOfTransactionsBlueprint.render(completed_sellers), 
+            canceled: ListOfTransactionsBlueprint.render(canceled_sellers)
+        }
+    end
+
     def create
         seller_ids = params[:sellers]
         seller_ids.each do |si|
