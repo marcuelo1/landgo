@@ -7,6 +7,7 @@ import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/sidebar/list_of_transactions.dart';
 import 'package:ryve_mobile/sidebar/profile.dart';
 import 'package:ryve_mobile/sign_in/sign_in.dart';
+import 'package:ryve_mobile/transactions/current_transactions.dart';
 
 class SharedWidgets {
   /////////////////////
@@ -19,6 +20,8 @@ class SharedWidgets {
       backgroundColor: SharedStyle.black2,
       iconTheme: IconThemeData(color: SharedStyle.yellow),
       actions: [
+        _currentTransactions(context),
+        SizedBox(width: 10,),
         _locations(context),
         SizedBox(width: 10,),
         _shoppingCart(context),
@@ -58,6 +61,15 @@ class SharedWidgets {
         Navigator.pushNamed(context, ListOfLocations.routeName);
       },
       child: Icon(Icons.location_on_outlined),
+    );
+  }
+
+  static Widget _currentTransactions(BuildContext context){
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, CurrentTransactions.routeName);
+      },
+      child: Icon(Icons.receipt),
     );
   }
 

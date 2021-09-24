@@ -13,6 +13,8 @@ import 'package:ryve_mobile/sidebar/profile.dart';
 import 'package:ryve_mobile/sign_in/sign_in.dart';
 import 'package:ryve_mobile/sign_up/sign_up.dart';
 import 'package:ryve_mobile/splash/splash.dart';
+import 'package:ryve_mobile/transactions/current_transaction_show.dart';
+import 'package:ryve_mobile/transactions/current_transactions.dart';
 import 'welcome_page/welcome_page.dart';
 
 void main() async {
@@ -42,7 +44,9 @@ class MyApp extends StatelessWidget {
         LocationForm.routeName: (context) => LocationForm(),
         Profile.routeName: (context) => Profile(),
         ReviewPaymentLocation.routeName: (context) => ReviewPaymentLocation(),
-        ListOfTransactions.routeName: (context) => ListOfTransactions()
+        ListOfTransactions.routeName: (context) => ListOfTransactions(),
+        CurrentTransactions.routeName: (context) => CurrentTransactions(),
+        CurrentTransactionShow.routeName: (context) => CurrentTransactionShow(),
       },
     );
   }
