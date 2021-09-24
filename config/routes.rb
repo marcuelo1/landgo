@@ -73,6 +73,9 @@ Rails.application.routes.draw do
       end
 
       resources :checkouts do
+        collection do
+          get :current_transactions
+        end
       end
 
       resources :locations do

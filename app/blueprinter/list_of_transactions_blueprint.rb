@@ -1,8 +1,12 @@
 class ListOfTransactionsBlueprint < Blueprinter::Base
-    fields :id, :total
+    fields :id, :total, :status
 
     field :seller_name do |cs|
         cs.seller.name
+    end
+
+    field :seller_id do |cs|
+        cs.seller.id
     end
 
     field :products_names do |cs|

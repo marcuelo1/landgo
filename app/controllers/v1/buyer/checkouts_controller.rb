@@ -8,7 +8,7 @@ class V1::Buyer::CheckoutsController < BuyerController
         render json: {
             completed: ListOfTransactionsBlueprint.render(completed_sellers), 
             canceled: ListOfTransactionsBlueprint.render(canceled_sellers)
-        }
+        }, status: 200
     end
 
     def create
@@ -18,6 +18,7 @@ class V1::Buyer::CheckoutsController < BuyerController
             if @checkout_seller.save 
                 # get carts of buyer
                 carts = @buyer.carts.where(seller_id: si) 
+                checkout_seller_price = 0
                 carts.each do |cart|
                     product = cart.product 
                     product_price = cart.product_price 
@@ -32,6 +33,8 @@ class V1::Buyer::CheckoutsController < BuyerController
                         quantity: cart.quantity,
                         total: cart.total
                     )
+
+                    checkout_seller_price += cart.total
 
                     if @checkout_product.save
                         # get cart product's add ons
@@ -53,11 +56,52 @@ class V1::Buyer::CheckoutsController < BuyerController
                         return render json: {success: false, message: @checkout_product.errors}, status: 500
                     end
                 end
+
+                @checkout_seller.update(total: checkout_seller_price)
             else
                 @checkout.destroy
                 return render json: {success: false, message: @checkout_seller.errors}, status: 500
             end
         end
         return render json: {success: true, checkout_id: @checkout.id}, status: 200
+    end
+
+    def show
+        checkout_seller = @buyer.checkout_sellers.find_by(seller_id: params[:id])
+        checkout = checkout_seller.checkout
+        seller = checkout_seller.seller
+        carts = @buyer.carts.where(seller_id: seller.id)
+        geo_object = Geocoder.search([checkout.latitude, checkout.longitude]).first.data
+        
+        address = geo_object['address']
+        street = address['road'] ? address['road'] : ''
+        village = address['village'] ? address['village'] : address['suburb'] ? address['suburb'] : ''
+        city = address['city']
+        
+        buyer_address = [street, village, city]
+        buyer_address.delete('')
+        buyer_address = buyer_address.join(', ')
+
+        render json: {
+            seller: SellerBlueprint.render(seller), 
+            carts: CartBlueprint.render(carts),
+            buyer_address: buyer_address
+        }, status: 200
+        
+    end
+
+    def update
+        checkout_seller = @buyer.checkout_sellers.find_by(seller_id: params[:id])
+        if checkout_seller.update(status: params[:status].to_i)
+            render json: {success: true}, status: 200
+        else
+            render json: {success: false}, status: 500
+        end
+    end
+
+    def current_transactions
+        sellers = @buyer.checkout_sellers.where(status: 0)
+
+        render json: {sellers: ListOfTransactionsBlueprint.render(sellers)}, status: 200
     end
 end
