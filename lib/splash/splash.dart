@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ryve_mobile/home/home.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
+import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/sign_in/sign_in.dart';
 
@@ -41,24 +42,10 @@ class _SplashState extends State<Splash> {
             print("====================");
             // check status of response
             if (response['status'] == 200) {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Home()
-                ), 
-                (route) => false
-              );
+              return Home();
             } else {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SignIn()
-                ), 
-                (route) => false
-              );
+              return SignIn();
             }
-
-            return content(context);
         }
       }
     );
@@ -67,7 +54,9 @@ class _SplashState extends State<Splash> {
   Widget content(BuildContext context){
     return SafeArea(
       child: Scaffold(
-        body: Text("Splash"),
+        body: Container(
+          color: SharedStyle.yellow,
+        ),
       )
     );
   }
