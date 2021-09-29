@@ -1,3 +1,22 @@
 // Place all the styles related to the category controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+.details-container {
+    .card{
+        width: fit-content;
+        margin: auto;
+        
+        .image {
+            width: 400px;
+            margin: auto;
+    
+            img {
+                width: inherit;
+                object-fit: fill;
+                border: 2px solid rgb(122, 122, 122);
+                border-radius: 10px;
+            }
+        }
+    }
+}

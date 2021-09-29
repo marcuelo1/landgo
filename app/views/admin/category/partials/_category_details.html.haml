@@ -1,0 +1,15 @@
+.card
+    .card-body 
+        .image 
+            - if @category.image.attached?
+                = image_tag @category.image
+            - else 
+                = image_tag asset_path "no-photo-2.jpg"
+        %br/
+        %table.table-details 
+            %tr 
+                %th Name: 
+                %td= @category.name
+            %tr 
+                %th Status:
+                %td= @category.status 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_21_132247) do
+ActiveRecord::Schema.define(version: 2021_09_29_101839) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,6 +75,15 @@ ActiveRecord::Schema.define(version: 2021_09_21_132247) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["buyer_id"], name: "index_buyer_payment_methods_on_buyer_id"
     t.index ["payment_method_id"], name: "index_buyer_payment_methods_on_payment_method_id"
+  end
+
+  create_table "buyer_vouchers", force: :cascade do |t|
+    t.bigint "buyer_id", null: false
+    t.bigint "voucher_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["buyer_id"], name: "index_buyer_vouchers_on_buyer_id"
+    t.index ["voucher_id"], name: "index_buyer_vouchers_on_voucher_id"
   end
 
   create_table "buyers", force: :cascade do |t|
@@ -295,11 +304,27 @@ ActiveRecord::Schema.define(version: 2021_09_21_132247) do
     t.index ["uid", "provider"], name: "index_sellers_on_uid_and_provider", unique: true
   end
 
+  create_table "vouchers", force: :cascade do |t|
+    t.string "code"
+    t.string "description"
+    t.float "discount"
+    t.string "discount_type"
+    t.float "min_amount"
+    t.float "max_discount"
+    t.datetime "valid_from"
+    t.datetime "valid_until"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "status"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "add_on_groups", "sellers"
   add_foreign_key "add_ons", "add_on_groups"
   add_foreign_key "buyer_payment_methods", "buyers"
   add_foreign_key "buyer_payment_methods", "payment_methods"
+  add_foreign_key "buyer_vouchers", "buyers"
+  add_foreign_key "buyer_vouchers", "vouchers"
   add_foreign_key "cart_add_ons", "add_ons"
   add_foreign_key "cart_add_ons", "carts"
   add_foreign_key "carts", "buyers"

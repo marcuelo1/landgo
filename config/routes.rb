@@ -37,6 +37,9 @@ Rails.application.routes.draw do
 
     resources :add_on_groups do
     end
+
+    resources :vouchers do
+    end
   end
 
   namespace :v1, default: {format: :json} do

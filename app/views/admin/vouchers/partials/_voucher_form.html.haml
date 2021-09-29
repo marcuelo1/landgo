@@ -1,0 +1,32 @@
+.modal-bg
+.modal-content
+    .card 
+        .card-header 
+            - if @voucher.id 
+                %h3 Edit Voucher
+            - else
+                %h3 Add Voucher
+        .card-body
+            =form_with(url: @voucher.id ? "/admin/vouchers/#{@voucher.id}" : "/admin/vouchers", method: @voucher.id ? :put : :post, model: @voucher) do |f|
+                = f.text_field :code, {class: "form-control", placeholder: "Code"}
+                %br/
+                = f.text_field :description, {class: "form-control", placeholder: "Description"}
+                %br/
+                = f.text_field :discount, {class: "form-control", placeholder: "Discount"}
+                %br/
+                = f.select :discount_type, options_for_select([['Percent', 'Percent'], ['Amount', 'Amount']], @voucher.discount_type), {}, {class: "form-select"}
+                %br/
+                = f.text_field :min_amount, {class: "form-control", placeholder: "Min. Amount"}
+                %br/
+                = f.text_field :max_discount, {class: "form-control", placeholder: "Max Discount"}
+                %br/
+                Valid From
+                = select_date(@voucher.valid_from, {prefix: "valid_from", start_year: Date.today.year, end_year: Date.today.year + 10, order: [:day, :month, :year], :prompt => { :day => 'Day', :month => 'Month', :year => 'Year' }, use_short_month: true})
+                %br/
+                Valid Until
+                = select_date(@voucher.valid_until, {prefix: "valid_until", start_year: Date.today.year, end_year: Date.today.year + 10, order: [:day, :month, :year], :prompt => { :day => 'Day', :month => 'Month', :year => 'Year' }, use_short_month: true})
+                %br/
+                - if @voucher.id 
+                    = f.select :status, options_for_select([['Pending', 0], ['Approved', 1]], @voucher.status_int), {}, {class: "form-select"}
+                    %br/
+                = f.submit "Create", {class: "btn btn-primary btn-sm"}

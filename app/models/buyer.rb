@@ -12,6 +12,8 @@ class Buyer < ActiveRecord::Base
   has_many :checkouts, dependent: :destroy
   has_many :checkout_sellers, through: :checkouts
   has_many :buyer_payment_methods, dependent: :destroy
+  has_many :buyer_vouchers, dependent: :destroy
+  has_many :vouchers, through: :buyer_vouchers
 
   after_create :create_current_location
 
