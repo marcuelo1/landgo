@@ -1,4 +1,4 @@
-function expandImage(image_url) {
+export function expandImage(image_url) {
     return `
         <div class="modal-bg">
         </div>
@@ -7,8 +7,3 @@ function expandImage(image_url) {
         </div>
     `;
 }
-
-$("body").on('click', '.modal-bg', function(){
-    $(this).remove();
-    $('.modal-content').remove();
-})

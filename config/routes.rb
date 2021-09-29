@@ -6,21 +6,14 @@ Rails.application.routes.draw do
   namespace :admin do
     get "/", to: "admin#index"
 
-    scope :category do
-      get "/", to: "category#index"
-      post "/", to: "category#create"
-      get "/:id", to: "category#show"
+    resources :category do
     end
     
     scope :category_deal do
       post "/", to: "category_deals#create"
     end
 
-    scope :seller do
-      get "/", to: "seller#index"
-      get "/new", to: "seller#new"
-      post "/", to: "seller#create"
-      get "/:id", to: "seller#show"
+    resources :seller do
     end
 
     scope :product_category do

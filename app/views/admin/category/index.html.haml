@@ -1,32 +1,36 @@
-%h1 Category
-.card 
-    .card-body 
-        = form_with(url: "/admin/category", method: :post) do |f|
-            = f.text_field :name, {placeholder: "Name", style: "width:300px;", class: "form-control"}
-            %br/
-            = f.file_field :image, {class: "form-control", style: "width:300px;"}
-            %br/
-            = submit_tag "Create", {class: "btn btn-primary btn-sm"}
-%hr/
-
-%table.table
-    %thead 
-        %tr
-            %th Name
-            %th Status
-            %th Image
-            %th Action
-    %tbody 
-        - @categories.each do |category|
-            %tr 
-                %td= category.name 
-                %td= category.status 
-                %td
-                    - if category.image.attached?
-                        = image_tag category.image, style: "width: 50px;"
-                    - else
-                        No Image
-                %td
-                    %a{href: "/admin/category/#{category.id}"}View 
+#category-index
+    .header.d-flex.justify-content-between 
+        .page-title List of Categories
+        .actions-container.d-flex.justify-content-end
+            .btn.btn-primary.new-btn{url: "/admin/category/new"}
+                %i.icon-plus
+                Add Category
+    %br/
+    .body
+        .card 
+            .card-body
+                .search-bar 
+                    %input{type: "text", placeholder: "Search Seller", class: "form-control"}/
+                    %i.icon-search 
+                %br/
+                %table.table-list 
+                    %tr 
+                        %th Name
+                        %th Status
+                        %th Image
+                        %th Action
+                    - @categories.each do |category|
+                        %tr
+                            %td= category.name 
+                            %td= category.status 
+                            %td
+                                - if category.image.attached?
+                                    = image_tag category.image, style: "width: 50px;"
+                                - else
+                                    = image_tag asset_path "no-photo-2.jpg"
+                            %td
+                                %a{href: "/admin/category/#{category.id}"}
+                                    .show-btn.btn.btn-secondary
+                                        %i.icon-eye-open 
 
         

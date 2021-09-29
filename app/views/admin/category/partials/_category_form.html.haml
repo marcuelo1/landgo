@@ -1,0 +1,12 @@
+.modal-bg
+.modal-content
+    .card 
+        .card-header 
+            %h3 Add Category
+        .card-body    
+            = form_with(url: "/admin/category", method: :post) do |f|
+                = f.text_field :name, {placeholder: "Name", style: "width:300px;", class: "form-control"}
+                %br/
+                = f.file_field :image, {class: "form-control", style: "width:300px;"}
+                %br/
+                = submit_tag "Create", {class: "btn btn-primary btn-sm"}

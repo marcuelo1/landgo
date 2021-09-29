@@ -215,14 +215,14 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: auto !important;
-    height: 80vh;
+    height: auto !important;
     z-index: 999999;
     background: white !important;
     border: none !important;
 
     .expanded-image {
         width: 60vw;
-        height: inherit;
+        height: 80vh;
         object-fit: contain;
     }
     

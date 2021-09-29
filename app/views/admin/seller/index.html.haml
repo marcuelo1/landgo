@@ -1,42 +1,40 @@
-= content_for :javascript_includes do
-    = javascript_pack_tag "sellers"
-
-.header.d-flex.justify-content-between 
-    .page-title List of Sellers
-    .actions-container.d-flex.justify-content-end
-        .btn.btn-primary#create-seller{url: "/admin/seller/new"}
-            %i.icon-plus
-            Add Seller
-%br/
-.body
-    .card 
-        .card-body
-            .search-bar 
-                %input{type: "text", placeholder: "Search Seller", class: "form-control"}/
-                %i.icon-search 
-            %br/
-            %table.table-list 
-                %tr 
-                    %th Name 
-                    %th Email 
-                    %th Phone Number 
-                    %th Address
-                    %th Category 
-                    %th Image 
-                    %th Actions
-                - @sellers.each do |seller|
-                    %tr
-                        %td= seller.name
-                        %td= seller.email 
-                        %td= seller.phone_number 
-                        %td= seller.address
-                        %td= seller.category.name 
-                        %td.image-container
-                            - if seller.image.attached?
-                                = image_tag seller.image
-                            - else 
-                                = image_tag asset_path "no-photo-2.jpg"
-                        %td
-                            %a{href: "/admin/seller/#{seller.id}"} 
-                                .show-btn.btn.btn-secondary
-                                    %i.icon-eye-open 
+#seller-index
+    .header.d-flex.justify-content-between 
+        .page-title List of Sellers
+        .actions-container.d-flex.justify-content-end
+            .btn.btn-primary#create-seller{url: "/admin/seller/new"}
+                %i.icon-plus
+                Add Seller
+    %br/
+    .body
+        .card 
+            .card-body
+                .search-bar 
+                    %input{type: "text", placeholder: "Search Seller", class: "form-control"}/
+                    %i.icon-search 
+                %br/
+                %table.table-list 
+                    %tr 
+                        %th Name 
+                        %th Email 
+                        %th Phone Number 
+                        %th Address
+                        %th Category 
+                        %th Image 
+                        %th Actions
+                    - @sellers.each do |seller|
+                        %tr
+                            %td= seller.name
+                            %td= seller.email 
+                            %td= seller.phone_number 
+                            %td= seller.address
+                            %td= seller.category.name 
+                            %td.image-container
+                                - if seller.image.attached?
+                                    = image_tag seller.image
+                                - else 
+                                    = image_tag asset_path "no-photo-2.jpg"
+                            %td
+                                %a{href: "/admin/seller/#{seller.id}"} 
+                                    .show-btn.btn.btn-secondary
+                                        %i.icon-eye-open 

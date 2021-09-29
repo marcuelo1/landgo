@@ -15,6 +15,9 @@ class Admin::CategoryController < AdministratorController
     def show
         @category = Category.find(params[:id])
     end
+
+    def new
+    end
     
     
     private

@@ -1,5 +1,7 @@
 $(document).ready(function(){
-    $("#create-seller ").on('click', function(){
+    body = $("#seller-index")
+
+    $(body).on('click', "#create-seller", function(){
         url = $(this).attr("url")
         $.ajax({
             url: url,
@@ -9,15 +11,10 @@ $(document).ready(function(){
         });
     });
 
-    $('.image-container').on('click', function(){
+    $(body).on('click', '.image-container', function(){
         image_url = $(this).find("img").attr("src");
-        $("body").prepend(expandImage(image_url));
+        $(body).prepend(expandImage(image_url));
     });
-
-    $("body").on('click', '.modal-bg', function(){
-        $(this).remove();
-        $('.modal-content').remove();
-    })
 });
 
 function expandImage(image_url) {

@@ -37,11 +37,6 @@ $(document).ready(function(){
         $("body").prepend(expandImage(image_url));
     });
 
-    $("body").on('click', '.modal-bg', function(){
-        $(this).remove();
-        $('.modal-content').remove();
-    })
-
     $("body").on('click', '#add-size', function(){
         count =  $("#input-sizes-container").find("li").length
         optionsRaw = $("#input-sizes-container").data("options")
@@ -108,16 +103,6 @@ $(document).ready(function(){
             $(this).find(".val").text(count)
             count++
         })
-    })
-
-    $("body").on('click', '.new-btn', function(){
-        url = $(this).attr("url")
-        $.ajax({
-            url: url,
-            dataType: "script",
-            data: {},
-            success: function(response){}
-        });
     })
 })
 
