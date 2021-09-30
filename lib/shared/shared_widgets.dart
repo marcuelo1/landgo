@@ -5,6 +5,7 @@ import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/sidebar/list_of_transactions.dart';
+import 'package:ryve_mobile/sidebar/list_of_vouchers.dart';
 import 'package:ryve_mobile/sidebar/profile.dart';
 import 'package:ryve_mobile/sign_in/sign_in.dart';
 import 'package:ryve_mobile/transactions/current_transactions.dart';
@@ -79,6 +80,7 @@ class SharedWidgets {
   static List menus = [
     ["Profile", Profile.routeName, Icon(Icons.person)],
     ["Transactions", ListOfTransactions.routeName, Icon(Icons.person)],
+    ["Vouchers", ListOfVouchers.routeName, Icon(Icons.location_on)],
     ["Addresses", "route", Icon(Icons.location_on)],
     ["Invite Friends", "route", Icon(Icons.groups)],
     ["Settings", "route", Icon(Icons.settings)],
@@ -368,6 +370,27 @@ class SharedWidgets {
           ),
         )
       ],
+    );
+  }
+
+  /////////////////////
+  /// V O U C H E R
+  /////////////////////
+  static final double voucherWidth = 200;
+  static final double voucherHeight = 60;
+
+  static Widget voucher(Map _voucher, double width, double height){
+    return Container(
+      width: SharedFunction.scaleWidth(voucherWidth, width),
+      height: SharedFunction.scaleHeight(voucherHeight, height),
+      color: SharedStyle.yellow,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(_voucher['code']),
+          Text(_voucher['description'])
+        ],
+      ),
     );
   }
 }
