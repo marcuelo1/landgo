@@ -88,6 +88,8 @@ Rails.application.routes.draw do
           post :select_payment_method
         end
       end
+      
+      resources :vouchers
     end
 
     ###############################################
