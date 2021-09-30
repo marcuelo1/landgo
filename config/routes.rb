@@ -40,6 +40,9 @@ Rails.application.routes.draw do
 
     resources :vouchers do
     end
+
+    resources :buyers do
+    end
   end
 
   namespace :v1, default: {format: :json} do

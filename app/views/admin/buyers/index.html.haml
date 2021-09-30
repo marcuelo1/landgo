@@ -1,0 +1,33 @@
+#buyers-index
+    .header.d-flex.justify-content-between 
+        .page-title List of Users
+        .actions-container.d-flex.justify-content-end
+        -#     .btn.btn-primary.new-btn{url: "/admin/vouchers/new"}
+        -#         %i.icon-plus
+        -#         Add Voucher
+    %br/
+    .body
+        .card 
+            .card-body
+                .search-bar 
+                    %input{type: "text", placeholder: "Search User", class: "form-control"}/
+                    %i.icon-search 
+                %br/
+                %table.table-list 
+                    %tr 
+                        %th Id
+                        %th Name
+                        %th Email
+                        %th Phone Number
+                        %th Actions
+                    - @buyers.each do |buyer|
+                        %tr
+                            %td= buyer.id 
+                            %td= buyer.name 
+                            %td= buyer.email 
+                            %td= buyer.phone_number 
+                            %td
+                                .edit-btn.show-btn.btn.btn-secondary{url: "/admin/buyers/#{buyer.id}"}
+                                    %i.icon-eye-open 
+
+        
