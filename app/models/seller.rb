@@ -9,10 +9,10 @@ class Seller < ActiveRecord::Base
 
   belongs_to :category
   has_one_attached :image
-  has_many :product_categories
-  has_many :products
-  has_many :product_sizes
-  has_many :add_on_groups
+  has_many :product_categories, dependent: :destroy
+  has_many :products, dependent: :destroy
+  has_many :product_sizes, dependent: :destroy
+  has_many :add_on_groups, dependent: :destroy
   has_many :add_ons, through: :add_on_groups
   has_one :location, as: :user, dependent: :destroy
   has_many :checkout_sellers, dependent: :destroy
