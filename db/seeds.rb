@@ -570,3 +570,42 @@ if Seller.count == 0
         end
     end
 end
+###########################################################################################################
+############ VOUCHERS
+###########################################################################################################
+vouchers = [
+    {
+        code: 'TESTVOUCHER1',
+        description: 'test voucher 1',
+        discount: 60,
+        discount_type: 'Percent',
+        min_amount: 20,
+        max_discount: 100,
+        valid_from: DateTime.now,
+        valid_until: DateTime.now + 1.months,
+        status: 1,
+    },
+    {
+        code: 'TESTVOUCHER2',
+        description: 'test voucher 2',
+        discount: 60,
+        discount_type: 'Amount',
+        min_amount: 20,
+        max_discount: nil,
+        valid_from: DateTime.now,
+        valid_until: DateTime.now + 1.months,
+        status: 1,
+    },
+]
+
+if Voucher.all.count == 0
+    vouchers.each do |v|
+        Voucher.create(v)
+    end
+end
+###########################################################################################################
+############ PAYMENT METHODS
+###########################################################################################################
+if PaymentMethod.all.count == 0
+    PaymentMethod.create(name: "Cash")
+end

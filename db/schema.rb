@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_29_101839) do
+ActiveRecord::Schema.define(version: 2021_10_05_180153) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -187,8 +187,10 @@ ActiveRecord::Schema.define(version: 2021_09_29_101839) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "status", default: 0
+    t.bigint "voucher_id"
     t.index ["checkout_id"], name: "index_checkout_sellers_on_checkout_id"
     t.index ["seller_id"], name: "index_checkout_sellers_on_seller_id"
+    t.index ["voucher_id"], name: "index_checkout_sellers_on_voucher_id"
   end
 
   create_table "checkouts", force: :cascade do |t|
@@ -339,6 +341,7 @@ ActiveRecord::Schema.define(version: 2021_09_29_101839) do
   add_foreign_key "checkout_products", "products"
   add_foreign_key "checkout_sellers", "checkouts"
   add_foreign_key "checkout_sellers", "sellers"
+  add_foreign_key "checkout_sellers", "vouchers"
   add_foreign_key "checkouts", "buyers"
   add_foreign_key "checkouts", "payment_methods"
   add_foreign_key "product_add_ons", "add_on_groups"

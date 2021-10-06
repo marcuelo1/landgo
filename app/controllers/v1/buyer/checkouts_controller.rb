@@ -14,7 +14,14 @@ class V1::Buyer::CheckoutsController < BuyerController
     def create
         seller_ids = params[:sellers]
         seller_ids.each do |si|
-            @checkout_seller = CheckoutSeller.new(checkout_id: @checkout.id, seller_id: si, delivery_fee: 0, total: 0)
+            @checkout_seller = CheckoutSeller.new(
+                checkout_id: @checkout.id, 
+                seller_id: si, 
+                delivery_fee: 0, 
+                total: 0,
+                voucher_id: params[:selectedVouchers].map{|v| v['seller_id'] == si ? v['voucher_id'] : []}.flatten.first
+            )
+
             if @checkout_seller.save 
                 # get carts of buyer
                 carts = @buyer.carts.where(seller_id: si) 

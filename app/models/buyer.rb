@@ -38,7 +38,7 @@ class Buyer < ActiveRecord::Base
   end
   
   def recent_sellers
-    seller_ids = self.checkout_sellers.where('checkout_sellers.created_at > ?', 1.weeks.ago).order(created_at: :desc).pluck(:seller_id)
+    seller_ids = self.checkout_sellers.where(status: 3).where('checkout_sellers.created_at > ?', 1.weeks.ago).order(created_at: :desc).pluck(:seller_id)
 
     Seller.where(id: seller_ids)
   end

@@ -32,5 +32,9 @@ class Seller < ActiveRecord::Base
     seller_ids = Location.where(user_type: "Seller").near(buyer_coordinates, DISTANCE, units: :km).map{|l| l.user_id}
     Seller.find(seller_ids)
   end
+
+  def delivery_fee buyer
+    {seller_id: self.id, delivery_fee: 10}
+  end
   
 end
