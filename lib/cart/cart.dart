@@ -42,11 +42,16 @@ class _CartState extends State<Cart> {
   Map responseBody = {};
 
   List sellers = [];
-  Map sellerCartProducts = {};
   Map sellerTotals = {};
   List selectedSeller = [];
-  Map cart_quantities = {};
-  Map cart_totals = {};
+
+  Map sellerCartProducts = {};
+
+  List selectedVouchers = [];
+  List vouchers = [];
+  int selectVoucherSellerId = 0;
+
+  List deliveryFees = [];
 
   // headers
   Map<String, String> _headers = {};
@@ -90,8 +95,17 @@ class _CartState extends State<Cart> {
                     sellers = json.decode(responseBody["sellers"]);
                   }
                   print(sellers);
-                  print(
-                      "==============================================================");
+                  print("============================================================== Sellers");
+
+                  if (responseBody["vouchers"].length > 0) {
+                    vouchers = json.decode(responseBody["vouchers"]);
+                  }
+                  print(vouchers);
+                  print("============================================================== Vouchers");
+
+                  deliveryFees = responseBody["delivery_fees"];
+                  print(deliveryFees);
+                  print("============================================================== deliveryFees");
 
                   for (var seller in sellers) {
                     sellerCartProducts[seller['id']] = [];
@@ -119,7 +133,7 @@ class _CartState extends State<Cart> {
               for (var seller in sellers) ...[
                 _sellerContent(seller),
                 if (selectedSeller.contains(seller['id'])) ...[
-                  checkoutDetails(seller['id'])
+                  checkoutDetails(seller)
                 ]
               ],
               if (selectedSeller.length > 0) ... [
@@ -137,13 +151,11 @@ class _CartState extends State<Cart> {
       onTap: () async {
         if (sellerCartProducts[seller['id']].isEmpty) {
           String _rawUrl = _dataUrlCartProduct + "?seller_id=${seller['id']}";
-          Map _response =
-              await SharedFunction.getData(_rawUrl, _headers);
+          Map _response =  await SharedFunction.getData(_rawUrl, _headers);
 
           if (_response['status'] == 200) {
             if (_response['body']['carts'].length > 0) {
-              sellerCartProducts[seller['id']] =
-                  json.decode(_response['body']['carts']);
+              sellerCartProducts[seller['id']] = json.decode(_response['body']['carts']);
             }
           }
         }
@@ -160,33 +172,78 @@ class _CartState extends State<Cart> {
     );
   }
 
-  Widget checkoutDetails(int seller_id) {
+  Widget checkoutDetails(Map _seller) {
+    int seller_id = _seller['id'];
     List _carts = sellerCartProducts[seller_id];
-    print(_carts);
-    print("============================================");
+    
+    // GET SUB TOTAL
+    double _subTotalPrice = _carts.map((_cart) => _cart['total']).toList().reduce((a, b) => a + b);
+
+    // GET DELIVERY FEE
+    double _deliveryFee = 0;
+    for (var i = 0; i < deliveryFees.length; i++) {
+      if(deliveryFees[i]['seller_id'] == _seller['id']){
+        _deliveryFee = deliveryFees[i]['delivery_fee'];
+      }
+    }
+
+    // GET VAT
+    double _vat = _subTotalPrice * .2;
+
+    // GET TOTAL
+    double _total = _subTotalPrice + _deliveryFee + _vat;
+
+    // GET VOUCHER DISCOUNT
+    double discountAmount = 0;
+
+    for (var _voucherRaw in selectedVouchers) {
+      if(_voucherRaw['seller_id'] == seller_id){
+        Map _voucher = _voucherRaw['voucher'];
+        if(_voucher['discount_type'] == 'Percent'){
+          // check if the discount amount is greater than the max discount
+          discountAmount = _total * (_voucher['discount']/100);
+          discountAmount = discountAmount < _voucher['max_discount'] ? discountAmount : _voucher['max_discount'];
+        }else{
+          discountAmount = _voucher['discount'];
+        }
+        break;
+      }
+    }
+
+    sellerTotals[seller_id] = _total - discountAmount;
+
     return Column(
       children: [
         // products
-        for (var _cart in _carts) ...[cartProduct(_cart)],
-        deliveryFee(),
+        for (var _cart in _carts) ...[
+          cartProduct(_cart)
+        ],
+        // sub total
+        rowWithValue("Sub Total", _subTotalPrice),
         SizedBox(height: SharedFunction.scaleHeight(5, height)),
-        vatFee(),
+        // delivery fee
+        rowWithValue('Delivery Fee', _deliveryFee),
         SizedBox(height: SharedFunction.scaleHeight(5, height)),
+        // vat
+        rowWithValue('VAT', _vat),
+        SizedBox(height: SharedFunction.scaleHeight(5, height)),
+        // voucher
+        voucherRow(seller_id, discountAmount),
+        SizedBox(height: SharedFunction.scaleHeight(2, height)),
+        // voucher list
+        if(selectVoucherSellerId == seller_id) ... [
+          voucherList(seller_id),
+          SizedBox(height: SharedFunction.scaleHeight(5, height)),
+        ],
         // total
-        sellerTotal(_carts, seller_id)
+        rowWithValue('Total', sellerTotals[seller_id]),
       ],
     );
   }
 
   Widget cartProduct(Map _cart) {
-    if(cart_quantities[_cart['id']] == null){
-      cart_quantities[_cart['id']] = _cart['quantity'];
-    }
-    if(cart_totals[_cart['id']] == null){
-      cart_totals[_cart['id']] = _cart['total'];
-    }
-    
     Map product = json.decode(_cart['product']);
+
     return Column(
       children: [
         // Space
@@ -206,7 +263,7 @@ class _CartState extends State<Cart> {
     String name = product['name'];
     String price = product['price'].toStringAsFixed(2);
     String cartProductDescription = _cart['product_description'];
-    String total = cart_totals[_cart['id']].toStringAsFixed(2);
+    String total = _cart['total'].toStringAsFixed(2);
     
     return Container(
       height: SharedFunction.scaleHeight(productHeight, height),
@@ -296,16 +353,16 @@ class _CartState extends State<Cart> {
     return Center(
       child: IconButton(
         onPressed: () async {
-          if (cart_quantities[_cart['id']] > 1) {
+          if (_cart['quantity'] > 1) {
             setState(() {
-              var cartPrice = cart_totals[_cart['id']] / cart_quantities[_cart['id']];
-              cart_quantities[_cart['id']]--;
-              cart_totals[_cart['id']] = cartPrice * cart_quantities[_cart['id']];
+              var cartPrice = _cart['total'] / _cart['quantity'];
+              _cart['quantity']--;
+              _cart['total'] = cartPrice * _cart['quantity'];
             });
             String _rawUrl = _dataUrlCartProduct + "/${_cart['id']}";
             Map _data = {
-              "quantity": cart_quantities[_cart['id']],
-              "total": cart_totals[_cart['id']],
+              "quantity": _cart['quantity'],
+              "total": _cart['quantity'],
             };
             var response = SharedFunction.sendData(_rawUrl, _headers, _data, "put");
           }
@@ -323,14 +380,14 @@ class _CartState extends State<Cart> {
       child: IconButton(
         onPressed: () {
           setState(() {
-            var cartPrice = cart_totals[_cart['id']] / cart_quantities[_cart['id']];
-            cart_quantities[_cart['id']]++;
-            cart_totals[_cart['id']] = cartPrice * cart_quantities[_cart['id']];
+            var cartPrice = _cart['total'] / _cart['quantity'];
+            _cart['quantity']++;
+            _cart['total'] = cartPrice * _cart['quantity'];
           });
           String _rawUrl = _dataUrlCartProduct + "/${_cart['id']}";
           Map _data ={
-            "quantity": cart_quantities[_cart['id']],
-            "total": cart_totals[_cart['id']],
+            "quantity": _cart['quantity'],
+            "total": _cart['total'],
           };
           var response = SharedFunction.sendData(_rawUrl, _headers, _data, "put");
         },
@@ -342,49 +399,17 @@ class _CartState extends State<Cart> {
 
   Widget quantityNum(Map _cart) {
     return Text(
-      "${cart_quantities[_cart['id']]}",
+      "${_cart['quantity']}",
       style: ProductStyle.quantityBarNum,
     );
   }
 
-  Widget sellerTotal(List _carts, int sellerId){
-    double _totalPrice = 0;
-    
-    for (var _cart in _carts) {
-      if(cart_totals[_cart['id']] != null){
-        _totalPrice += cart_totals[_cart['id']];
-      }
-    }
-
-    sellerTotals[sellerId] = _totalPrice;
-    String _totalPriceString = _totalPrice.toStringAsFixed(2);
-    print(_totalPriceString);
-    print("===================================");
+  Widget rowWithValue(String _name, double _amount){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("Sub Total", style: SharedStyle.subTitle,),
-        Text("₱$_totalPriceString", style: SharedStyle.subTitleYellow,)
-      ],
-    );
-  }
-
-  Widget deliveryFee(){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text("Delivery Fee", style: SharedStyle.subTitle,),
-        Text("₱0", style: SharedStyle.subTitleYellow,)
-      ],
-    );
-  }
-
-  Widget vatFee(){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text("VAT", style: SharedStyle.subTitle,),
-        Text("₱0", style: SharedStyle.subTitleYellow,)
+        Text(_name, style: SharedStyle.subTitle,),
+        Text("₱${_amount.toStringAsFixed(2)}", style: SharedStyle.subTitleYellow,)
       ],
     );
   }
@@ -401,7 +426,8 @@ class _CartState extends State<Cart> {
       onPressed: () async {
         // send data for checkout
         Map rawBody = {
-          "sellers": selectedSeller
+          "sellers": selectedSeller,
+          "selectedVouchers": selectedVouchers
         };
         
         Navigator.pushNamed(context, ReviewPaymentLocation.routeName, arguments: rawBody);
@@ -411,9 +437,62 @@ class _CartState extends State<Cart> {
         width: SharedFunction.scaleWidth(checkoutBtnWidth, width),
         height: SharedFunction.scaleHeight(checkoutBtnHeight, height),
         child: Center(
-          child: Text("Checkout $_totalPrice", style: SharedStyle.yellowBtnText,),
+          child: Text("Checkout ${_totalPrice.toStringAsFixed(2)}", style: SharedStyle.yellowBtnText,),
         ),
       )
+    );
+  }
+
+  Widget voucherRow(int _sellerId, double discountAmount){    
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Text("Voucher", style: SharedStyle.subTitle,),
+            TextButton(
+              onPressed: (){
+                setState(() {
+                  selectVoucherSellerId = _sellerId;
+                });
+              }, 
+              child: Text("Select Voucher")
+            )
+          ],
+        ),
+        Text("₱${discountAmount.toStringAsFixed(2)}", style: SharedStyle.subTitleYellow,)
+      ],
+    );
+  }
+
+  Widget voucherList(int _sellerId){
+    return Container(
+      height: SharedFunction.scaleHeight(SharedWidgets.voucherHeight, height),
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          for (var _voucher in vouchers) ... [
+            GestureDetector(
+              onTap: (){
+                setState(() {
+                  selectVoucherSellerId = 0;
+                  
+                  for (var i = 0; i < selectedVouchers.length; i++) {
+                    if(selectedVouchers[i]['seller_id'] == _sellerId){
+                      selectedVouchers.removeAt(i);
+                      break;
+                    }
+                  }
+
+                  selectedVouchers.add({'seller_id': _sellerId, 'voucher': _voucher});
+                });
+              },
+              child: SharedWidgets.voucher(_voucher, width, height),
+            ),
+            SizedBox(width: SharedFunction.scaleWidth(10, width),)
+          ]
+        ],
+      ),
     );
   }
 }
