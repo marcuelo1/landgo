@@ -4,7 +4,8 @@ class V1::Buyer::CartsController < BuyerController
         seller_ids = Cart.where(buyer_id: @buyer.id).pluck(:seller_id).uniq
         @sellers = Seller.find(seller_ids)
         @vouchers = @buyer.vouchers
-        delivery_fees = @sellers.map{|s| s.delivery_fee(@buyer)}
+        delivery_fees = {}
+        @sellers.map{|s| delivery_fees[s.id] = s.delivery_fee(@buyer)}
 
         render json: {
             sellers: SellerBlueprint.render(@sellers),

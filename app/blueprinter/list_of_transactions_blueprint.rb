@@ -1,5 +1,5 @@
 class ListOfTransactionsBlueprint < Blueprinter::Base
-    fields :id, :total, :status
+    fields :id, :status
 
     field :seller_name do |cs|
         cs.seller.name
@@ -7,11 +7,6 @@ class ListOfTransactionsBlueprint < Blueprinter::Base
 
     field :seller_id do |cs|
         cs.seller.id
-    end
-
-    field :products_names do |cs|
-        product_ids = cs.checkout_products.pluck(:product_id)
-        Product.find(product_ids).pluck(:name).join(',')
     end
 
     field :date do |cs|

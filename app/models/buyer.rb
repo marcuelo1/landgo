@@ -44,6 +44,11 @@ class Buyer < ActiveRecord::Base
   end
 
   def selected_payment_method
+    # check if there is no payment method saved
+    if self.buyer_payment_methods.count == 0
+      BuyerPaymentMethod.create(buyer_id: self.id, payment_method_id: PaymentMethod.find_by(name: "Cash").id, selected: true)
+    end
+
     self.buyer_payment_methods.where(selected: true).first
   end
 end

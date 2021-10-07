@@ -34,7 +34,7 @@ class Seller < ActiveRecord::Base
   end
 
   def delivery_fee buyer
-    {seller_id: self.id, delivery_fee: 10}
+    10
   end
   
 end

@@ -25,23 +25,11 @@ class V1::Buyer::BuyersController < BuyerController
     end
 
     def review_payment_location
-        selected_payment_method = @buyer.selected_payment_method ? @buyer.selected_payment_method.id : PaymentMethod.find_by(name: "Cash").id
-
-        order_summary = []
-        seller_ids = params[:seller_ids].split(',')
-        seller_ids.each do |si|
-            seller = Seller.find(si)
-            carts = @buyer.carts.where(seller_id: si)
-
-            order_summary.push({seller: SellerBlueprint.render(seller), carts: CartBlueprint.render(carts)})
-        end
-
-
         render json: {
             locations: LocationBlueprint.render(@locations), 
+            selected_location_id: @buyer.selected_location.id,
             payment_methods: PaymentMethodBlueprint.render(@payment_methods), 
-            selected_payment_method: selected_payment_method,
-            order_summary: order_summary
+            selected_payment_method_id: @buyer.selected_payment_method.id,
         }
     end
 

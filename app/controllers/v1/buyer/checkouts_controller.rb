@@ -1,4 +1,5 @@
 class V1::Buyer::CheckoutsController < BuyerController
+    include ApplicationHelper
     before_action :set_checkout, only: [:create]
 
     def index
@@ -12,20 +13,26 @@ class V1::Buyer::CheckoutsController < BuyerController
     end
 
     def create
-        seller_ids = params[:sellers]
-        seller_ids.each do |si|
+        sellers = params[:sellers]
+        vouchers = params[:selectedVouchers]
+        delivery_fees = params[:deliveryFees]
+        
+        sellers.each do |seller|
+            seller = Seller.find(seller[:id])
+            voucher = Voucher.find_by(id: vouchers.map{|v| v['seller_id'] == seller.id ? v['voucher']['id'] : []}.flatten.first)
+            
             @checkout_seller = CheckoutSeller.new(
                 checkout_id: @checkout.id, 
-                seller_id: si, 
-                delivery_fee: 0, 
-                total: 0,
-                voucher_id: params[:selectedVouchers].map{|v| v['seller_id'] == si ? v['voucher_id'] : []}.flatten.first
+                seller_id: seller.id, 
+                delivery_fee: delivery_fees["#{seller.id}"], 
+                voucher_id: voucher ? voucher.id : nil
             )
 
             if @checkout_seller.save 
                 # get carts of buyer
-                carts = @buyer.carts.where(seller_id: si) 
-                checkout_seller_price = 0
+                carts = @buyer.carts.where(seller_id: seller.id) 
+                subtotal = 0
+
                 carts.each do |cart|
                     product = cart.product 
                     product_price = cart.product_price 
@@ -41,7 +48,7 @@ class V1::Buyer::CheckoutsController < BuyerController
                         total: cart.total
                     )
 
-                    checkout_seller_price += cart.total
+                    subtotal += cart.total
 
                     if @checkout_product.save
                         # get cart product's add ons
@@ -64,12 +71,17 @@ class V1::Buyer::CheckoutsController < BuyerController
                     end
                 end
 
-                @checkout_seller.update(total: checkout_seller_price)
+                voucher_discount = get_voucher_discount(subtotal, voucher)
+                vat = get_vat(subtotal)
+                
+                total = subtotal + @checkout_seller.delivery_fee + vat - voucher_discount
+                @checkout_seller.update(subtotal: subtotal, total: total, vat: vat)
             else
                 @checkout.destroy
                 return render json: {success: false, message: @checkout_seller.errors}, status: 500
             end
         end
+
         return render json: {success: true, checkout_id: @checkout.id}, status: 200
     end
 
@@ -78,21 +90,17 @@ class V1::Buyer::CheckoutsController < BuyerController
         checkout = checkout_seller.checkout
         seller = checkout_seller.seller
         carts = @buyer.carts.where(seller_id: seller.id)
-        geo_object = Geocoder.search([checkout.latitude, checkout.longitude]).first.data
-        
-        address = geo_object['address']
-        street = address['road'] ? address['road'] : ''
-        village = address['village'] ? address['village'] : address['suburb'] ? address['suburb'] : ''
-        city = address['city']
-        
-        buyer_address = [street, village, city]
-        buyer_address.delete('')
-        buyer_address = buyer_address.join(', ')
+        buyer_address = get_address(checkout.latitude, checkout.longitude)
 
         render json: {
-            seller: SellerBlueprint.render(seller), 
+            # seller: SellerBlueprint.render(seller), 
             carts: CartBlueprint.render(carts),
-            buyer_address: buyer_address
+            buyer_address: buyer_address,
+            delivery_fee: checkout_seller.delivery_fee,
+            subtotal: checkout_seller.subtotal,
+            total: checkout_seller.total,
+            vat: checkout_seller.vat,
+            voucher_discount: get_voucher_discount(checkout_seller.subtotal, checkout_seller.voucher)
         }, status: 200
         
     end
@@ -107,8 +115,8 @@ class V1::Buyer::CheckoutsController < BuyerController
     end
 
     def current_transactions
-        sellers = @buyer.checkout_sellers.where(status: 0)
+        checkout_sellers = @buyer.checkout_sellers.where(status: 0)
 
-        render json: {sellers: ListOfTransactionsBlueprint.render(sellers)}, status: 200
+        render json: {checkout_sellers: ListOfTransactionsBlueprint.render(checkout_sellers)}, status: 200
     end
 end
