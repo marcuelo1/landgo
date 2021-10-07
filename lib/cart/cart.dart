@@ -42,8 +42,9 @@ class _CartState extends State<Cart> {
   Map responseBody = {};
 
   List sellers = [];
+  Map sellerSubTotals = {};
   Map sellerTotals = {};
-  List selectedSeller = [];
+  List selectedSellersId = [];
 
   Map sellerCartProducts = {};
 
@@ -51,7 +52,7 @@ class _CartState extends State<Cart> {
   List vouchers = [];
   int selectVoucherSellerId = 0;
 
-  List deliveryFees = [];
+  Map deliveryFees = {};
 
   // headers
   Map<String, String> _headers = {};
@@ -132,11 +133,11 @@ class _CartState extends State<Cart> {
             children: [
               for (var seller in sellers) ...[
                 _sellerContent(seller),
-                if (selectedSeller.contains(seller['id'])) ...[
+                if (selectedSellersId.contains(seller['id'])) ...[
                   checkoutDetails(seller)
                 ]
               ],
-              if (selectedSeller.length > 0) ... [
+              if (selectedSellersId.length > 0) ... [
                 checkoutBtn()
               ]
             ],
@@ -161,10 +162,10 @@ class _CartState extends State<Cart> {
         }
 
         setState(() {
-          if (selectedSeller.contains(seller['id'])) {
-            selectedSeller.remove(seller['id']);
+          if (selectedSellersId.contains(seller['id'])) {
+            selectedSellersId.remove(seller['id']);
           } else {
-            selectedSeller.add(seller['id']);
+            selectedSellersId.add(seller['id']);
           }
         });
       },
@@ -178,17 +179,13 @@ class _CartState extends State<Cart> {
     
     // GET SUB TOTAL
     double _subTotalPrice = _carts.map((_cart) => _cart['total']).toList().reduce((a, b) => a + b);
+    sellerSubTotals[seller_id] = _subTotalPrice;
 
     // GET DELIVERY FEE
-    double _deliveryFee = 0;
-    for (var i = 0; i < deliveryFees.length; i++) {
-      if(deliveryFees[i]['seller_id'] == _seller['id']){
-        _deliveryFee = deliveryFees[i]['delivery_fee'];
-      }
-    }
+    double _deliveryFee = deliveryFees[_seller['id'].toString()];
 
     // GET VAT
-    double _vat = _subTotalPrice * .2;
+    double _vat = _subTotalPrice * .2 * .12;
 
     // GET TOTAL
     double _total = _subTotalPrice + _deliveryFee + _vat;
@@ -206,6 +203,8 @@ class _CartState extends State<Cart> {
         }else{
           discountAmount = _voucher['discount'];
         }
+
+        _voucherRaw['discount_amount'] = discountAmount;
         break;
       }
     }
@@ -417,17 +416,29 @@ class _CartState extends State<Cart> {
   Widget checkoutBtn(){
     double _totalPrice = 0;
     sellerTotals.forEach((key, value) {
-      if(selectedSeller.contains(key)){
+      if(selectedSellersId.contains(key)){
         _totalPrice += value;
       }
     });
+
+    List selectedSellers = [];
+
+    for (var _seller in sellers) {
+      if(selectedSellersId.contains(_seller['id'])){
+        selectedSellers.add(_seller);
+      }
+    }
 
     return ElevatedButton(
       onPressed: () async {
         // send data for checkout
         Map rawBody = {
-          "sellers": selectedSeller,
-          "selectedVouchers": selectedVouchers
+          "sellers": selectedSellers,
+          "selectedVouchers": selectedVouchers,
+          "sellerSubTotals": sellerSubTotals,
+          "deliveryFees": deliveryFees,
+          "sellerTotals": sellerTotals,
+          "sellerCartProducts": sellerCartProducts
         };
         
         Navigator.pushNamed(context, ReviewPaymentLocation.routeName, arguments: rawBody);

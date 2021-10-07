@@ -7,6 +7,7 @@ import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/shared/shared_widgets.dart';
+import 'package:ryve_mobile/transactions/current_transactions.dart';
 
 class ReviewPaymentLocation extends StatefulWidget {
   static const String routeName = "review_payment_location";
@@ -31,14 +32,14 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   static final double cardWidth = 327;
 
   // variables
-  Map checkoutData = {};
+  Map argsData = {};
   List locations = [];
   List paymentMethods = [];
-  List orederSummary = [];
   bool refresh = true;
   bool changeLocation = false;
   bool changePayment = false;
-  int selectedPayment = 0;
+  int selectedPaymentId = 0;
+  int selectedLocationId = 0;
 
   // headers
   Map<String, String> _headers = {};
@@ -57,10 +58,10 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
 
     final Map args = ModalRoute.of(context)!.settings.arguments as Map;
     args.forEach((key, value) {
-      checkoutData[key] = value;
+      argsData[key] = value;
     });
 
-    String rawUrl = _dataUrl + "?seller_ids=${checkoutData['sellers'].join(',')}";
+    String rawUrl = _dataUrl + "?seller_ids=${argsData['sellers'].join(',')}";
 
     return !refresh ? content() : FutureBuilder(
       future: SharedFunction.getData(rawUrl, _headers),
@@ -89,17 +90,14 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
             }
             print("============================================================== locations");
 
+            selectedLocationId = responseBody["selected_location_id"];
+
             if(responseBody['payment_methods'].length > 0){
               paymentMethods = json.decode(responseBody["payment_methods"]);
             }
             print("============================================================== payment methods");
 
-            if(responseBody['order_summary'].length > 0){
-              orederSummary = responseBody["order_summary"];
-            }
-            print("============================================================== order summary");
-
-            selectedPayment = responseBody["selected_payment_method"];
+            selectedPaymentId = responseBody["selected_payment_method_id"];
             print("============================================================== selected payment method");
 
             return content();
@@ -169,7 +167,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
           SizedBox(height: SharedFunction.scaleHeight(10, height),),
           if(!changePayment) ... [
             for (var _paymentMethod in paymentMethods) ... [
-              if(_paymentMethod['id'] == selectedPayment) ... [
+              if(_paymentMethod['id'] == selectedPaymentId) ... [
                 selectedPaymentMethod(_paymentMethod)
               ]
             ]
@@ -190,8 +188,8 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
         children: [
           cardHeader(Icon(Icons.receipt), "Order summary", false),
           SizedBox(height: SharedFunction.scaleHeight(10, height),),
-          for (var os in orederSummary) ... [
-            orderSummaryContent(os),
+          for (var _seller in argsData["sellers"]) ... [
+            orderSummaryContent(_seller, argsData["sellerCartProducts"][_seller['id']]),
             SizedBox(height: SharedFunction.scaleHeight(10, height),),
           ]
         ],
@@ -238,8 +236,6 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   }
 
   Widget selectedLocation(Map _location){
-    checkoutData['location_id'] = _location['id'];
-
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -249,8 +245,6 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   }
 
   Widget selectedPaymentMethod(Map _paymentMethod){
-    checkoutData['payment_method_id'] = _paymentMethod['id'];
-
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -271,6 +265,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
 
                 if (_response['status'] == 200){
                   setState(() {
+                    selectedLocationId =  _location['id'];
                     if(_response['body']['locations'].length > 0){
                       locations = json.decode(_response['body']['locations']);
                     }
@@ -303,13 +298,13 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
 
                 if (_response['status'] == 200){
                   setState(() {
-                    selectedPayment = _paymentMethod['id'];
+                    selectedPaymentId = _paymentMethod['id'];
                     changePayment = false;
                   });
                 }
               },
               title: Container(
-                color: _paymentMethod['id'] == selectedPayment ? SharedStyle.yellow : SharedStyle.white,
+                color: _paymentMethod['id'] == selectedPaymentId ? SharedStyle.yellow : SharedStyle.white,
                 child: paymentMethod(_paymentMethod),
               ),
             )
@@ -337,18 +332,39 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
     );
   }
 
-  Widget orderSummaryContent(Map _orderSummary){
+  Widget orderSummaryContent(Map _seller, List _carts){
     print("================================= orderSummaryContent");
-    List _carts = json.decode(_orderSummary['carts']);
-    print("================================= orderSummaryContent after decode");
-    Map _seller = json.decode(_orderSummary['seller']);
+
+    double _vat = argsData['sellerSubTotals'][_seller['id']] * .2;
+    double _voucherAmount = 0;
+
+    for (var _voucherRaw in argsData['selectedVouchers']) {
+      if(_voucherRaw['seller_id'] == _seller['id']){
+        _voucherAmount = _voucherRaw['discount_amount'];
+        break;
+      }
+    }
 
     return Column(
       children: [
+        // Divider
+        Divider(color: SharedStyle.black,height: 1,),
         orderSummarySeller(_seller),
+        SizedBox(height: SharedFunction.scaleHeight(5, height)),
         for (var _cart in _carts) ... [
-          orderSummaryItems(_cart)
-        ]
+          orderSummaryItems(_cart),
+          SizedBox(height: SharedFunction.scaleHeight(5, height)),
+        ],
+        SizedBox(height: SharedFunction.scaleHeight(5, height)),
+        rowWithValue('Sub Total', argsData['sellerSubTotals'][_seller['id']]),
+        SizedBox(height: SharedFunction.scaleHeight(5, height)),
+        rowWithValue('Delivery Fee', argsData['deliveryFees'][_seller['id'].toString()]),
+        SizedBox(height: SharedFunction.scaleHeight(5, height)),
+        rowWithValue('VAT', _vat),
+        SizedBox(height: SharedFunction.scaleHeight(5, height)),
+        rowWithValue('Voucher', _voucherAmount),
+        SizedBox(height: SharedFunction.scaleHeight(5, height)),
+        rowWithValue('Total', argsData['sellerTotals'][_seller['id']]),
       ],
     );
   }
@@ -357,8 +373,8 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
     print("================================= orderSummarySeller");
     return Row(
       children: [
-        Text("Store: "),
-        Text(_seller['name'])
+        Text("Store: ", style: SharedStyle.labelBold),
+        Text(_seller['name'], style: SharedStyle.labelBold)
       ],
     );
   }
@@ -369,24 +385,46 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
 
     return Row(
       children: [
-        Text("${_cart['quantity'].toString()}x"),
-        Column(
-          children: [
-            Text(_product['name']),
-            Text(_cart['product_description'])
-          ],
-        ),
-        Text("${_cart['total'].toString()}")
+        orderItemQuantity(_cart['quantity']),
+        orderItemContent(_product['name'], _cart['product_description']),
+        orderItemTotal(_cart['total'])
       ],
     );
+  }
+
+  Widget orderItemQuantity(double _quantity){
+    return Text("${_quantity.toString()}x", style: SharedStyle.labelRegular,);
+  }
+
+  Widget orderItemContent(String _name, String _description){
+    return Expanded(
+      child: Column(
+        children: [
+          Text(_name, style: SharedStyle.labelRegular),
+          Text(_description, style: SharedStyle.labelRegular)
+        ],
+      ),
+    );
+  }
+
+  Widget orderItemTotal(double _total){
+    return Text("₱${_total.toStringAsFixed(2)}", style: SharedStyle.labelRegular);
   }
 
   Widget placeOrderBtn(){
     return ElevatedButton(
       onPressed: () async {
+        Map checkoutData = {
+          "sellers": argsData["sellers"],
+          "selectedVouchers": argsData["selectedVouchers"],
+          "deliveryFees": argsData['deliveryFees'],
+          "location_id": selectedLocationId,
+          "payment_method_id": selectedPaymentId,
+        };
+        
         Map _response = await SharedFunction.sendData(_dataUrlCheckout, _headers, checkoutData);
         if(_response['status'] == 200){
-          
+          Navigator.pushNamed(context, CurrentTransactions.routeName);
         }
       }, 
       style: SharedStyle.yellowBtn,
@@ -399,4 +437,13 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
     );
   }
   
+  Widget rowWithValue(String _name, double _value){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(_name, style: SharedStyle.labelRegular,),
+        Text("₱${_value.toStringAsFixed(2)}", style: SharedStyle.labelRegular,),
+      ],
+    );
+  }
 }

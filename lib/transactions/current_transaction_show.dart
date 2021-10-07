@@ -71,7 +71,7 @@ class _CurrentTransactionShowState extends State<CurrentTransactionShow> {
 
             // get response
             var response = snapshot.data;
-            var responseBody = response['body'];
+            Map responseBody = response['body'];
             print(responseBody);
             print("============================================================== response body");
 
@@ -80,6 +80,13 @@ class _CurrentTransactionShowState extends State<CurrentTransactionShow> {
             }
             print(carts);
             print("============================================================== carts");
+
+            List _except = ["carts", "buyer_address"];
+            responseBody.forEach((key, value) {
+              if(!_except.contains(key)){
+                currentTransaction[key] = value;
+              }
+            });
 
             buyerAddress = responseBody['buyer_address'];
 
@@ -133,6 +140,14 @@ class _CurrentTransactionShowState extends State<CurrentTransactionShow> {
         ],
 
         Divider(color: SharedStyle.black,height: 1,),
+        cardTitle("Subtotal", "₱${currentTransaction['subtotal'].toStringAsFixed(2)}"),
+        SizedBox(height: SharedFunction.scaleHeight(5, height),),
+        cardTitle("Delivery Fee", "₱${currentTransaction['delivery_fee'].toStringAsFixed(2)}"),
+        SizedBox(height: SharedFunction.scaleHeight(5, height),),
+        cardTitle("VAT", "₱${currentTransaction['vat'].toStringAsFixed(2)}"),
+        SizedBox(height: SharedFunction.scaleHeight(5, height),),
+        cardTitle("Voucher Discount", "₱${currentTransaction['voucher_discount'].toStringAsFixed(2)}"),
+        SizedBox(height: SharedFunction.scaleHeight(5, height),),
         cardTitle("Total", "₱${currentTransaction['total'].toStringAsFixed(2)}"),
         Divider(color: SharedStyle.black,height: 1,),
 

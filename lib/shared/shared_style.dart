@@ -124,4 +124,17 @@ class SharedStyle {
     color: SharedStyle.white,
     fontFamily: 'Poppins-Regular'
   );
+
+  static final labelBold = TextStyle(
+    fontSize: 15,
+    color: SharedStyle.primaryText,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Poppins-Bold'
+  );
+
+  static final labelRegular = TextStyle(
+    fontSize: 15,
+    color: SharedStyle.primaryText,
+    fontFamily: 'Poppins-Regular'
+  );
 }
