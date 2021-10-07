@@ -30,7 +30,7 @@ class _CurrentTransactionShowState extends State<CurrentTransactionShow> {
   // variables
   Map currentTransaction = {};
   bool refresh = true;
-  List carts = [];
+  List checkout_products = [];
   String buyerAddress = "";
 
   // headers
@@ -75,13 +75,13 @@ class _CurrentTransactionShowState extends State<CurrentTransactionShow> {
             print(responseBody);
             print("============================================================== response body");
 
-            if(responseBody['carts'].length > 0){
-              carts = json.decode(responseBody['carts']);
+            if(responseBody['checkout_products'].length > 0){
+              checkout_products = json.decode(responseBody['checkout_products']);
             }
-            print(carts);
-            print("============================================================== carts");
+            print(checkout_products);
+            print("============================================================== checkout_products");
 
-            List _except = ["carts", "buyer_address"];
+            List _except = ["checkout_products", "buyer_address"];
             responseBody.forEach((key, value) {
               if(!_except.contains(key)){
                 currentTransaction[key] = value;
@@ -134,8 +134,8 @@ class _CurrentTransactionShowState extends State<CurrentTransactionShow> {
 
         Divider(color: SharedStyle.black,height: 1,),
 
-        for (var _cart in carts) ... [
-          cartContainer(_cart),
+        for (var _checkout_product in checkout_products) ... [
+          cartContainer(_checkout_product),
           SizedBox(height: SharedFunction.scaleHeight(5, height),),
         ],
 
@@ -181,39 +181,37 @@ class _CurrentTransactionShowState extends State<CurrentTransactionShow> {
     return Text(_name);
   }
 
-  Widget cartContainer(Map _cart){
+  Widget cartContainer(Map _checkout_product){
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
-        cartQuantity(_cart),
-        cartDetails(_cart),
-        cardPrice(_cart)
+        cartQuantity(_checkout_product),
+        cartDetails(_checkout_product),
+        cardPrice(_checkout_product)
       ],
     );
   }
 
-  Widget cartQuantity(Map _cart){
+  Widget cartQuantity(Map _checkout_product){
     return Text(
-      "${_cart['quantity']}x "
+      "${_checkout_product['quantity']}x "
     );
   }
 
-  Widget cartDetails(Map _cart){
-    Map _product = json.decode(_cart['product']);
-
+  Widget cartDetails(Map _checkout_product){
     return Column(
       children: [
-        Text(_product['name']),
-        Text(_cart['product_description'])
+        Text(_checkout_product['name']),
+        Text(_checkout_product['description'])
       ],
     );
   }
 
-  Widget cardPrice(Map _cart){
+  Widget cardPrice(Map _checkout_product){
     return Expanded(
       child: Container(
         alignment: Alignment.centerRight,
-        child: Text("₱${_cart['total'].toStringAsFixed(2)}"),
+        child: Text("₱${_checkout_product['total'].toStringAsFixed(2)}"),
       )
     );
   }
