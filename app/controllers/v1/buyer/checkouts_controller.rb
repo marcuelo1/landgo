@@ -45,6 +45,7 @@ class V1::Buyer::CheckoutsController < BuyerController
                         size: product_size.name,
                         price: product_price.price,
                         quantity: cart.quantity,
+                        description: cart.product_description,
                         total: cart.total
                     )
 
@@ -76,6 +77,8 @@ class V1::Buyer::CheckoutsController < BuyerController
                 
                 total = subtotal + @checkout_seller.delivery_fee + vat - voucher_discount
                 @checkout_seller.update(subtotal: subtotal, total: total, vat: vat)
+
+                @buyer.carts.where(seller_id: seller.id).destroy_all
             else
                 @checkout.destroy
                 return render json: {success: false, message: @checkout_seller.errors}, status: 500
@@ -89,12 +92,11 @@ class V1::Buyer::CheckoutsController < BuyerController
         checkout_seller = @buyer.checkout_sellers.find_by(seller_id: params[:id])
         checkout = checkout_seller.checkout
         seller = checkout_seller.seller
-        carts = @buyer.carts.where(seller_id: seller.id)
+        checkout_products = checkout_seller.checkout_products
         buyer_address = get_address(checkout.latitude, checkout.longitude)
 
         render json: {
-            # seller: SellerBlueprint.render(seller), 
-            carts: CartBlueprint.render(carts),
+            checkout_products: CheckoutProductBlueprint.render(checkout_products),
             buyer_address: buyer_address,
             delivery_fee: checkout_seller.delivery_fee,
             subtotal: checkout_seller.subtotal,
