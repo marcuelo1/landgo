@@ -1,5 +1,5 @@
 class ProductPriceBlueprint < Blueprinter::Base
-    fields :price
+    fields :price, :base_price
 
     field :product_price_id do |pp|
         pp.id

@@ -12,4 +12,8 @@ class ProductBlueprint < Blueprinter::Base
     field :price do |product|
         product.product_prices.first.price
     end
+
+    field :base_price do |product|
+        product.product_prices.first.base_price
+    end
 end

@@ -13,6 +13,7 @@ class Admin::ProductController < AdministratorController
             product_price.product_size_id = params[:product_size_ids][i] 
             product_price.product_id = product.id
             product_price.price = params[:prices][i]
+            product_price.base_price = params[:prices][i]
 
             product_price.save
         end

@@ -555,6 +555,7 @@ if Seller.count == 0
                 ProductPrice.create(
                     product_id: product.id,
                     price: pp[:price],
+                    base_price: pp[:price],
                     product_size_id: ProductSize.find_by(name: pp[:size], seller_id: seller.id).id
                 )
             end
