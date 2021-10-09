@@ -61,6 +61,13 @@ class SharedStyle {
    fontSize: 14,
    fontFamily: 'SFProText-Regular',
  );
+  
+  static final productPriceLineThrough = TextStyle(
+    color: SharedStyle.secondaryText,
+    fontSize: 14,
+    fontFamily: 'SFProText-Regular',
+    decoration: TextDecoration.lineThrough
+  );
 
  static final sellerName = TextStyle(
    color: SharedStyle.primaryText,

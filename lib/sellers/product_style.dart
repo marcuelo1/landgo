@@ -44,6 +44,20 @@ class ProductStyle {
     fontSize: 15,
     fontFamily: 'SFProText-Regular',
   );
+
+  static final selectedSubTitleLineThrough = TextStyle(
+    color: SharedStyle.white,
+    fontSize: 15,
+    fontFamily: 'SFProText-Regular',
+    decoration: TextDecoration.lineThrough
+  );
+
+  static final unselectedSubTitleLineThrough = TextStyle(
+    color: SharedStyle.black,
+    fontSize: 15,
+    fontFamily: 'SFProText-Regular',
+    decoration: TextDecoration.lineThrough
+  );
   
   static final unselectedBtn = ButtonStyle(
     backgroundColor: MaterialStateProperty.all(SharedStyle.white),

@@ -338,9 +338,9 @@ class _HomeState extends State<Home> {
   Widget recentPurchases(){
     return Column(
       children: [
-        for (var item in products) ... [
-          SharedWidgets.product(item[0], item[1], item[2].toStringAsFixed(2), width, height)
-        ]
+        // for (var item in products) ... [
+        //   SharedWidgets.product(item[0], item[1], item[2].toStringAsFixed(2), width, height)
+        // ]
       ],
     );  
   }

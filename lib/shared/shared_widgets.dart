@@ -170,13 +170,13 @@ class SharedWidgets {
   static final double productImageWidth = 70;
   static final double productImageHeight = 70;
 
-  static Widget product(String imageUrl, String name, String price, double width, double height){
+  static Widget product(Map product, double width, double height){
     return Column(
       children: [
         // Space
         SizedBox(height: SharedFunction.scaleHeight(15, height),),
         // product
-        _productContent(imageUrl, name, price, width, height),
+        _productContent(product, width, height),
         // Space
         SizedBox(height: SharedFunction.scaleHeight(15, height),),
         // Divider
@@ -185,18 +185,18 @@ class SharedWidgets {
     );
   }
 
-  static Widget _productContent(String imageUrl, String name, String price, double width, double height){
+  static Widget _productContent(Map product, double width, double height){
     return Container(
       height: SharedFunction.scaleHeight(productHeight, height),
       width: SharedFunction.scaleWidth(productWidth, width),
       child: Row( 
         children: [
           // product image
-          productImage(imageUrl, width, height),
+          productImage(product['image'], width, height),
           // space
           SizedBox(width: SharedFunction.scaleWidth(21, width),),
           // product details
-          _productDetails(name, price),
+          _productDetails(product, width),
           // add button
           _productAddBtn()
         ],
@@ -215,16 +215,16 @@ class SharedWidgets {
     );
   }
 
-  static Widget _productDetails(String name, String price){
+  static Widget _productDetails(Map product, double width){
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // product name
-        _productName(name),
+        _productName(product['name']),
         // product price
-        _productPrice(price)
+        _productPrice(product['price'], product['base_price'], width)
       ],
     );
   }
@@ -236,10 +236,25 @@ class SharedWidgets {
     );
   }
 
-  static Widget _productPrice(String price){
-    return Text(
-      "₱$price",
-      style: SharedStyle.productPrice,
+  static Widget _productPrice(double price, double basePrice, double width){
+    bool _isSame = price == basePrice;
+    String _stringPrice = price.toStringAsFixed(2);
+    String _stringBasePrice = basePrice.toStringAsFixed(2);
+
+    return Row(
+      children: [
+        Text(
+          "₱$_stringBasePrice",
+          style: _isSame ? SharedStyle.productPrice : SharedStyle.productPriceLineThrough,
+        ),
+        if(!_isSame) ... [
+          SizedBox(width: SharedFunction.scaleWidth(10, width)),
+          Text(
+            "₱$_stringPrice",
+            style: SharedStyle.productPrice,
+          )
+        ]
+      ],
     );
   }
 

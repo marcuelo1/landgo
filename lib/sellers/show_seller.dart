@@ -155,7 +155,7 @@ class _ShowSellerState extends State<ShowSeller> {
               onPressed: (){
                 Navigator.pushNamed(context, Product.routeName, arguments: {"seller": seller, "product": products[i]});
               },
-              child: SharedWidgets.product(products[i]['image'], products[i]['name'], products[i]['price'].toStringAsFixed(2), width, height)
+              child: SharedWidgets.product(products[i], width, height)
             )
           ]
         ],

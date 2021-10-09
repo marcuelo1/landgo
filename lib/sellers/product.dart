@@ -243,8 +243,8 @@ class _ProductState extends State<Product> {
 
   Widget productSizeDetail(Map size){
     String _name = size['size'];
-    String _price = size['price'].toStringAsFixed(2);
-    bool selected = selectedSize["product_price_id"] == size['product_price_id'] ? true : false ;
+    bool selected = selectedSize["product_price_id"] == size['product_price_id'];
+
     return ElevatedButton(
       onPressed: (){
         setState(() {
@@ -259,7 +259,7 @@ class _ProductState extends State<Product> {
           // name
           subTitle(_name, selected),
           // price
-          subTitle("₱$_price", selected),
+          priceDisplay(size['price'], size['base_price'], selected),
         ],
       )
     );
@@ -463,6 +463,28 @@ class _ProductState extends State<Product> {
     return Text(
       name,
       style: selected ? ProductStyle.selectedSubTitle : ProductStyle.unselectedSubTitle,
+    );
+  }
+  
+  Widget priceDisplay(double _price, double _basePrice, bool selected){
+    String _stringPrice = _price.toStringAsFixed(2);
+    String _stringBasePrice = _basePrice.toStringAsFixed(2);
+    bool _isSame = _price == _basePrice;
+
+    return Row(
+      children: [
+        if(!_isSame) ... [
+          Text(
+            "₱$_stringPrice",
+            style: selected ? ProductStyle.selectedSubTitle : ProductStyle.unselectedSubTitle,
+          ),
+          SizedBox(width: SharedFunction.scaleWidth(10, width),)
+        ],
+        Text(
+          "₱$_stringBasePrice",
+          style: selected ? (_isSame ? ProductStyle.selectedSubTitle : ProductStyle.selectedSubTitleLineThrough) : (_isSame ? ProductStyle.unselectedSubTitle : ProductStyle.unselectedSubTitleLineThrough),
+        )
+      ],
     );
   }
 
