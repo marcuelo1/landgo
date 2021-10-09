@@ -353,17 +353,21 @@ class _CartState extends State<Cart> {
       child: IconButton(
         onPressed: () async {
           if (_cart['quantity'] > 1) {
-            setState(() {
-              var cartPrice = _cart['total'] / _cart['quantity'];
-              _cart['quantity']--;
-              _cart['total'] = cartPrice * _cart['quantity'];
-            });
+            _cart['quantity']--;
+
             String _rawUrl = _dataUrlCartProduct + "/${_cart['id']}";
             Map _data = {
+              "type": "quantity",
               "quantity": _cart['quantity'],
-              "total": _cart['quantity'],
             };
-            var response = SharedFunction.sendData(_rawUrl, _headers, _data, "put");
+
+            Map response = await SharedFunction.sendData(_rawUrl, _headers, _data, "put");
+
+            if(response['status'] == 200){
+              _cart['total'] = response['body']['total'];
+            }
+            
+            setState(() {});
           }
         },
         icon: Icon(
@@ -378,17 +382,21 @@ class _CartState extends State<Cart> {
     return Center(
       child: IconButton(
         onPressed: () {
-          setState(() {
-            var cartPrice = _cart['total'] / _cart['quantity'];
+          setState(() async {
             _cart['quantity']++;
-            _cart['total'] = cartPrice * _cart['quantity'];
+
+            String _rawUrl = _dataUrlCartProduct + "/${_cart['id']}";
+            Map _data = {
+              "type": "quantity",
+              "quantity": _cart['quantity'],
+            };
+
+            Map response = await SharedFunction.sendData(_rawUrl, _headers, _data, "put");
+
+            if(response['status'] == 200){
+              _cart['total'] = response['body']['total'];
+            }
           });
-          String _rawUrl = _dataUrlCartProduct + "/${_cart['id']}";
-          Map _data ={
-            "quantity": _cart['quantity'],
-            "total": _cart['total'],
-          };
-          var response = SharedFunction.sendData(_rawUrl, _headers, _data, "put");
         },
         icon: Icon(Icons.add),
         color: SharedStyle.yellow,

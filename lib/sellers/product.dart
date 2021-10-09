@@ -545,7 +545,6 @@ class _ProductState extends State<Product> {
           "product_price_id": selectedSize["product_price_id"],
           "quantity": quan_of_prod,
           "add_on_ids" : _addOnsIds,
-          "total": getTotalAmount()
         };
 
         String _url = "${SharedUrl.root}/${SharedUrl.version}/buyer/carts";
