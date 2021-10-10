@@ -25,6 +25,19 @@ class V1::Buyer::CartsController < BuyerController
     
 
     def create # add to cart
+        # check if added item is already in the cart
+        @cart = Cart.find_by(product_id: params[:product_id], product_price_id: params[:product_price_id])
+
+        if @cart.present?
+            if @cart.cart_add_ons.pluck(:add_on_id).sort == params[:add_on_ids].flatten.sort
+                new_quantity = @cart.quantity + params[:quantity].to_i
+                new_total = @cart.single_item_price * new_quantity
+                @cart.update(quantity: new_quantity, total: new_total)
+
+                return render json: {success: true}, status: 200
+            end
+        end
+
         @cart = Cart.new(cart_params)
         @cart.buyer_id = @buyer.id
         @cart.save 
