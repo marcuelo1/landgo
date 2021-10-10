@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ryve_mobile/cart/cart.dart';
 import 'package:ryve_mobile/cart/review_payment_location.dart';
 import 'package:ryve_mobile/home/home.dart';
+import 'package:ryve_mobile/home/search_page.dart';
 import 'package:ryve_mobile/locations/location_form.dart';
 import 'package:ryve_mobile/locations/list_of_locations.dart';
 import 'package:ryve_mobile/sellers/show_seller.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         CurrentTransactions.routeName: (context) => CurrentTransactions(),
         CurrentTransactionShow.routeName: (context) => CurrentTransactionShow(),
         ListOfVouchers.routeName: (context) => ListOfVouchers(),
+        SearchPage.routeName: (context) => SearchPage(),
       },
     );
   }

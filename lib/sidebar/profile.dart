@@ -60,7 +60,7 @@ class _ProfileState extends State<Profile> {
     print(_buyer);
     return SafeArea(
       child: Scaffold(
-        appBar: SharedWidgets.appBar(context, "Profile"),
+        appBar: SharedWidgets.appBar(context, title: "Profile"),
         backgroundColor: SharedStyle.yellow,
         body: Padding(
           padding: EdgeInsets.fromLTRB(

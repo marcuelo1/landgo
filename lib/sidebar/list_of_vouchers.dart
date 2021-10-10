@@ -80,7 +80,7 @@ class _ListOfVouchersState extends State<ListOfVouchers> {
   Widget content(BuildContext context){
     return SafeArea(
       child: Scaffold(
-        appBar: SharedWidgets.appBar(context, "Vouchers"),
+        appBar: SharedWidgets.appBar(context, title: "Vouchers"),
         body: Center(
           child: Column(
             children: [

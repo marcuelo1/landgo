@@ -84,7 +84,7 @@ class _ShowSellerState extends State<ShowSeller> {
             }
 
             return Scaffold(
-              appBar: SharedWidgets.appBar(context, ""),
+              appBar: SharedWidgets.appBar(context, title: seller['name'], showCart: true),
               body: SingleChildScrollView(
                 child: Column(
                   children: [

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/home/home.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
@@ -424,6 +425,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
         
         Map _response = await SharedFunction.sendData(_dataUrlCheckout, _headers, checkoutData);
         if(_response['status'] == 200){
+          Navigator.popUntil(context, ModalRoute.withName(Home.routeName));
           Navigator.pushNamed(context, CurrentTransactions.routeName);
         }
       }, 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ryve_mobile/home/home_style.dart';
+import 'package:ryve_mobile/home/search_page.dart';
 import 'package:ryve_mobile/sellers/sellers.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
@@ -27,6 +28,7 @@ class _HomeState extends State<Home> {
   // dimensions
   final double imageWidth = 150;
   final double imageHeight = 100;
+  final double searchHeight = 50;
 
   // categories
   late List categories;
@@ -141,7 +143,7 @@ class _HomeState extends State<Home> {
   Widget content(){
     return SafeArea(
       child: Scaffold(
-        appBar: SharedWidgets.appBar(context),
+        appBar: SharedWidgets.appBar(context, showCart: true, showCurrTrans: true, showLoc: true),
         drawer: Drawer(
           child: SharedWidgets.sideBar(context, _buyer, _headers),
         ),
@@ -172,16 +174,44 @@ class _HomeState extends State<Home> {
       ),
       child: Column(
         children: [
+          // search
+          searchBar(),
           // title
           title("Categories"),
           // space
-          SizedBox(height: 43,),
+          SizedBox(height: SharedFunction.scaleHeight(20, height),),
           // category list
           for (var i = 0; i < categories.length; i+=2) ... [
             categoryRow(i),
             SizedBox(height: SharedFunction.scaleHeight(15, height),)
           ]
         ],
+      ),
+    );
+  }
+
+  Widget searchBar(){
+    return Container(
+      width: double.infinity,
+      height: SharedFunction.scaleHeight(searchHeight, height),
+      child: ElevatedButton(
+        onPressed: (){
+          Navigator.pushNamed(context, SearchPage.routeName);
+        }, 
+        style: SharedStyle.searchBarBtn,
+        child: Row(
+          children: [
+            Icon(
+              Icons.search,
+              color: SharedStyle.black,
+            ),
+            SizedBox(width: SharedFunction.scaleWidth(10, width),),
+            Text(
+              "Search Bar",
+              style: SharedStyle.labelBold
+            )
+          ],
+        )
       ),
     );
   }

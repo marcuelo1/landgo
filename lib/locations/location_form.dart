@@ -76,7 +76,7 @@ class _LocationFormState extends State<LocationForm> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: SharedWidgets.appBar(context, "Pin Location"),
+        appBar: SharedWidgets.appBar(context, title: "Pin Location"),
         body: Column(
           children: [
             mapContent(),

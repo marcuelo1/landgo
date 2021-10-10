@@ -105,7 +105,7 @@ class _SellersState extends State<Sellers> {
     return SafeArea(
       child: Scaffold(
         body: Scaffold(
-          appBar: SharedWidgets.appBar(context, category['name']),
+          appBar: SharedWidgets.appBar(context, title: category['name'], showCart: true),
           body: SingleChildScrollView(
             child: Container(
               width: double.infinity,

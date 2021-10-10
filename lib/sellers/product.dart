@@ -126,7 +126,7 @@ class _ProductState extends State<Product> {
   Widget content(){
     return SafeArea(
       child: Scaffold(
-        appBar: SharedWidgets.appBar(context, seller['name']),
+        appBar: SharedWidgets.appBar(context, title: seller['name']),
         body: Padding(
           padding: EdgeInsets.fromLTRB(
             SharedFunction.scaleWidth(24, width), 

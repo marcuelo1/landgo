@@ -89,7 +89,7 @@ class _ListOfTransactionsState extends State<ListOfTransactions> {
   Widget content(BuildContext context){
     return SafeArea(
       child: Scaffold(
-        appBar: SharedWidgets.appBar(context, "Transactions"),
+        appBar: SharedWidgets.appBar(context, title: "Transactions"),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

@@ -144,4 +144,13 @@ class SharedStyle {
     color: SharedStyle.primaryText,
     fontFamily: 'Poppins-Regular'
   );
+
+  static final searchBarBtn = ButtonStyle(
+    backgroundColor: MaterialStateProperty.all(SharedStyle.white),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: SharedStyle.borderRadius(10, 10, 10, 10)
+      )
+    )
+  );
 }

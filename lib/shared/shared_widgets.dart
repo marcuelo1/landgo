@@ -14,20 +14,26 @@ class SharedWidgets {
   /////////////////////
   /// A P P  B A R
   /// /////////////////
-  static AppBar appBar(BuildContext context, [String title = "LandGo"]){
+  static AppBar appBar(BuildContext context, {String title = "Landgo", bool showCurrTrans = false, bool showLoc = false, bool showCart = false}){
+
     return AppBar(
       title: _appBarTitle(title),
       centerTitle: true,
       backgroundColor: SharedStyle.black2,
       iconTheme: IconThemeData(color: SharedStyle.yellow),
       actions: [
-        _currentTransactions(context),
-        SizedBox(width: 10,),
-        _locations(context),
-        SizedBox(width: 10,),
-        _shoppingCart(context),
-        // _search(),
-        SizedBox(width: 10,),
+        if (showCurrTrans) ... [
+          _currentTransactions(context),
+          SizedBox(width: 10,),
+        ],
+        if (showLoc) ... [
+          _locations(context),
+          SizedBox(width: 10,),
+        ],
+        if (showCart) ... [
+          _shoppingCart(context),
+          SizedBox(width: 10,),
+        ]
       ],
       actionsIconTheme: IconThemeData(color: SharedStyle.yellow),
     );

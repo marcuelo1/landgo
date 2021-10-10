@@ -120,7 +120,7 @@ class _CartState extends State<Cart> {
   Widget content() {
     return SafeArea(
         child: Scaffold(
-      appBar: SharedWidgets.appBar(context, "Basket"),
+      appBar: SharedWidgets.appBar(context, title: "Basket"),
       body: Padding(
         padding: EdgeInsets.fromLTRB(
             SharedFunction.scaleWidth(24, width),

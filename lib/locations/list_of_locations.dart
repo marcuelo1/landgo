@@ -95,7 +95,7 @@ class _ListOfLocationsState extends State<ListOfLocations> {
   Widget content(BuildContext context){
     return SafeArea(
       child: Scaffold(
-        appBar: SharedWidgets.appBar(context, "Addresses"),
+        appBar: SharedWidgets.appBar(context, title: "Addresses"),
         body: Padding(
           padding: EdgeInsets.fromLTRB(
             SharedFunction.scaleWidth(10, width),
