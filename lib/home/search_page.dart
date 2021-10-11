@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/home/search_results.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/shared/shared_url.dart';
 
 class SearchPage extends StatefulWidget {
   static const String routeName = "search_page";
@@ -11,10 +13,16 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  // url
+  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyer/search/suggestion_words";
+  
   // variables for scale functions
   late double width;
   late double height;
   late double scale;
+
+  // variables
+  List suggestedWords = [];
 
   // Dimensions
   final double searchWidth = 40;
@@ -45,6 +53,7 @@ class _SearchPageState extends State<SearchPage> {
             // search bar
             searchBarContainer(),
             // suggestions
+            searchSuggestion()
           ],
         ),
       )
@@ -89,7 +98,32 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  void searchFunction(String keyword){
-    
+  Widget searchSuggestion(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (var _suggested in suggestedWords) ... [
+          TextButton(
+            onPressed: (){
+              Navigator.pushNamed(context, SearchResults.routeName, arguments: {"keyword": _suggested});
+            }, 
+            child: Text(_suggested)
+          ),
+          SizedBox(height: SharedFunction.scaleHeight(10, height),)
+        ]
+      ],
+    );
+  }
+
+  Future<void> searchFunction(String keyword) async {
+    String _rawUrl = _dataUrl + "?keyword=$keyword";
+    Map _response = await SharedFunction.getData(_rawUrl, _headers);
+
+    if(_response['status'] == 200){
+      Map _responseBody = _response['body'];
+      setState(() {
+        suggestedWords = _responseBody['suggested_words'];
+      });
+    }
   }
 }
