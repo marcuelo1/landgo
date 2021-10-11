@@ -17,6 +17,19 @@ class Seller < ActiveRecord::Base
   has_one :location, as: :user, dependent: :destroy
   has_many :checkout_sellers, dependent: :destroy
 
+  include PgSearch::Model
+  multisearchable against: [:name], update_if: :name_changed?
+  pg_search_scope(
+    :seller_search, 
+    against: [:name], 
+    associated_against: {
+      products: [:name, :description]
+    },
+    using: {
+      tsearch: { prefix: true }
+    }
+  )
+
   DISTANCE = 5
 
   def rating

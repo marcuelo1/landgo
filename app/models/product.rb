@@ -1,4 +1,10 @@
 class Product < ApplicationRecord
+  include PgSearch::Model
+  multisearchable(
+    against: [:name], 
+    update_if: :name_changed?
+  )
+
   belongs_to :product_category
   belongs_to :seller
 

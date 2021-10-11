@@ -90,6 +90,12 @@ Rails.application.routes.draw do
       end
       
       resources :vouchers
+
+      resources :search, only: [:index] do
+        collection do
+          get :suggestion_words
+        end
+      end
     end
 
     ###############################################
