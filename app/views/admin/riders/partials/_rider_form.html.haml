@@ -1,0 +1,16 @@
+.modal-bg
+.modal-content
+    .card 
+        .card-header 
+            %h3 Add Rider
+        .card-body
+            =form_with(url: "/admin/riders", method: :post, model: @rider) do |f|
+                = f.text_field :first_name, {class: "form-control", placeholder: "First Name"}
+                %br/
+                = f.text_field :last_name, {class: "form-control", placeholder: "Last Name"}
+                %br/
+                = f.text_field :email, {class: "form-control", placeholder: "Email"}
+                %br/
+                = f.text_field :phone_number, {class: "form-control", placeholder: "Phone Number"}
+                %br/
+                = f.submit "Create", {class: "btn btn-primary btn-sm"}

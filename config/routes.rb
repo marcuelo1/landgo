@@ -43,9 +43,14 @@ Rails.application.routes.draw do
 
     resources :buyers do
     end
+
+    resources :riders do
+    end
   end
 
   namespace :v1, default: {format: :json} do
+    #############################
+    #### B U Y E R ##############
     mount_devise_token_auth_for 'Buyer', at: 'buyers', controllers: {
       registrations: 'v1/buyer/registrations',
       sessions: 'v1/buyer/sessions'
@@ -97,6 +102,22 @@ Rails.application.routes.draw do
         end
       end
     end
+    ### E N D  O F  B U Y E R ###
+    #############################
+
+    #############################
+    #### R I D E R ##############
+    mount_devise_token_auth_for 'Rider', at: 'riders'
+
+    namespace :rider do
+      resources :riders do
+        collection do
+          get :home
+        end
+      end
+    end
+    ### E N D  O F  R I D E R ###
+    #############################
 
     ###############################################
     mount_devise_token_auth_for 'Seller', at: 'sellers'
