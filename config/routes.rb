@@ -110,9 +110,10 @@ Rails.application.routes.draw do
     mount_devise_token_auth_for 'Rider', at: 'riders'
 
     namespace :rider do
-      resources :riders do
+      resources :riders, path: "" do
         collection do
           get :home
+          get :is_signed_in
         end
       end
     end
