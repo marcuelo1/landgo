@@ -32,26 +32,23 @@ class SharedWidgets {
   static List menus = [
     ["Profile", "route", Icon(Icons.person)],
     ["Transactions", "route", Icon(Icons.person)],
-    ["Vouchers", "route", Icon(Icons.location_on)],
-    ["Addresses", "route", Icon(Icons.location_on)],
-    ["Invite Friends", "route", Icon(Icons.groups)],
-    ["Settings", "route", Icon(Icons.settings)],
     ["Help Center", "route", Icon(Icons.info_outline)],
+    ["Settings", "route", Icon(Icons.settings)],
     ["Terms & Conditions", "route", Icon(Icons.info_outline)],
   ];
   static Map<String, String> headers = {};
-  static Widget sideBar(BuildContext context, Map _buyer, Map<String, String> _headers){
+  static Widget sideBar(BuildContext context, Map _rider, Map<String, String> _headers){
     headers = _headers;
 
     return ListView(
       // Important: Remove any padding from the ListView.
       padding: EdgeInsets.zero,
       children: [
-        buyerName(_buyer),
+        riderName(_rider),
         // Divider
         Divider(color: SharedStyle.black,height: 1,),
         for (var menu in menus) ... [
-          sideBarMenu(context, menu, _buyer)
+          sideBarMenu(context, menu, _rider)
         ],
         // Divider
         Divider(color: SharedStyle.black,height: 1,),
@@ -60,16 +57,16 @@ class SharedWidgets {
     );
   }
 
-  static Widget buyerName(Map _buyer){
+  static Widget riderName(Map _rider){
     return Container(
       width: double.infinity,
       child: Text(
-        _buyer['name']
+        _rider['name']
       ),
     );
   }
 
-  static Widget sideBarMenu(BuildContext context, List _menu, Map _buyer){
+  static Widget sideBarMenu(BuildContext context, List _menu, Map _rider){
     return ListTile(
       title: Row(
         children: [
@@ -79,7 +76,7 @@ class SharedWidgets {
         ],
       ),
       onTap: () {
-        Navigator.pushNamed(context, _menu[1], arguments: _buyer);
+        Navigator.pushNamed(context, _menu[1], arguments: _rider);
       },
     );
   }
@@ -96,7 +93,7 @@ class SharedWidgets {
         ],
       ),
       onTap: () async {
-        String rawUrl = "${SharedUrl.root}/${SharedUrl.version}/buyers/sign_out";
+        String rawUrl = "${SharedUrl.root}/${SharedUrl.version}/riders/sign_out";
         
         Map _response = await SharedFunction.sendData(rawUrl, headers, {}, "delete");
         

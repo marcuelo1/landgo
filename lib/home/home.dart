@@ -88,6 +88,9 @@ class _HomeState extends State<Home> {
     return SafeArea(
       child: Scaffold(
         appBar: SharedWidgets.appBar(context),
+        drawer: Drawer(
+          child: SharedWidgets.sideBar(context, rider, _headers),
+        ),
         backgroundColor: SharedStyle.yellow,
         body: Center(
           child: Column(
