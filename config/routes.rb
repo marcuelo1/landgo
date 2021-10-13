@@ -107,7 +107,9 @@ Rails.application.routes.draw do
 
     #############################
     #### R I D E R ##############
-    mount_devise_token_auth_for 'Rider', at: 'riders'
+    mount_devise_token_auth_for 'Rider', at: 'riders', controllers: {
+      sessions: 'v1/rider/sessions'
+    }
 
     namespace :rider do
       resources :riders, path: "" do

@@ -8,7 +8,7 @@
       .details.card
         .card-body 
           .rider-image
-            - if @rider.image.attached?
+            - if @rider.image
               = image_tag @rider.image
             - else 
               = image_tag asset_path "no-photo-2.jpg"

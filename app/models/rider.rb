@@ -7,7 +7,7 @@ class Rider < ActiveRecord::Base
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
 
-  has_one_attached :image
+  # has_one_attached :image
   has_one :wallet, as: :user, dependent: :destroy
 
   after_create :create_wallet
