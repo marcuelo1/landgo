@@ -1,3 +1,26 @@
 // Place all the styles related to the riders controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+#rider-show {
+  .details {
+    .card {
+      width: fit-content;
+      .card-body {
+        padding: 10px;
+      }
+    }
+  
+    .rider-image {
+      width: fit-content;
+      margin: auto;
+  
+      img {
+          width: 300px;
+      }
+    }
+  }
+
+  .wallet {
+    width: 60%;
+  }
+}

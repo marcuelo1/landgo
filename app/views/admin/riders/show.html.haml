@@ -1,0 +1,35 @@
+#rider-show
+  .header.d-flex.justify-content-between 
+    .page-title Rider's Page
+    .actions-container.d-flex.justify-content-end
+  %br/
+  .body
+    .d-flex.justify-content-evenly
+      .details.card
+        .card-body 
+          .rider-image
+            - if @rider.image.attached?
+              = image_tag @rider.image
+            - else 
+              = image_tag asset_path "no-photo-2.jpg"
+          %br/
+          %table.table-details 
+            %tr 
+              %th First Name: 
+              %td= @rider.first_name 
+            %tr 
+              %th Last Name: 
+              %td= @rider.last_name 
+            %tr 
+              %th Email:
+              %td= @rider.email 
+            %tr 
+              %th Phone Number: 
+              %td= @rider.phone_number 
+      .wallet.card
+        .card-header
+          .d-flex.justify-content-between 
+            .title Wallet
+            .value= "Remaining Balance: ₱#{@rider.wallet.amount}"
+        .card-body
+            

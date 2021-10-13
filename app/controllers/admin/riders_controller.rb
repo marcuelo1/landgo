@@ -17,6 +17,10 @@ class Admin::RidersController < AdministratorController
         redirect_to "/admin/riders"
     end
 
+    def show
+        @rider = Rider.find(params[:id])
+    end
+
     private
     def rider_params
         params.require(:rider).permit(:first_name, :last_name, :email, :phone_number)
