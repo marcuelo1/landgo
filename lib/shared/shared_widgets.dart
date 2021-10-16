@@ -203,8 +203,6 @@ class SharedWidgets {
           SizedBox(width: SharedFunction.scaleWidth(21, width),),
           // product details
           _productDetails(product, width),
-          // add button
-          _productAddBtn()
         ],
       ),
     );
@@ -229,6 +227,8 @@ class SharedWidgets {
       children: [
         // product name
         _productName(product['name']),
+        // product description
+        _productDescription(product['description'], width),
         // product price
         _productPrice(product['price'], product['base_price'], width)
       ],
@@ -264,16 +264,14 @@ class SharedWidgets {
     );
   }
 
-  static Widget _productAddBtn(){
-    return Expanded(
-      child: Container(
-        alignment: Alignment.centerRight,
-        child: Icon(
-          Icons.add_circle_outline,
-          size: 35,
-          color: SharedStyle.yellow,
-        ),
-      )
+  static Widget _productDescription(String _description, double width){
+    return Container(
+      width: SharedFunction.scaleWidth(230, width),
+      child: Text(
+        _description,
+        overflow: TextOverflow.ellipsis,
+        style: SharedStyle.productPrice,
+      ),
     );
   }
 
@@ -416,7 +414,7 @@ class SharedWidgets {
   }
 
 
-  // RED BUTTONS
+  // BUTTONS
   static Widget redBtn(Function()function, String name, double width, double height){
     return Container(
       decoration: SharedStyle.btnContainerDecor,
