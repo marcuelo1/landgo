@@ -62,7 +62,7 @@ class _SignUpState extends State<SignUp> {
         body: Padding(
           padding: EdgeInsets.fromLTRB(
             SharedFunction.scaleWidth(37.5, width), 
-            SharedFunction.scaleHeight(226, height), 
+            SharedFunction.scaleHeight(50, height), 
             SharedFunction.scaleWidth(37.5, width), 
             SharedFunction.scaleHeight(48, height)
           ),
@@ -105,6 +105,7 @@ class _SignUpState extends State<SignUp> {
           password(),
           /// Confirm Password
           confirmPassword(),
+          SizedBox(height: SharedFunction.scaleHeight(20, height),),
           /// sign up
           signUp()
         ],

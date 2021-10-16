@@ -187,6 +187,7 @@ class SharedStyle {
 
   static final whiteBtn = ButtonStyle(
     backgroundColor: MaterialStateProperty.all(SharedStyle.white),
+    shadowColor: MaterialStateProperty.all(SharedStyle.black),
     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
       RoundedRectangleBorder(
         borderRadius: SharedStyle.borderRadius(20, 20, 20, 20)
@@ -198,6 +199,17 @@ class SharedStyle {
     fontSize: 18,
     color: SharedStyle.red,
     fontFamily: 'Poppins-Regular'
+  );
+
+  static final btnContainerDecor = BoxDecoration(
+    boxShadow: [
+      BoxShadow(
+        color: SharedStyle.black.withOpacity(0.35),
+        spreadRadius: -10,
+        blurRadius: 20,
+        offset: Offset(10, 10),
+      )
+    ]
   );
   
   static final h1 = TextStyle(
