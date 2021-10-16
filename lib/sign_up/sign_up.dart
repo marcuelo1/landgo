@@ -6,6 +6,7 @@ import 'package:ryve_mobile/shared/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
+import 'package:ryve_mobile/shared/shared_widgets.dart';
 import 'package:ryve_mobile/sign_in/sign_in.dart';
 import 'package:ryve_mobile/sign_up/sign_up_style.dart';
 import 'package:http/http.dart' as http;
@@ -33,7 +34,6 @@ class _SignUpState extends State<SignUp> {
   final formKey = GlobalKey<FormState>();
 
   // Page and variable for values of the form
-  int currentPage = 1;
   var _email;
   var _password;
   var _confirmPassword;
@@ -56,30 +56,6 @@ class _SignUpState extends State<SignUp> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
-    List<Widget> page = <Widget>[];
-
-    switch (currentPage) {
-      case 1:
-        page = [
-          /// TITLE
-          title(),
-          /// FORM
-          form_1(),
-          /// Already registered
-          signIn()
-        ];
-        break;
-      case 2:
-        page = [
-          /// TITLE
-          title(),
-          /// FORM
-          form_2(),
-          /// Already registered
-          signIn()
-        ];
-        break;
-    }
 
     return loading ? Loading() : SafeArea(
       child: Scaffold(
@@ -91,7 +67,14 @@ class _SignUpState extends State<SignUp> {
             SharedFunction.scaleHeight(48, height)
           ),
           child: Column(
-            children: page,
+            children: [
+              /// TITLE
+              title(),
+              /// FORM
+              form(),
+              /// Already registered
+              signIn()
+            ],
           ),
         ),
       ),
@@ -105,25 +88,7 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget form_1(){
-    return Form(
-      key: formKey,
-      child: Column(
-        children: [
-          /// Email
-          email(),
-          /// Password
-          password(),
-          /// Confirm Password
-          confirmPassword(),
-          /// Next Button
-          nextBtn()
-        ],
-      ),
-    );
-  }
-
-  Widget form_2(){
+  Widget form(){
     return Form(
       key: formKey,
       child: Column(
@@ -134,10 +99,14 @@ class _SignUpState extends State<SignUp> {
           lastName(),
           /// Confirm Password
           mobileNumber(),
-          /// Sign Up Button
-          signUp(),
-          /// Back Button
-          backBtn()
+          /// Email
+          email(),
+          /// Password
+          password(),
+          /// Confirm Password
+          confirmPassword(),
+          /// sign up
+          signUp()
         ],
       ),
     );
@@ -257,119 +226,42 @@ class _SignUpState extends State<SignUp> {
   }
 
   Widget signUp(){
-    return TextButton(
-      onPressed: () async { 
-        if(!formKey.currentState!.validate()){
-          return;
-        }
+    Function() _onPressedFunction = ()async{
+      if(!formKey.currentState!.validate()){
+        return;
+      }
 
-        setState(() {
-          loading = true;
-        });
-        formKey.currentState!.save();
+      setState(() {
+        loading = true;
+      });
+      formKey.currentState!.save();
 
-        // Sends data to back end
-        var url = '${SharedUrl.root}/${SharedUrl.version}/buyers';
-        var data = {
-          "email": _email,
-          "password": _password,
-          "first_name": _firstName,
-          "last_name": _lastName,
-          "phone_number": _mobileNumber
-        };
-        var _response = await SharedFunction.sendData(url, {}, data);
-        Map responseBody = _response['body'];
+      // Sends data to back end
+      var url = '${SharedUrl.root}/${SharedUrl.version}/buyers';
+      var data = {
+        "email": _email,
+        "password": _password,
+        "first_name": _firstName,
+        "last_name": _lastName,
+        "phone_number": _mobileNumber
+      };
+      var _response = await SharedFunction.sendData(url, {}, data);
+      Map responseBody = _response['body'];
 
-        setState(() => loading = false);
+      setState(() => loading = false);
 
-        if(_response['status'] == 200){ // successful
-          Navigator.pushNamed(context, 'signin');
-        }else if(_response['status'] == 422){ // email has already been taken
-          PopUp.error(context, responseBody['errors']['full_messages'][0]);
-        }else{  // 500 error
-          PopUp.error(context);
-        }
-      },
-      child: Container(
-        width: signUpBtnWidth,
-        height: signUpBtnHeight,
-        margin: EdgeInsets.only(top: 13, bottom: 11),
-        decoration: SignUpStyle.signUpBtn,
-        child: Center(
-          child: Text(
-            "Sign Up",
-            style: SignUpStyle.signUpText,
-          ),
-        ),
-      ),
-    );
+      if(_response['status'] == 200){ // successful
+        Navigator.pushNamed(context, 'signin');
+      }else if(_response['status'] == 422){ // email has already been taken
+        PopUp.error(context, responseBody['errors']['full_messages'][0]);
+      }else{  // 500 error
+        PopUp.error(context);
+      }
+    };
+
+    return SharedWidgets.redBtn(_onPressedFunction, 'Sign Up', width, height);
   }
-
-  Widget nextBtn(){
-    return TextButton(
-      onPressed: (){
-        // set value of the inputs in form 2
-        firstNameCon.text = _firstName;
-        lastNameCon.text = _lastName;
-        mobileNumberCon.text = _mobileNumber;
-
-        setState(() {
-          if(!formKey.currentState!.validate()){
-            return;
-          }
-
-          formKey.currentState!.save();
-          currentPage++;
-
-          print(_email);
-          print(_password);
-          print(_confirmPassword);
-          print(_firstName);
-          print(_lastName);
-          print(_mobileNumber);
-        });
-      }, 
-      child: Container(
-        width: navBtnWidth,
-        height: navUpBtnHeight,
-        margin: EdgeInsets.only(top: 13, bottom: 11),
-        decoration: SignUpStyle.signUpBtn,
-        child: Center(
-          child: Text(
-            "Next",
-            style: SignUpStyle.signUpText,
-          ),
-        )
-      )
-    );
-  }
-
-  Widget backBtn(){
-    return TextButton(
-      onPressed: (){
-        // set value of the inputs in form 2
-        emailCon.text = _email;
-        passwordCon.text = _password;
-        confirmPasswordCon.text = _confirmPassword;
-        setState(() {
-          currentPage--;
-        });
-      }, 
-      child: Container(
-        width: navBtnWidth,
-        height: navUpBtnHeight,
-        margin: EdgeInsets.only(top: 13, bottom: 11),
-        decoration: SignUpStyle.signUpBtn,
-        child: Center(
-          child: Text(
-            "Back",
-            style: SignUpStyle.signUpText,
-          ),
-        ),
-      )
-    );
-  }
-
+  
   Widget signIn(){
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -414,4 +414,40 @@ class SharedWidgets {
       ),
     );
   }
+
+
+  // RED BUTTONS
+  static Widget redBtn(Function()function, String name, double width, double height){
+    return ElevatedButton(
+      onPressed: function, 
+      style: SharedStyle.redBtn,
+      child: Container(
+        width: SharedFunction.scaleWidth(SharedStyle.btnWidth, width),
+        height: SharedFunction.scaleHeight(SharedStyle.btnHeight, height),
+        child: Center(
+          child: Text(
+            name,
+            style: SharedStyle.redBtnText,
+          ),
+        ),
+      )
+    );
+  }
+
+  static Widget whiteBtn(Function()function, String name, double width, double height){
+    return ElevatedButton(
+      onPressed: function, 
+      style: SharedStyle.whiteBtn,
+      child: Container(
+        width: SharedFunction.scaleWidth(SharedStyle.btnWidth, width),
+        height: SharedFunction.scaleHeight(SharedStyle.btnHeight, height),
+        child: Center(
+          child: Text(
+            name,
+            style: SharedStyle.whiteBtnText,
+          ),
+        ),
+      )
+    );
+  }
 }

@@ -13,9 +13,7 @@ class SharedStyle {
 
   // Shades of black, check ryve prototype colors (from left to right) 
   // Note: some of the colors are the same
-  static final Color white = SharedFunction.hexToColor("FFFFFF");
   static final Color white2 = SharedFunction.hexToColor("#EFEFF4");
-  static final Color black = SharedFunction.hexToColor("000000");
   static final Color black2 = SharedFunction.hexToColor("1C1C1E");
   static final Color black3 = SharedFunction.hexToColor("2C2C2E");
   static final Color black4 = SharedFunction.hexToColor("3A3A3C");
@@ -152,5 +150,60 @@ class SharedStyle {
         borderRadius: SharedStyle.borderRadius(10, 10, 10, 10)
       )
     )
+  );
+
+
+
+  // NEW STYLES
+  static final Color red = SharedFunction.hexToColor("FC5C53");
+  static final Color white = SharedFunction.hexToColor("FFFFFF");
+  static final Color grey = SharedFunction.hexToColor("7F7F7F");
+  static final Color black = SharedFunction.hexToColor("000000");
+
+  static final Color backgroundRed = SharedStyle.red;
+  static final Color backgroundWhite = SharedStyle.white;
+
+  static final Color blackText = SharedStyle.black;
+  static final Color greyText = SharedStyle.grey;
+  static final Color whiteText = SharedStyle.white;
+
+  static final double btnWidth = 300;
+  static final double btnHeight = 60;
+
+  static final redBtn = ButtonStyle(
+    backgroundColor: MaterialStateProperty.all(SharedStyle.red),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: SharedStyle.borderRadius(20, 20, 20, 20)
+      )
+    )
+  );
+
+  static final redBtnText = TextStyle(
+    fontSize: 18,
+    color: SharedStyle.white,
+    fontFamily: 'Poppins-Regular'
+  );
+
+  static final whiteBtn = ButtonStyle(
+    backgroundColor: MaterialStateProperty.all(SharedStyle.white),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: SharedStyle.borderRadius(20, 20, 20, 20)
+      )
+    )
+  );
+
+  static final whiteBtnText = TextStyle(
+    fontSize: 18,
+    color: SharedStyle.red,
+    fontFamily: 'Poppins-Regular'
+  );
+  
+  static final h1 = TextStyle(
+    color: SharedStyle.primaryText,
+    fontSize: 14,
+    fontFamily: 'SFProText-Bold',
+    fontWeight: FontWeight.bold
   );
 }
