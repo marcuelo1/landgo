@@ -1,5 +1,5 @@
 class ProductBlueprint < Blueprinter::Base
-    fields :id, :name, :product_category_id
+    fields :id, :name, :product_category_id, :description
 
     field :image do |product|
         if product.image.attached?
