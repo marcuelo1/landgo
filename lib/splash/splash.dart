@@ -50,12 +50,12 @@ class _SplashState extends State<Splash> {
             print(response);
             print("====================");
             // check status of response
-            // if (response['status'] == 200) {
-            //   return Home();
-            // } else {
-            //   return SignIn();
-            // }
-            return content(context);
+            if (response['status'] == 200) {
+              return Home();
+            } else {
+              return SignIn();
+            }
+            // return content(context);
         }
       }
     );

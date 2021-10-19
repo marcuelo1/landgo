@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/home/home.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
 import 'package:ryve_mobile/shared/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
+import 'package:ryve_mobile/shared/shared_widgets.dart';
 import 'package:ryve_mobile/sign_in/sign_in_style.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -19,6 +21,9 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  // data url
+  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyers/sign_in";
+
   // dimensions of needed in displays
   final double signInBtnWidth = 300;
   final double signInBtnHeight = 60;
@@ -46,22 +51,20 @@ class _SignInState extends State<SignIn> {
 
     return loading ? Loading() : SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(
-            SharedFunction.scaleWidth(37.5, width), 
-            SharedFunction.scaleHeight(226, height), 
-            SharedFunction.scaleWidth(37.5, width), 
-            SharedFunction.scaleHeight(48, height),
-          ),
-          child: Column(
-            children: [
-              // Title
-              title(),
-              // Space betweeen title and form
-              SizedBox(height: (80 / SharedStyle.referenceHeight) * height),
-              // Form
-              form()
-            ],
+        body: Center(
+          child: Container(
+            width: SharedFunction.scaleWidth(300, width),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Title
+                title(),
+                // Space betweeen title and form
+                SizedBox(height: SharedFunction.scaleHeight(80, height)),
+                // Form
+                form()
+              ],
+            ),
           ),
         ),
       ),
@@ -83,13 +86,16 @@ class _SignInState extends State<SignIn> {
           // email
           email(),
           // password
+          SizedBox(height: SharedFunction.scaleHeight(10, height)),
           password(),
+          SizedBox(height: SharedFunction.scaleHeight(10, height)),
           // reset password
           resetPass(),
           // space
-          SizedBox(height: (68 / SharedStyle.referenceHeight) * height,),
+          SizedBox(height: SharedFunction.scaleHeight(68, height)),
           // sign in button
           signInBtn(),
+          SizedBox(height: SharedFunction.scaleHeight(20, height)),
           // create account
           createAcc()
         ],
@@ -99,7 +105,7 @@ class _SignInState extends State<SignIn> {
 
   Widget email () {
     return TextFormField(
-      decoration: InputDecoration(labelText: "Email"),
+      decoration: SharedStyle.textFormFieldDecoration('Email'),
       validator: (value){
         // check if input field is empty
         if(value!.isEmpty){
@@ -118,7 +124,7 @@ class _SignInState extends State<SignIn> {
   Widget password () {
     return TextFormField(
       obscureText: true,
-      decoration: InputDecoration(labelText: "Password"),
+      decoration: SharedStyle.textFormFieldDecoration('Password'),
       validator: (value) {
         if(value!.isEmpty){
           return "Password is required";
@@ -133,62 +139,43 @@ class _SignInState extends State<SignIn> {
       onPressed: (){}, 
       child: Text(
         "Reset Password",
-        style: SignInStyle.yellowText,
+        style: SharedStyle.linkText,
       )
     );
   }
 
   Widget signInBtn () {
-    return ElevatedButton(
-      style: SignInStyle.signInBtn,
-      onPressed: () async {
-        if(!formKey.currentState!.validate()){
-          return;
-        }
-        // start loading page
-        setState(() => loading = true);
-        // Save form inputs to their variables
-        formKey.currentState!.save();
+    Function() _onPressedFunction = ()async{
+      if(!formKey.currentState!.validate()){
+        return;
+      }
+      // start loading page
+      setState(() => loading = true);
+      // Save form inputs to their variables
+      formKey.currentState!.save();
 
-        // Send data to backend
-        var url = Uri.parse("${SharedUrl.root}/${SharedUrl.version}/buyers/sign_in");
-        try {
-          var response = await http.post(url, body: {"email": _email, "password": _password});
-          // convert response body to MAP
-          Map responseBody = json.decode(response.body);
+      // Send data to backend
+      Map _data = {"email": _email, "password": _password};
+      Map _response = await SharedFunction.sendData(_dataUrl, {}, _data);
+      Map _responseBody = _response['body'];
 
-          // end loading page
-          setState(() => loading = false);
-          if(response.statusCode == 200){ // successful
-            // save headers
-            await Headers.setHeaders(response.headers);
-            // go to home
-            Navigator.pushNamed(context, 'home');
-          }else if(response.statusCode == 422){ // doesnt have account
-            PopUp.error(context, responseBody['status']);
-          }else if(response.statusCode == 401){ // invalid creds
-            PopUp.error(context, responseBody['errors'][0]);
-          }else{  // 500 status code
-            PopUp.error(context);
-          }
-        } catch (e) {
-          // end loading page
-          setState(() => loading = false);
-          // No internet connection
-          PopUp.error(context, "Please check your internet connection");
-        }
-      }, 
-      child: Container(
-        width: SharedFunction.scaleWidth(signInBtnWidth, width),
-        height: SharedFunction.scaleHeight(signInBtnHeight, height),
-        child: Center(
-          child: Text(
-            "Sign In",
-            style: SignInStyle.signInText,
-          ),
-        ),
-      )
-    );
+      // end loading page
+      setState(() => loading = false);
+
+      if(_response['status'] == 200){ // successful
+        // save headers
+        await Headers.setHeaders(_response['headers']);
+        // go to home
+        Navigator.pushNamed(context, Home.routeName);
+      }else if(_response['status'] == 422){ // doesnt have account
+        PopUp.error(context, _responseBody['status']);
+      }else if(_response['status'] == 401){ // invalid creds
+        PopUp.error(context, _responseBody['errors'][0]);
+      }else{  // 500 status code
+        PopUp.error(context);
+      }
+    };
+    return SharedWidgets.redBtn(_onPressedFunction, 'Sign In', width, height);
   }
 
   Widget createAcc () {
@@ -196,7 +183,7 @@ class _SignInState extends State<SignIn> {
       onPressed: () => Navigator.pushNamed(context, SignUp.routeName), 
       child: Text(
         "Create Account",
-        style: SignInStyle.yellowText,
+        style: SharedStyle.linkText,
       )
     );
   }

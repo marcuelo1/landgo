@@ -83,7 +83,7 @@ class SharedFunction {
           data = await http.post(url, headers: headers, body: body);
       }
 
-      return {"status": data.statusCode, "body": json.decode(data.body)};
+      return {"status": data.statusCode, "body": json.decode(data.body), "headers": data.headers};
     } catch (e) {
       print(e);
       print("==================================");

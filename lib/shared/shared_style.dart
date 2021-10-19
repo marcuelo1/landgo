@@ -211,6 +211,21 @@ class SharedStyle {
       )
     ]
   );
+
+  static final textFormFieldDecoration = (String _title){
+    return InputDecoration(
+      hintText: _title, 
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: SharedStyle.red)
+      )
+    );
+  };
+
+  static final linkText = TextStyle(
+    fontSize: 18,
+    color: SharedStyle.red,
+    fontFamily: 'Poppins-Regular'
+  );
   
   static final h1 = TextStyle(
     color: SharedStyle.primaryText,
