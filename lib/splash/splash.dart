@@ -17,6 +17,11 @@ class _SplashState extends State<Splash> {
   // url
   String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyer/is_signed_in";
 
+  // variables for scale functions
+  late double width;
+  late double height;
+  late double scale;
+
   Map<String,String> _headers = {};
   @override
   void initState(){
@@ -27,6 +32,10 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    scale = SharedStyle.referenceWidth / width;
+
     return FutureBuilder(
       future: SharedFunction.getData(_dataUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot){
@@ -41,11 +50,12 @@ class _SplashState extends State<Splash> {
             print(response);
             print("====================");
             // check status of response
-            if (response['status'] == 200) {
-              return Home();
-            } else {
-              return SignIn();
-            }
+            // if (response['status'] == 200) {
+            //   return Home();
+            // } else {
+            //   return SignIn();
+            // }
+            return content(context);
         }
       }
     );
@@ -54,8 +64,13 @@ class _SplashState extends State<Splash> {
   Widget content(BuildContext context){
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          color: SharedStyle.yellow,
+        backgroundColor: SharedStyle.white,
+        body: Center(
+          child: Container(
+            width: SharedFunction.scaleWidth(234, width),
+            height: SharedFunction.scaleHeight(324, height),
+            child: Image.asset('images/logo_white.png')
+          ),
         ),
       )
     );
