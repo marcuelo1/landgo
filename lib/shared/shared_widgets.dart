@@ -14,20 +14,23 @@ class SharedWidgets {
   /////////////////////
   /// A P P  B A R
   /// /////////////////
-  static AppBar appBar(BuildContext context, {String title = "Landgo", bool showCurrTrans = false, bool showLoc = false, bool showCart = false}){
+  static AppBar appBar(BuildContext context, {String title = "Landgo", String locName = "", String locDescription = "", bool showCurrTrans = false, bool showLoc = false, bool showCart = false}){
 
     return AppBar(
-      title: _appBarTitle(title),
-      centerTitle: true,
-      backgroundColor: SharedStyle.black2,
-      iconTheme: IconThemeData(color: SharedStyle.yellow),
+      title: Row(
+        children: [
+          if (showLoc) ... [
+            _locations(context, locName, locDescription),
+          ],
+        ],
+      ),
+      backgroundColor: Colors.transparent,
+      iconTheme: IconThemeData(color: SharedStyle.red),
+      titleSpacing: 0,
+      elevation: 0,
       actions: [
         if (showCurrTrans) ... [
           _currentTransactions(context),
-          SizedBox(width: 10,),
-        ],
-        if (showLoc) ... [
-          _locations(context),
           SizedBox(width: 10,),
         ],
         if (showCart) ... [
@@ -35,7 +38,7 @@ class SharedWidgets {
           SizedBox(width: 10,),
         ]
       ],
-      actionsIconTheme: IconThemeData(color: SharedStyle.yellow),
+      actionsIconTheme: IconThemeData(color: SharedStyle.red),
     );
   }
 
@@ -55,19 +58,28 @@ class SharedWidgets {
     );
   }
 
-  static Widget _search(){
-    return GestureDetector(
-      onTap: (){},
-      child: Icon(Icons.search),
-    );
-  }
-
-  static Widget _locations(BuildContext context){
-    return GestureDetector(
-      onTap: (){
-        Navigator.pushNamed(context, ListOfLocations.routeName);
-      },
-      child: Icon(Icons.location_on_outlined),
+  static Widget _locations(BuildContext context, name, description){
+    return TextButton(
+      onPressed: () => Navigator.pushNamed(context, ListOfLocations.routeName), 
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 10),
+          Text(
+            name,
+            style: SharedStyle.appBarTitle,
+          ),
+          Container(
+            width: 200,
+            child: Text(
+              description,
+              overflow: TextOverflow.ellipsis,
+              style: SharedStyle.appBarSubTitle
+            ),
+          ),
+        ],
+      )
     );
   }
 

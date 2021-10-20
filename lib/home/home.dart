@@ -34,64 +34,10 @@ class _HomeState extends State<Home> {
   late List categories;
 
   // products
-  List products = [
-    [
-      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "Matcha Pearl",
-      79.00,
-    ],
-    [
-      "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "Assorted Meal",
-      180.00
-    ]
-  ];
+  List products = [];
 
   // sellers
-  List sellers = [
-    {
-      "id": 1,
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "name": "Shed Twenty Three",
-      "rating":  4.8,
-      "address": 'Hilado-Rizal Street 6100'
-    },
-    {
-      "id": 1,
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "name": "Shed Twenty Three",
-      "rating":  4.8,
-      "address": 'Hilado-Rizal Street 6100'
-    },
-    {
-      "id": 1,
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "name": "Shed Twenty Three",
-      "rating":  4.8,
-      "address": 'Hilado-Rizal Street 6100'
-    },
-    {
-      "id": 1,
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "name": "Shed Twenty Three",
-      "rating":  4.8,
-      "address": 'Hilado-Rizal Street 6100'
-    },
-    {
-      "id": 1,
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "name": "Shed Twenty Three",
-      "rating":  4.8,
-      "address": 'Hilado-Rizal Street 6100'
-    },
-    {
-      "id": 1,
-      "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-      "name": "Shed Twenty Three",
-      "rating":  4.8,
-      "address": 'Hilado-Rizal Street 6100'
-    }
-  ];
+  List sellers = [];
 
   Map selected_location = {};
   Map _buyer = {};
@@ -132,6 +78,14 @@ class _HomeState extends State<Home> {
               _buyer = json.decode(responseBody['buyer']);
               selected_location = json.decode(responseBody['selected_location']);
               print(selected_location);
+
+              if(responseBody['sellers'].length > 0){
+                sellers = json.decode(responseBody['sellers']);
+              }
+
+              if(responseBody['products'].length > 0){
+                products = json.decode(responseBody['products']);
+              }
               
               return content();
             }
@@ -141,16 +95,19 @@ class _HomeState extends State<Home> {
   }
 
   Widget content(){
+    String _locName = selected_location['name'];
+    String _locDescription = selected_location['description'];
+
     return SafeArea(
       child: Scaffold(
-        appBar: SharedWidgets.appBar(context, showCart: true, showCurrTrans: true, showLoc: true),
+        appBar: SharedWidgets.appBar(context, locName: _locName, locDescription: _locDescription, showCart: true, showCurrTrans: true, showLoc: true),
         drawer: Drawer(
           child: SharedWidgets.sideBar(context, _buyer, _headers),
         ),
+        backgroundColor: SharedStyle.white,
         body: Container(
           width: double.infinity,
           height: double.infinity,
-          decoration: BoxDecoration(color: SharedStyle.yellow),
           child: Stack(
             children: [
               // static page
@@ -176,10 +133,12 @@ class _HomeState extends State<Home> {
         children: [
           // search
           searchBar(),
+          // space
+          SizedBox(height: SharedFunction.scaleHeight(10, height),),
           // title
           title("Categories"),
           // space
-          SizedBox(height: SharedFunction.scaleHeight(20, height),),
+          SizedBox(height: SharedFunction.scaleHeight(10, height),),
           // category list
           for (var i = 0; i < categories.length; i+=2) ... [
             categoryRow(i),
@@ -264,10 +223,6 @@ class _HomeState extends State<Home> {
         children: [
           // image
           categoryImage(category['image']),
-          // yellow overlay
-          yellowOverlay(),
-          //black overlay
-          blackOverlay(),
           // text
           categoryName(category['name'])
         ],
@@ -285,28 +240,6 @@ class _HomeState extends State<Home> {
           url,
           fit: BoxFit.fill,
         ),
-      ),
-    );
-  }
-
-  Widget yellowOverlay(){
-    return Opacity(
-      opacity: 0.5,
-      child: Container(
-        width: SharedFunction.scaleWidth(imageWidth, width),
-        height: SharedFunction.scaleHeight(imageHeight, height),
-        decoration: HomeStyle.yellowOverlay,
-      ),
-    );
-  }
-
-  Widget blackOverlay(){
-    return Opacity(
-      opacity: 0.3,
-      child: Container(
-        width: SharedFunction.scaleWidth(imageWidth, width),
-        height: SharedFunction.scaleHeight(imageHeight, height),
-        decoration: HomeStyle.blackOverlay,
       ),
     );
   }
@@ -368,9 +301,9 @@ class _HomeState extends State<Home> {
   Widget recentPurchases(){
     return Column(
       children: [
-        // for (var item in products) ... [
-        //   SharedWidgets.product(item[0], item[1], item[2].toStringAsFixed(2), width, height)
-        // ]
+        for (var product in products) ... [
+          SharedWidgets.product(product, width, height)
+        ]
       ],
     );  
   }

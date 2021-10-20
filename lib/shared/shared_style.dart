@@ -43,10 +43,6 @@ class SharedStyle {
           );
   }
 
- static final appBarTitle = TextStyle(
-   color: SharedStyle.yellow,
- ); 
-
  static final productName = TextStyle(
    color: SharedStyle.primaryText,
    fontSize: 14,
@@ -223,6 +219,19 @@ class SharedStyle {
 
   static final linkText = TextStyle(
     fontSize: 18,
+    color: SharedStyle.red,
+    fontFamily: 'Poppins-Regular'
+  );
+
+  static final appBarTitle = TextStyle(
+    fontSize: 15,
+    color: SharedStyle.red,
+    fontFamily: 'Poppins-Bold',
+    fontWeight: FontWeight.bold
+  );
+  
+  static final appBarSubTitle = TextStyle(
+    fontSize: 13,
     color: SharedStyle.red,
     fontFamily: 'Poppins-Regular'
   );
