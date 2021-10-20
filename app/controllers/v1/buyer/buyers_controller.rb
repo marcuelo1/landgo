@@ -15,8 +15,8 @@ class V1::Buyer::BuyersController < BuyerController
             buyer: BuyerBlueprint.render(@buyer),
             selected_location: LocationBlueprint.render(@buyer.selected_location),
             categories: CategoryBlueprint.render(@categories),
-            products: [],
-            sellers: []
+            products: ProductBlueprint.render(@buyer.recent_purchases),
+            sellers: SellerBlueprint.render(Seller.top_sellers)
         }, status: 200
     end
 

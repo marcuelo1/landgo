@@ -51,4 +51,8 @@ class Buyer < ActiveRecord::Base
 
     self.buyer_payment_methods.where(selected: true).first
   end
+
+  def recent_purchases
+    Product.all.limit(5)
+  end
 end
