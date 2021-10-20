@@ -6,11 +6,7 @@ class Location < ApplicationRecord
   # after_validation :reverse_geocode if :coordinates_changed? 
 
   def address 
-    if self.name == "Current Location"
-      ""
-    else
-      [details, street, village, city.present? ? city + " City" : "", state].compact.join(", ") 
-    end
+    [details, street, village, city.present? ? city + " City" : "", state].compact.join(", ") 
   end 
 
   def address_changed? 

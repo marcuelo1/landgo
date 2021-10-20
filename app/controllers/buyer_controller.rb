@@ -8,6 +8,7 @@ class BuyerController < ApiController
         if params[:is_current]
             current_loc = @buyer.current_loc
             current_loc.update(latitude: params[:latitude], longitude: params[:longitude])
+            update_address(params[:latitude], params[:longitude], current_loc)
         end
     end
 
