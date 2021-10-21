@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ryve_mobile/home/home_style.dart';
 import 'package:ryve_mobile/home/search_page.dart';
+import 'package:ryve_mobile/sellers/product.dart';
 import 'package:ryve_mobile/sellers/sellers.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
@@ -302,7 +303,12 @@ class _HomeState extends State<Home> {
     return Column(
       children: [
         for (var product in products) ... [
-          SharedWidgets.product(product, width, height)
+          GestureDetector(
+            onTap: (){
+              Navigator.pushNamed(context, Product.routeName, arguments: {"product": product});
+            },
+            child: SharedWidgets.product(product, width, height),
+          )
         ]
       ],
     );  

@@ -5,8 +5,14 @@ class ProductStyle {
   static final productName = TextStyle(
     color: SharedStyle.primaryText,
     fontSize: 35,
-   fontFamily: 'Poppins-Bold',
-   fontWeight: FontWeight.bold,
+    fontFamily: 'Poppins-Bold',
+    fontWeight: FontWeight.bold,
+  );
+
+  static final productDescription = TextStyle(
+    color: SharedStyle.primaryText,
+    fontSize: 18,
+    fontFamily: 'Poppins-Regular',
   );
   
   static final productPrice = TextStyle(
@@ -69,7 +75,7 @@ class ProductStyle {
   );
   
   static final selectedBtn = ButtonStyle(
-    backgroundColor: MaterialStateProperty.all(SharedStyle.yellow),
+    backgroundColor: MaterialStateProperty.all(SharedStyle.red),
     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
       RoundedRectangleBorder(
         borderRadius: SharedStyle.borderRadius(30, 30, 30, 30)
@@ -79,18 +85,18 @@ class ProductStyle {
 
   static final quantityBar = BoxDecoration(
     borderRadius: SharedStyle.borderRadius(30, 30, 30, 30),
-    border: Border.all(color: SharedStyle.yellow)
+    border: Border.all(color: SharedStyle.red)
   );
 
   static final quantityBarNum = TextStyle(
-    color: SharedStyle.primaryText,
+    color: SharedStyle.red,
     fontSize: 20,
     fontFamily: 'SFProText-Bold',
     fontWeight: FontWeight.bold,
   );
 
   static final totalAmount = TextStyle(
-    color: SharedStyle.yellow,
+    color: SharedStyle.red,
     fontSize: 20,
     fontFamily: 'SFProText-Bold',
     fontWeight: FontWeight.bold,

@@ -14,11 +14,14 @@ class SharedWidgets {
   /////////////////////
   /// A P P  B A R
   /// /////////////////
-  static AppBar appBar(BuildContext context, {String title = "Landgo", String locName = "", String locDescription = "", bool showCurrTrans = false, bool showLoc = false, bool showCart = false}){
+  static AppBar appBar(BuildContext context, {String title = "", String locName = "", String locDescription = "", bool showCurrTrans = false, bool showLoc = false, bool showCart = false}){
 
     return AppBar(
       title: Row(
         children: [
+          if(title != "")...[
+            _appBarTitle(title)
+          ],
           if (showLoc) ... [
             _locations(context, locName, locDescription),
           ],
@@ -45,7 +48,7 @@ class SharedWidgets {
   static Widget _appBarTitle(String title){
     return Text(
       title,
-      style: SharedStyle.appBarTitle,
+      style: SharedStyle.appBarBlackTitle,
     );
   }
 

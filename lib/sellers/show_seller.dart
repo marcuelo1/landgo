@@ -153,7 +153,7 @@ class _ShowSellerState extends State<ShowSeller> {
           for (var i = 0; i < products.length; i++) ... [
             TextButton(
               onPressed: (){
-                Navigator.pushNamed(context, Product.routeName, arguments: {"seller": seller, "product": products[i]});
+                Navigator.pushNamed(context, Product.routeName, arguments: {"product": products[i]});
               },
               child: SharedWidgets.product(products[i], width, height)
             )

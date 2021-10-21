@@ -224,8 +224,15 @@ class SharedStyle {
   );
 
   static final appBarTitle = TextStyle(
-    fontSize: 15,
+    fontSize: 16,
     color: SharedStyle.red,
+    fontFamily: 'Poppins-Bold',
+    fontWeight: FontWeight.bold
+  );
+
+  static final appBarBlackTitle = TextStyle(
+    fontSize: 16,
+    color: SharedStyle.black,
     fontFamily: 'Poppins-Bold',
     fontWeight: FontWeight.bold
   );

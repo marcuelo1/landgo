@@ -62,9 +62,7 @@ class _ProductState extends State<Product> {
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
     final Map args = ModalRoute.of(context)!.settings.arguments as Map;
-    seller = args['seller'];
     product = args['product'];
-    print(seller);
     print(product);
     _dataUrl = _dataUrl + "?id=${product['id']}";
     
@@ -117,6 +115,8 @@ class _ProductState extends State<Product> {
             print(selectedAddOns);
             print("==============================================================");
 
+            seller = json.decode(responseBody['seller']);
+
             return content();
         }
       }
@@ -127,25 +127,25 @@ class _ProductState extends State<Product> {
     return SafeArea(
       child: Scaffold(
         appBar: SharedWidgets.appBar(context, title: seller['name']),
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(
-            SharedFunction.scaleWidth(24, width), 
-            SharedFunction.scaleHeight(20, height), 
-            SharedFunction.scaleWidth(24, width), 
-            SharedFunction.scaleHeight(0, height)
-          ),
+        body: Center(
           child: SingleChildScrollView(
             child: Container(
-              width: double.infinity,
+              width: SharedFunction.scaleWidth(327, width),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  // space
+                  SizedBox(height: SharedFunction.scaleHeight(20, height),),
                   // product image
                   productImage(product['image']),
                   // space
-                  SizedBox(height: SharedFunction.scaleHeight(18, height),),
+                  SizedBox(height: SharedFunction.scaleHeight(10, height),),
                   // product name
                   productName(product['name']),
+                  // space
+                  SizedBox(height: SharedFunction.scaleHeight(5, height),),
+                  // product description
+                  productDescription(product['description']),
                   // space
                   SizedBox(height: SharedFunction.scaleHeight(7, height),),
                   // product price
@@ -188,16 +188,16 @@ class _ProductState extends State<Product> {
   }
 
   Widget productImage(String url){
-    return ClipRRect(
-      borderRadius: SharedStyle.borderRadius(20, 20, 20, 20),
-      child: Container(
-        width: SharedFunction.scaleWidth(productImageWidth, width),
-        height: SharedFunction.scaleHeight(productImageHeight, height),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius:SharedStyle.borderRadius(20, 20, 20, 20),
-            side: BorderSide(width: 1, color: SharedStyle.tertiaryFill)
-          ),
+    return Container(
+      width: SharedFunction.scaleWidth(productImageWidth, width),
+      height: SharedFunction.scaleHeight(productImageHeight, height),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius:SharedStyle.borderRadius(20, 20, 20, 20),
+          side: BorderSide(width: 1, color: SharedStyle.tertiaryFill)
+        ),
+        child: ClipRRect(
+          borderRadius: SharedStyle.borderRadius(20, 20, 20, 20),
           child: Image.network(
             url,
             fit: BoxFit.cover,
@@ -212,6 +212,14 @@ class _ProductState extends State<Product> {
       name,
       textAlign: TextAlign.center,
       style: ProductStyle.productName,
+    );
+  }
+
+  Widget productDescription(String _description){
+    return Text(
+      _description,
+      textAlign: TextAlign.center,
+      style: ProductStyle.productDescription,
     );
   }
 
@@ -385,7 +393,7 @@ class _ProductState extends State<Product> {
         icon: Icon(
           Icons.remove,
         ),
-        color: SharedStyle.yellow,
+        color: SharedStyle.red,
       ),
     );
   }
@@ -401,7 +409,7 @@ class _ProductState extends State<Product> {
         icon: Icon(
           Icons.add
         ),
-        color: SharedStyle.yellow,
+        color: SharedStyle.red,
       ),
     );
   }
@@ -440,13 +448,8 @@ class _ProductState extends State<Product> {
       mainAxisSize: MainAxisSize.max,
       children: [
         plainTitle(name),
-        Container(
-          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-          decoration: ProductStyle.requireContainer,
-          child: Text(
-            requireName,
-            style: ProductStyle.require,
-          ),
+        Text(
+          requireName,
         ),
       ],
     );
@@ -511,60 +514,50 @@ class _ProductState extends State<Product> {
   }
 
   Widget addToBasketBtn(){
-    return ElevatedButton(
-      style: SharedStyle.yellowBtn,
-      onPressed: () async {
-        // check if size has been selected
-        if(selectedSize["product_price_id"] == null){
-          PopUp.error(context, "Please choose one size");
-          return;
+    Function () _onPressed = () async {
+      // check if size has been selected
+      if(selectedSize["product_price_id"] == null){
+        PopUp.error(context, "Please choose one size");
+        return;
+      }
+
+      // check if add on required is not selected
+      int check = 0;
+      selectedAddOns.forEach((key, value) {
+        if(value["addOns"].length < value["require"]){
+          check = 1;
         }
+      });
 
-        // check if add on required is not selected
-        int check = 0;
-        selectedAddOns.forEach((key, value) {
-          if(value["addOns"].length < value["require"]){
-            check = 1;
-          }
-        });
+      if(check == 1){
+        PopUp.error(context, "Please select on of the required add ons"); 
+        return;
+      }
 
-        if(check == 1){
-          PopUp.error(context, "Please select on of the required add ons"); 
-          return;
-        }
+      // send data to back end
+      List _addOnsIds = [];
+      selectedAddOns.forEach((key, value) {
+        _addOnsIds.add(value["addOns"]);
+      });
 
-        // send data to back end
-        List _addOnsIds = [];
-        selectedAddOns.forEach((key, value) {
-          _addOnsIds.add(value["addOns"]);
-        });
+      Map _data = {
+        "product_id": product["id"],
+        "seller_id": seller["id"],
+        "product_price_id": selectedSize["product_price_id"],
+        "quantity": quan_of_prod,
+        "add_on_ids" : _addOnsIds,
+      };
 
-        Map _data = {
-          "product_id": product["id"],
-          "seller_id": seller["id"],
-          "product_price_id": selectedSize["product_price_id"],
-          "quantity": quan_of_prod,
-          "add_on_ids" : _addOnsIds,
-        };
+      String _url = "${SharedUrl.root}/${SharedUrl.version}/buyer/carts";
+      Map _response = await SharedFunction.sendData(_url, _headers, _data);
 
-        String _url = "${SharedUrl.root}/${SharedUrl.version}/buyer/carts";
-        Map _response = await SharedFunction.sendData(_url, _headers, _data);
+      if(_response["status"] == 200){
+        Navigator.pop(context);
+      }else{
+        PopUp.error(context, "error in server");
+      }
+    };
 
-        if(_response["status"] == 200){
-          Navigator.pop(context);
-        }else{
-          PopUp.error(context, "error in server");
-        }
-      }, 
-      child: Container(
-        width: SharedFunction.scaleWidth(addToBasketBtnWidth, width),
-        height: SharedFunction.scaleHeight(addToBasketBtnHeight, height),
-        child: Center(
-          child: Text(
-            "Add To Basket",
-            style: SharedStyle.yellowBtnText,
-          ),
-        ),
-      ));
+    return SharedWidgets.redBtn(_onPressed, "Add To Basket", width, height);
   }
 }
