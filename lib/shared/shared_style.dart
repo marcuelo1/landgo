@@ -246,22 +246,22 @@ class SharedStyle {
   static final h1 = TextStyle(
     color: SharedStyle.black,
     fontSize: 35,
-    fontFamily: 'SFProText-Bold',
-    fontWeight: FontWeight.bold
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Poppins-Bold'
   );
 
   static final h1Red = TextStyle(
     color: SharedStyle.red,
     fontSize: 35,
-    fontFamily: 'SFProText-Bold',
-    fontWeight: FontWeight.bold
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Poppins-Bold'
   );
 
   static final h1White = TextStyle(
     color: SharedStyle.white,
     fontSize: 35,
-    fontFamily: 'SFProText-Bold',
-    fontWeight: FontWeight.bold
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Poppins-Bold'
   );
 
   static final redRegularText = TextStyle(
@@ -291,6 +291,12 @@ class SharedStyle {
 
   static final smallText = TextStyle(
     color: SharedStyle.black,
+    fontSize: 12,
+    fontFamily: 'SFProText-Regular',
+  );
+
+  static final redSmallText = TextStyle(
+    color: SharedStyle.red,
     fontSize: 12,
     fontFamily: 'SFProText-Regular',
   );

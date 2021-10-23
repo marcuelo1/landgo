@@ -8,7 +8,6 @@ import 'package:ryve_mobile/shared/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/shared/shared_widgets.dart';
 import 'package:ryve_mobile/sign_in/sign_in.dart';
-import 'package:ryve_mobile/sign_up/sign_up_style.dart';
 import 'package:http/http.dart' as http;
 
 class SignUp extends StatefulWidget {
@@ -41,6 +40,7 @@ class _SignUpState extends State<SignUp> {
   var _lastName;
   var _mobileNumber;
 
+  bool isChecked = false;
   bool loading = false;
 
   // Controllers
@@ -59,22 +59,27 @@ class _SignUpState extends State<SignUp> {
 
     return loading ? Loading() : SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(
-            SharedFunction.scaleWidth(37.5, width), 
-            SharedFunction.scaleHeight(50, height), 
-            SharedFunction.scaleWidth(37.5, width), 
-            SharedFunction.scaleHeight(48, height)
-          ),
-          child: Column(
-            children: [
-              /// TITLE
-              title(),
-              /// FORM
-              form(),
-              /// Already registered
-              signIn()
-            ],
+        body: Center(
+          child: Container(
+            width: SharedFunction.scaleWidth(300, width),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Space
+                  SizedBox(height: SharedFunction.scaleHeight(50, height),),
+                  /// TITLE
+                  title(),
+                  // Space
+                  SizedBox(height: SharedFunction.scaleHeight(20, height),),
+                  /// FORM
+                  form(),
+                  // Space
+                  SizedBox(height: SharedFunction.scaleHeight(20, height),),
+                  /// Already registered
+                  signIn()
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -84,7 +89,7 @@ class _SignUpState extends State<SignUp> {
   Widget title(){
     return Text(
       "Let's get started",
-      style: SignUpStyle.title,
+      style: SharedStyle.h1,
     );
   }
 
@@ -105,7 +110,12 @@ class _SignUpState extends State<SignUp> {
           password(),
           /// Confirm Password
           confirmPassword(),
-          SizedBox(height: SharedFunction.scaleHeight(20, height),),
+          // space
+          SizedBox(height: SharedFunction.scaleHeight(30, height),),
+          // terms and policy
+          termsAndPolicyContainer(),
+          // Space
+          SizedBox(height: SharedFunction.scaleHeight(50, height),),
           /// sign up
           signUp()
         ],
@@ -115,7 +125,7 @@ class _SignUpState extends State<SignUp> {
 
   Widget email(){
     return TextFormField(
-      decoration: InputDecoration(labelText: "Email"),
+      decoration: SharedStyle.textFormFieldDecoration('Email'),
       controller: emailCon,
       validator: (value){
         // check if input field is empty
@@ -137,7 +147,7 @@ class _SignUpState extends State<SignUp> {
   Widget password(){
     return TextFormField(
       obscureText: true,
-      decoration: InputDecoration(labelText: "Password"),
+      decoration: SharedStyle.textFormFieldDecoration('Password'),
       controller: passwordCon,
       validator: (value){
         // check if input field is empty
@@ -156,7 +166,7 @@ class _SignUpState extends State<SignUp> {
   Widget confirmPassword(){
     return TextFormField(
       obscureText: true,
-      decoration: InputDecoration(labelText: "Confirm Password"),
+      decoration: SharedStyle.textFormFieldDecoration('Confirm Password'),
       controller: confirmPasswordCon,
       validator: (value){
         // check if input field is empty
@@ -176,7 +186,7 @@ class _SignUpState extends State<SignUp> {
 
   Widget firstName(){
     return TextFormField(
-      decoration: InputDecoration(labelText: "First Name"),
+      decoration: SharedStyle.textFormFieldDecoration('First Name'),
       controller: firstNameCon,
       validator: (value) {
         if(value!.isEmpty){
@@ -191,7 +201,7 @@ class _SignUpState extends State<SignUp> {
 
   Widget lastName(){
     return TextFormField(
-      decoration: InputDecoration(labelText: "Last Name"),
+      decoration: SharedStyle.textFormFieldDecoration('Last Name'),
       controller: lastNameCon,
       validator: (value) {
         if(value!.isEmpty){
@@ -206,7 +216,7 @@ class _SignUpState extends State<SignUp> {
 
   Widget mobileNumber(){
     return TextFormField(
-      decoration: InputDecoration(labelText: "Mobile Number"),
+      decoration: SharedStyle.textFormFieldDecoration('Mobile Number'),
       controller: mobileNumberCon,
       validator: (value) {
         int? check = int.tryParse(value!);
@@ -223,6 +233,44 @@ class _SignUpState extends State<SignUp> {
       onSaved: (value) {
         _mobileNumber = value;
       },
+    );
+  }
+
+  Widget termsAndPolicyContainer(){
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Checkbox(
+          checkColor: SharedStyle.white,
+          fillColor: MaterialStateProperty.resolveWith(getColor),
+          value: isChecked,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked = value!;
+            });
+          },
+        ),
+        Expanded(
+          child: Wrap(
+            children: [
+              Text("I agree with the ", style: SharedStyle.regularText),
+              InkWell(
+                onTap: (){
+                  print("object");
+                }, 
+                child: Text("Terms of Conditions", style: SharedStyle.redRegularText,)
+              ),
+              Text(" and ", style: SharedStyle.regularText),
+              InkWell(
+                onTap: (){
+                  print("object2");
+                }, 
+                child: Text("Privacy and Policy", style: SharedStyle.redRegularText)
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 
@@ -264,24 +312,20 @@ class _SignUpState extends State<SignUp> {
   }
   
   Widget signIn(){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          "Already registered? ",
-          style: SignUpStyle.regularText,
+    return Center(
+      child: TextButton(
+        onPressed: (){
+          Navigator.pushNamed(context, SignIn.routeName);
+        }, 
+        child: Text(
+          "Sign in.",
+          style: SharedStyle.linkText,
         ),
-        TextButton(
-          onPressed: (){
-            Navigator.pushNamed(context, SignIn.routeName);
-          }, 
-          child: Text(
-            "Sign in.",
-            style: SignUpStyle.yellowText,
-          ),
-        ),
-      ],
+      ),
     );
+  }
+
+  Color getColor(Set<MaterialState> states) {
+    return SharedStyle.red;
   }
 }
