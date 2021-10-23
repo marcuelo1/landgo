@@ -244,9 +244,54 @@ class SharedStyle {
   );
   
   static final h1 = TextStyle(
-    color: SharedStyle.primaryText,
-    fontSize: 14,
+    color: SharedStyle.black,
+    fontSize: 35,
     fontFamily: 'SFProText-Bold',
     fontWeight: FontWeight.bold
+  );
+
+  static final h1Red = TextStyle(
+    color: SharedStyle.red,
+    fontSize: 35,
+    fontFamily: 'SFProText-Bold',
+    fontWeight: FontWeight.bold
+  );
+
+  static final h1White = TextStyle(
+    color: SharedStyle.white,
+    fontSize: 35,
+    fontFamily: 'SFProText-Bold',
+    fontWeight: FontWeight.bold
+  );
+
+  static final redRegularText = TextStyle(
+    color: SharedStyle.red,
+    fontSize: 16,
+    fontFamily: 'SFProText-Regular',
+  );
+
+  static final regularText = TextStyle(
+    color: SharedStyle.black,
+    fontSize: 16,
+    fontFamily: 'SFProText-Regular',
+  );
+
+  static final smallBoldText = TextStyle(
+    color: SharedStyle.black,
+    fontSize: 12,
+    fontFamily: 'SFProText-Bold',
+    fontWeight: FontWeight.bold
+  );
+
+  static final greySmallText = TextStyle(
+    color: SharedStyle.grey,
+    fontSize: 12,
+    fontFamily: 'SFProText-Regular',
+  );
+
+  static final smallText = TextStyle(
+    color: SharedStyle.black,
+    fontSize: 12,
+    fontFamily: 'SFProText-Regular',
   );
 }

@@ -110,8 +110,8 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   Widget content(){
     return SafeArea(
       child: Scaffold(
-        appBar: SharedWidgets.appBar(context),
-        backgroundColor: SharedStyle.yellow,
+        appBar: SharedWidgets.appBar(context, iconThemeColor: SharedStyle.white),
+        backgroundColor: SharedStyle.red,
         body: Padding(
           padding: EdgeInsets.fromLTRB(
             SharedFunction.scaleWidth(24, width),
@@ -119,17 +119,24 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
             SharedFunction.scaleWidth(24, width),
             SharedFunction.scaleHeight(0, height)
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              locationContainer(),
-              SizedBox(height: SharedFunction.scaleHeight(20, height),),
-              paymentMethodContainer(),
-              SizedBox(height: SharedFunction.scaleHeight(20, height),),
-              orderSummaryContainer(),
-              SizedBox(height: SharedFunction.scaleHeight(20, height),),
-              placeOrderBtn()
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  "Checkout",
+                  style: SharedStyle.h1White,
+                ),
+                SizedBox(height: SharedFunction.scaleHeight(20, height),),
+                orderSummaryContainer(),
+                SizedBox(height: SharedFunction.scaleHeight(20, height),),
+                locationContainer(),
+                SizedBox(height: SharedFunction.scaleHeight(20, height),),
+                paymentMethodContainer(),
+                SizedBox(height: SharedFunction.scaleHeight(20, height),),
+                placeOrderBtn()
+              ],
+            ),
           ),
         )
       )
@@ -137,12 +144,12 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   }
 
   Widget locationContainer(){
-    return Container(
-      width: SharedFunction.scaleWidth(cardWidth, width),
-      color: SharedStyle.white,
+    return SharedWidgets.card(
+      cardWidth: cardWidth, 
+      referenceWidth: width, 
       child: Column(
         children: [
-          cardHeader(Icon(Icons.location_on_outlined), "Delivery Location"),
+          cardHeader("Delivery Location"),
           SizedBox(height: SharedFunction.scaleHeight(10, height),),
           if(!changeLocation) ... [
             for (var _location in locations) ... [
@@ -154,17 +161,17 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
             locationList()
           ]
         ],
-      ),
+      )
     );
   }
 
   Widget paymentMethodContainer(){
-    return Container(
-      width: SharedFunction.scaleWidth(cardWidth, width),
-      color: SharedStyle.white,
+    return SharedWidgets.card(
+      cardWidth: cardWidth, 
+      referenceWidth: width, 
       child: Column(
         children: [
-          cardHeader(Icon(Icons.account_balance_wallet_outlined), "Payment Method"),
+          cardHeader("Payment Method"),
           SizedBox(height: SharedFunction.scaleHeight(10, height),),
           if(!changePayment) ... [
             for (var _paymentMethod in paymentMethods) ... [
@@ -176,43 +183,40 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
             paymentMethodList()
           ]
         ],
-      ),
+      )
     );
   }
 
   Widget orderSummaryContainer(){
     print("================================= orderSummaryContainer");
-    return Container(
-      width: SharedFunction.scaleWidth(cardWidth, width),
-      color: SharedStyle.white,
+    return SharedWidgets.card(
+      cardWidth: cardWidth, 
+      referenceWidth: width, 
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          cardHeader(Icon(Icons.receipt), "Order summary", false),
+          cardHeader("Order summary", false),
           SizedBox(height: SharedFunction.scaleHeight(10, height),),
           for (var _seller in argsData["sellers"]) ... [
             orderSummaryContent(_seller, argsData["sellerCartProducts"][_seller['id']]),
             SizedBox(height: SharedFunction.scaleHeight(10, height),),
           ]
         ],
-      ),
+      )
     );
   }
 
-  Widget cardHeader(Icon icon, String name, [bool showEdit = true]){
+  Widget cardHeader(String name, [bool showEdit = true]){
     return Row(
       children: [
-        icon,
-        cardHeaderName(name),
+        Text(
+          name,
+          style: SharedStyle.redRegularText,
+        ),
         if (showEdit) ... [
           editBtn(name)
         ]
       ],
-    );
-  }
-
-  Widget cardHeaderName(String name){
-    return Text(
-      name
     );
   }
 
@@ -230,6 +234,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
           },
           icon: Icon(
             Icons.edit,
+            color: SharedStyle.red,
           ),
         ),
       )
@@ -336,7 +341,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   Widget orderSummaryContent(Map _seller, List _carts){
     print("================================= orderSummaryContent");
 
-    double _vat = argsData['sellerSubTotals'][_seller['id']] * .2;
+    double _vat = argsData['sellerSubTotals'][_seller['id']] * .2 * .12;
     double _voucherAmount = 0;
 
     for (var _voucherRaw in argsData['selectedVouchers']) {
@@ -347,10 +352,10 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Divider
-        Divider(color: SharedStyle.black,height: 1,),
-        orderSummarySeller(_seller),
+        // Seller Name
+        Text(_seller['name'], style: SharedStyle.smallBoldText),
         SizedBox(height: SharedFunction.scaleHeight(5, height)),
         for (var _cart in _carts) ... [
           orderSummaryItems(_cart),
@@ -366,50 +371,52 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
         rowWithValue('Voucher', _voucherAmount),
         SizedBox(height: SharedFunction.scaleHeight(5, height)),
         rowWithValue('Total', argsData['sellerTotals'][_seller['id']]),
-      ],
-    );
-  }
-
-  Widget orderSummarySeller(Map _seller){
-    print("================================= orderSummarySeller");
-    return Row(
-      children: [
-        Text("Store: ", style: SharedStyle.labelBold),
-        Text(_seller['name'], style: SharedStyle.labelBold)
+        SizedBox(height: SharedFunction.scaleHeight(10, height)),
       ],
     );
   }
 
   Widget orderSummaryItems(Map _cart){
+    print(_cart);
     print("================================= orderSummaryItems");
     Map _product = json.decode(_cart['product']);
 
     return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        orderItemQuantity(_cart['quantity']),
-        orderItemContent(_product['name'], _cart['product_description']),
-        orderItemTotal(_cart['total'])
+        // Left Side
+        Row(
+          children: [
+            // Image
+            Container(
+              width: SharedFunction.scaleWidth(40, width),
+              height: SharedFunction.scaleHeight(40, height),
+              child: ClipRRect(
+                borderRadius: SharedStyle.borderRadius(10, 10, 10, 10),
+                child: Image.network(
+                  _product['image'],
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            // Space
+            SizedBox(width: SharedFunction.scaleWidth(15, width),),
+            // Item Content
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Item Name
+                Text(_product['name'], style: SharedStyle.smallBoldText),
+                // Item Description
+                Text(_cart['product_description'], style: SharedStyle.greySmallText)
+              ],
+            ),
+          ],
+        ),
+        Text("₱${_cart['total'].toStringAsFixed(2)}", style: SharedStyle.greySmallText)
       ],
     );
-  }
-
-  Widget orderItemQuantity(double _quantity){
-    return Text("${_quantity.toString()}x", style: SharedStyle.labelRegular,);
-  }
-
-  Widget orderItemContent(String _name, String _description){
-    return Expanded(
-      child: Column(
-        children: [
-          Text(_name, style: SharedStyle.labelRegular),
-          Text(_description, style: SharedStyle.labelRegular)
-        ],
-      ),
-    );
-  }
-
-  Widget orderItemTotal(double _total){
-    return Text("₱${_total.toStringAsFixed(2)}", style: SharedStyle.labelRegular);
   }
 
   Widget placeOrderBtn(){
@@ -443,8 +450,8 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(_name, style: SharedStyle.labelRegular,),
-        Text("₱${_value.toStringAsFixed(2)}", style: SharedStyle.labelRegular,),
+        Text(_name, style: SharedStyle.smallText,),
+        Text("₱${_value.toStringAsFixed(2)}", style: SharedStyle.greySmallText,),
       ],
     );
   }

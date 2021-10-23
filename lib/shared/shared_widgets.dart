@@ -14,7 +14,10 @@ class SharedWidgets {
   /////////////////////
   /// A P P  B A R
   /// /////////////////
-  static AppBar appBar(BuildContext context, {String title = "", String locName = "", String locDescription = "", bool showCurrTrans = false, bool showLoc = false, bool showCart = false}){
+  static AppBar appBar(BuildContext context, {String title = "", String locName = "", String locDescription = "", bool showCurrTrans = false, bool showLoc = false, bool showCart = false, iconThemeColor}){
+    if(iconThemeColor == null){
+      iconThemeColor = SharedStyle.red;
+    }
 
     return AppBar(
       title: Row(
@@ -28,7 +31,7 @@ class SharedWidgets {
         ],
       ),
       backgroundColor: Colors.transparent,
-      iconTheme: IconThemeData(color: SharedStyle.red),
+      iconTheme: IconThemeData(color: iconThemeColor),
       titleSpacing: 0,
       elevation: 0,
       actions: [
@@ -41,7 +44,7 @@ class SharedWidgets {
           SizedBox(width: 10,),
         ]
       ],
-      actionsIconTheme: IconThemeData(color: SharedStyle.red),
+      actionsIconTheme: IconThemeData(color: iconThemeColor),
     );
   }
 
@@ -467,6 +470,18 @@ class SharedWidgets {
           ),
         )
       ),
+    );
+  }
+
+  static Widget card({required double cardWidth, required double referenceWidth, required Widget child}){
+    return Container(
+      width: SharedFunction.scaleWidth(cardWidth, referenceWidth),
+      decoration: BoxDecoration(
+        borderRadius: SharedStyle.borderRadius(10, 10, 10, 10),
+        color: SharedStyle.white,
+      ),
+      padding: EdgeInsets.all(10),
+      child: child,
     );
   }
 }
