@@ -35,10 +35,12 @@ class V1::Buyer::BuyersController < BuyerController
 
     def product_details
         product = Product.find(params[:id])
+        seller = product.seller
 
         render json: {
             sizes: ProductPriceBlueprint.render(product.product_prices),
-            add_on_groups: AddOnGroupBlueprint.render(product.product_add_ons)
+            add_on_groups: AddOnGroupBlueprint.render(product.product_add_ons),
+            seller: SellerBlueprint.render(seller)
         }
     end
 
