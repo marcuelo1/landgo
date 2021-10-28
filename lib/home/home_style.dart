@@ -28,6 +28,7 @@ class HomeStyle {
 
  static final draggablePage = BoxDecoration(
    borderRadius: SharedStyle.borderRadius(20, 20, 0, 0),
+   border: Border.all(color: SharedStyle.grey),
    color: SharedStyle.white,
  );
 }

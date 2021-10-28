@@ -131,13 +131,17 @@ class _HomeState extends State<Home> {
         SharedFunction.scaleHeight(0, height)
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // search
           searchBar(),
           // space
           SizedBox(height: SharedFunction.scaleHeight(10, height),),
           // title
-          title("Categories"),
+          Text(
+            "Categories",
+            style: SharedStyle.h1,
+          ),
           // space
           SizedBox(height: SharedFunction.scaleHeight(10, height),),
           // category list
@@ -176,17 +180,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget title(String title){
-    return Container(
-      width: double.infinity,
-      alignment: Alignment.centerLeft,
-      child: Text(
-        title,
-        style: HomeStyle.title,
-      ),
-    );
-  }
-
   Widget categoryRow(int i){
     Map category1;
     Map category2;
@@ -215,10 +208,8 @@ class _HomeState extends State<Home> {
     }
 
     return GestureDetector(
-      onTap: () async {
-        await Navigator.pushNamed(context, Sellers.routeName, arguments: {'category': category, 'selected_location': selected_location});
-        
-        setState(() { });
+      onTap: (){
+        Navigator.pushNamed(context, Sellers.routeName, arguments: {'category': category, 'selected_location': selected_location});
       },
       child: Stack(
         children: [
@@ -275,6 +266,7 @@ class _HomeState extends State<Home> {
             child: SingleChildScrollView(
               controller: scrollController,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // space
                   SizedBox(height: SharedFunction.scaleHeight(39, height),),
@@ -296,6 +288,13 @@ class _HomeState extends State<Home> {
           ),
         );
       },
+    );
+  }
+
+  Widget title(String title){
+    return Text(
+      title,
+      style: SharedStyle.h1Red,
     );
   }
 
