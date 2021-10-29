@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:landgo_rider/home/home.dart';
 import 'package:landgo_rider/shared/shared_function.dart';
 import 'package:landgo_rider/shared/shared_style.dart';
 import 'package:landgo_rider/shared/shared_url.dart';
@@ -13,7 +14,7 @@ class SharedWidgets {
     return AppBar(
       title: _appBarTitle(title),
       centerTitle: true,
-      backgroundColor: SharedStyle.black2,
+      backgroundColor: SharedStyle.white,
       iconTheme: IconThemeData(color: SharedStyle.yellow),
       actionsIconTheme: IconThemeData(color: SharedStyle.yellow),
     );
@@ -111,4 +112,49 @@ class SharedWidgets {
     );
   }
 
+  /////////////////////
+  // B O T T O M  B A R
+  /////////////////////
+  static BottomAppBar bottomAppBar(BuildContext context){
+    return BottomAppBar(
+      shape: CircularNotchedRectangle(),
+      notchMargin: 4.0,
+      child: Container(
+        width: double.infinity,
+        height: 60,
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children:[
+            // Profile
+            _bottomAppBarBtn(context, Icon(Icons.person), "Profile", ""),
+            // Deliveries
+            _bottomAppBarBtn(context, Icon(Icons.bike_scooter), "Delivery", Home.routeName),
+            // History
+            _bottomAppBarBtn(context, Icon(Icons.timer), "History", ""),
+            // Wallet
+            _bottomAppBarBtn(context, Icon(Icons.account_balance_wallet), "Wallet", ""),
+          ]
+        ),
+      )
+    );
+  }
+
+  static Widget _bottomAppBarBtn(BuildContext context, Icon _icon, String _name, String _route){
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, _route);
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _icon,
+          Text(
+            _name
+          )
+        ],
+      ),
+    );
+  }
 }

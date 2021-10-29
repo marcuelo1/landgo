@@ -88,6 +88,7 @@ class _HomeState extends State<Home> {
     return SafeArea(
       child: Scaffold(
         appBar: SharedWidgets.appBar(context),
+        bottomNavigationBar: SharedWidgets.bottomAppBar(context),
         drawer: Drawer(
           child: SharedWidgets.sideBar(context, rider, _headers),
         ),
