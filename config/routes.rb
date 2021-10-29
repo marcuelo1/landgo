@@ -116,6 +116,9 @@ Rails.application.routes.draw do
         collection do
           get :home
           get :is_signed_in
+          get :profile
+          get :wallet
+          get :history
         end
       end
     end

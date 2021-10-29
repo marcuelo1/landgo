@@ -39,4 +39,15 @@ module ApplicationHelper
         
         return buyer_address.join(', ')
     end
+
+    def rider_info(rider)
+        {
+            id: rider.id,
+            email: rider.email,
+            first_name: rider.first_name,
+            last_name: rider.last_name,
+            phone_number: rider.phone_number,
+            name: rider.name,
+        }
+    end
 end
