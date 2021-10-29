@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:landgo_rider/home/home.dart';
+import 'package:landgo_rider/profile/profile.dart';
 import 'package:landgo_rider/shared/headers.dart';
 import 'package:landgo_rider/sign_in/sign_in.dart';
 import 'package:landgo_rider/splash/splash.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         Splash.routeName: (context) => Splash(),
         SignIn.routeName: (context) => SignIn(),
         Home.routeName: (context) => Home(),
+        Profile.routeName: (context) => Profile(),
       },
     );
   }

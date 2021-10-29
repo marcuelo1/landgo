@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:landgo_rider/home/home.dart';
+import 'package:landgo_rider/profile/profile.dart';
 import 'package:landgo_rider/shared/shared_function.dart';
 import 'package:landgo_rider/shared/shared_style.dart';
 import 'package:landgo_rider/shared/shared_url.dart';
@@ -127,7 +128,7 @@ class SharedWidgets {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children:[
             // Profile
-            _bottomAppBarBtn(context, Icon(Icons.person), "Profile", ""),
+            _bottomAppBarBtn(context, Icon(Icons.person), "Profile", Profile.routeName),
             // Deliveries
             _bottomAppBarBtn(context, Icon(Icons.bike_scooter), "Delivery", Home.routeName),
             // History
@@ -143,7 +144,7 @@ class SharedWidgets {
   static Widget _bottomAppBarBtn(BuildContext context, Icon _icon, String _name, String _route){
     return GestureDetector(
       onTap: (){
-        Navigator.pushNamed(context, _route);
+        Navigator.popAndPushNamed(context, _route);
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
