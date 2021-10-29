@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:landgo_rider/history/history.dart';
 import 'package:landgo_rider/home/home.dart';
 import 'package:landgo_rider/profile/profile.dart';
 import 'package:landgo_rider/shared/headers.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         Home.routeName: (context) => Home(),
         Profile.routeName: (context) => Profile(),
         Wallet.routeName: (context) => Wallet(),
+        History.routeName: (context) => History(),
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:landgo_rider/history/history.dart';
 import 'package:landgo_rider/home/home.dart';
 import 'package:landgo_rider/profile/profile.dart';
 import 'package:landgo_rider/shared/shared_function.dart';
@@ -133,7 +134,7 @@ class SharedWidgets {
             // Deliveries
             _bottomAppBarBtn(context, Icon(Icons.bike_scooter), "Delivery", Home.routeName),
             // History
-            _bottomAppBarBtn(context, Icon(Icons.timer), "History", ""),
+            _bottomAppBarBtn(context, Icon(Icons.timer), "History", History.routeName),
             // Wallet
             _bottomAppBarBtn(context, Icon(Icons.account_balance_wallet), "Wallet", Wallet.routeName),
           ]
