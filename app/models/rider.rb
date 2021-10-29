@@ -9,6 +9,8 @@ class Rider < ActiveRecord::Base
 
   # has_one_attached :image
   has_one :wallet, as: :user, dependent: :destroy
+  has_one :location, as: :user, dependent: :destroy
+  belongs_to :batch
 
   after_create :create_wallet
 

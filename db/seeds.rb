@@ -1,10 +1,3 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
 ###########################################################################################################
 ############ ADMIN
 ###########################################################################################################
@@ -609,4 +602,13 @@ end
 ###########################################################################################################
 if PaymentMethod.all.count == 0
     PaymentMethod.create(name: "Cash")
+end
+###########################################################################################################
+############ BATCH
+###########################################################################################################
+if Batch.all.count == 0
+    Batch.create(name: "Batch 1", acceptance_rate: 90.0)
+    Batch.create(name: "Batch 2", acceptance_rate: 70.0)
+    Batch.create(name: "Batch 3", acceptance_rate: 60.0)
+    Batch.create(name: "Batch 4", acceptance_rate: 50.0)
 end

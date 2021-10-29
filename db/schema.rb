@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_12_155402) do
+ActiveRecord::Schema.define(version: 2021_10_29_172816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,13 @@ ActiveRecord::Schema.define(version: 2021_10_12_155402) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
+  end
+
+  create_table "batches", force: :cascade do |t|
+    t.string "name"
+    t.float "acceptance_rate"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "buyer_payment_methods", force: :cascade do |t|
@@ -192,7 +199,9 @@ ActiveRecord::Schema.define(version: 2021_10_12_155402) do
     t.bigint "voucher_id"
     t.float "subtotal", default: 0.0
     t.float "vat"
+    t.bigint "rider_id", null: false
     t.index ["checkout_id"], name: "index_checkout_sellers_on_checkout_id"
+    t.index ["rider_id"], name: "index_checkout_sellers_on_rider_id"
     t.index ["seller_id"], name: "index_checkout_sellers_on_seller_id"
     t.index ["voucher_id"], name: "index_checkout_sellers_on_voucher_id"
   end
@@ -313,6 +322,8 @@ ActiveRecord::Schema.define(version: 2021_10_12_155402) do
     t.string "phone_number"
     t.string "first_name"
     t.string "last_name"
+    t.bigint "batch_id"
+    t.index ["batch_id"], name: "index_riders_on_batch_id"
     t.index ["confirmation_token"], name: "index_riders_on_confirmation_token", unique: true
     t.index ["email"], name: "index_riders_on_email", unique: true
     t.index ["reset_password_token"], name: "index_riders_on_reset_password_token", unique: true
@@ -391,6 +402,7 @@ ActiveRecord::Schema.define(version: 2021_10_12_155402) do
   add_foreign_key "checkout_products", "product_prices"
   add_foreign_key "checkout_products", "products"
   add_foreign_key "checkout_sellers", "checkouts"
+  add_foreign_key "checkout_sellers", "riders"
   add_foreign_key "checkout_sellers", "sellers"
   add_foreign_key "checkout_sellers", "vouchers"
   add_foreign_key "checkouts", "buyers"
@@ -403,5 +415,6 @@ ActiveRecord::Schema.define(version: 2021_10_12_155402) do
   add_foreign_key "product_sizes", "sellers"
   add_foreign_key "products", "product_categories"
   add_foreign_key "products", "sellers"
+  add_foreign_key "riders", "batches"
   add_foreign_key "sellers", "categories"
 end
