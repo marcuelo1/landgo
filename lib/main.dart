@@ -4,6 +4,7 @@ import 'package:landgo_rider/profile/profile.dart';
 import 'package:landgo_rider/shared/headers.dart';
 import 'package:landgo_rider/sign_in/sign_in.dart';
 import 'package:landgo_rider/splash/splash.dart';
+import 'package:landgo_rider/wallet/wallet.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         SignIn.routeName: (context) => SignIn(),
         Home.routeName: (context) => Home(),
         Profile.routeName: (context) => Profile(),
+        Wallet.routeName: (context) => Wallet(),
       },
     );
   }

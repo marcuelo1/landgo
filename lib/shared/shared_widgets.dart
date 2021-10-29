@@ -5,6 +5,7 @@ import 'package:landgo_rider/shared/shared_function.dart';
 import 'package:landgo_rider/shared/shared_style.dart';
 import 'package:landgo_rider/shared/shared_url.dart';
 import 'package:landgo_rider/sign_in/sign_in.dart';
+import 'package:landgo_rider/wallet/wallet.dart';
 
 class SharedWidgets {
   /////////////////////
@@ -134,7 +135,7 @@ class SharedWidgets {
             // History
             _bottomAppBarBtn(context, Icon(Icons.timer), "History", ""),
             // Wallet
-            _bottomAppBarBtn(context, Icon(Icons.account_balance_wallet), "Wallet", ""),
+            _bottomAppBarBtn(context, Icon(Icons.account_balance_wallet), "Wallet", Wallet.routeName),
           ]
         ),
       )

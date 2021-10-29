@@ -7,16 +7,16 @@ import 'package:landgo_rider/shared/shared_style.dart';
 import 'package:landgo_rider/shared/shared_url.dart';
 import 'package:landgo_rider/shared/shared_widgets.dart';
 
-class Profile extends StatefulWidget {
-  static const String routeName = "profile";
+class Wallet extends StatefulWidget {
+  static const String routeName = "wallet";
 
   @override
-  _ProfileState createState() => _ProfileState();
+  _WalletState createState() => _WalletState();
 }
 
-class _ProfileState extends State<Profile> {
+class _WalletState extends State<Wallet> {
   // url
-  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/rider/profile";
+  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/rider/wallet";
 
   // variables for scale functions
   late double width;
@@ -26,6 +26,7 @@ class _ProfileState extends State<Profile> {
   // variables
   bool refresh = true;
   Map rider = {};
+  double walletAmount = 0;
 
   // headers
   Map<String,String> _headers = {};
@@ -61,6 +62,7 @@ class _ProfileState extends State<Profile> {
             print("============================================================== response body");
             
             rider = responseBody['rider'];
+            walletAmount = responseBody['wallet_amount'];
 
             return buildContent(context);
         }
@@ -69,6 +71,8 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget buildContent(BuildContext context){
+    String _amount = walletAmount.toStringAsFixed(2);
+    
     return SafeArea(
       child: Scaffold(
         appBar: SharedWidgets.appBar(context),
@@ -76,8 +80,29 @@ class _ProfileState extends State<Profile> {
         drawer: SharedWidgets.sideBar(context, rider, _headers),
         backgroundColor: SharedStyle.yellow,
         body: Center(
-          child: Text("Profile"),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Current Balance"),
+              Text("₱$_amount"),
+              // cash out button
+              buildBtn(),
+              // collection list
+            ],
+          ),
         ),
+      )
+    );
+  }
+
+  Widget buildBtn(){
+    return ElevatedButton(
+      onPressed: (){
+        print("Cash out");
+      }, 
+      style: SharedStyle.yellowBtn,
+      child: Center(
+        child: Text("Cash Out", style: SharedStyle.yellowBtnText,),
       )
     );
   }
