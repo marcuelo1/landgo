@@ -14,6 +14,9 @@ class Admin::RidersController < AdministratorController
         @rider.password = "marcuelo2"
         @rider.save
 
+        # create location for rider
+        Location.create(user_id: @rider.id, user_type: @rider.class.to_s)
+
         redirect_to "/admin/riders"
     end
 

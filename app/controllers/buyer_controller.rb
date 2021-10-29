@@ -1,6 +1,7 @@
 class BuyerController < ApiController
     before_action :authenticate_v1_buyer!
     before_action :set_buyer
+    include BuyerHelper
 
     private
 

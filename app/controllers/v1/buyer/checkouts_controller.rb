@@ -20,12 +20,16 @@ class V1::Buyer::CheckoutsController < BuyerController
         sellers.each do |seller|
             seller = Seller.find(seller[:id])
             voucher = Voucher.find_by(id: vouchers.map{|v| v['seller_id'] == seller.id ? v['voucher']['id'] : []}.flatten.first)
+
+            # find available rider
+            rider = find_available_rider()
             
             @checkout_seller = CheckoutSeller.new(
                 checkout_id: @checkout.id, 
                 seller_id: seller.id, 
                 delivery_fee: delivery_fees["#{seller.id}"], 
                 voucher_id: voucher ? voucher.id : nil
+                rider_id: rider.id
             )
 
             if @checkout_seller.save 
@@ -79,13 +83,16 @@ class V1::Buyer::CheckoutsController < BuyerController
                 @checkout_seller.update(subtotal: subtotal, total: total, vat: vat)
 
                 @buyer.carts.where(seller_id: seller.id).destroy_all
+                
+                # websocket to rider
+                # websocket to seller
+
+                return render json: {success: true, checkout_id: @checkout.id}, status: 200
             else
                 @checkout.destroy
                 return render json: {success: false, message: @checkout_seller.errors}, status: 500
             end
         end
-
-        return render json: {success: true, checkout_id: @checkout.id}, status: 200
     end
 
     def show
