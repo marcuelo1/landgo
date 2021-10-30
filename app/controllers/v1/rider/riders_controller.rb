@@ -37,4 +37,11 @@ class V1::Rider::RidersController < RiderController
         rider = rider_info(@rider)
         render json: {rider: rider}, status: 200
     end
+
+    def change_shift
+        @rider.update(status: params[:status])
+        @rider.reload
+
+        render json: {success: true}, status: 200
+    end
 end

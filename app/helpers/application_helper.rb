@@ -48,6 +48,7 @@ module ApplicationHelper
             last_name: rider.last_name,
             phone_number: rider.phone_number,
             name: rider.name,
+            status: rider.status_int,
         }
     end
 end

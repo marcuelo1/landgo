@@ -119,6 +119,7 @@ Rails.application.routes.draw do
           get :profile
           get :wallet
           get :history
+          put :change_shift
         end
       end
     end
