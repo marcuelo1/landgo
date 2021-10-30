@@ -15,6 +15,8 @@ class Rider < ActiveRecord::Base
 
   after_create :create_wallet
 
+  enum status: {"Not Logged In" => 0, "On Shift" => 1, "Off Shift" => 2, "On Break" => 3, "On Deliver" => 4}
+
   def name
     "#{first_name} #{last_name}"
   end
@@ -24,5 +26,9 @@ class Rider < ActiveRecord::Base
       user: self,
       amount: 0
     )
+  end
+
+  def status_int
+    Rider.statuses[self.status]
   end
 end

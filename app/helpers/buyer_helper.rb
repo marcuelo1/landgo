@@ -3,7 +3,7 @@ module BuyerHelper
         # query for available, nearest, and by batch
 
         # available riders
-        available_riders_ids = Rider.where(is_available: true).pluck(:id)
+        available_riders_ids = Rider.where(status: "On Shift").pluck(:id)
 
         # nearest riders
         store_coordinates = [store_latitude, store_longitude]
@@ -25,7 +25,7 @@ module BuyerHelper
         rider = Rider.find(rider_id)
 
         # update rider's availability
-        rider.update(is_available: false)
+        rider.update(status: 4)
         rider.reload
 
         return rider
