@@ -32,8 +32,8 @@ class _HomeState extends State<Home> {
 
   // variables
   bool refresh = true;
-  Map wallet = {};
   Map rider = {};
+  Map transaction = {};
 
   // headers
   Map<String,String> _headers = {};
@@ -71,12 +71,9 @@ class _HomeState extends State<Home> {
             var responseBody = response['body'];
             print(responseBody);
             print("============================================================== response body");
-
-            // if(responseBody['checkout_sellers'].length > 0){
-            //   currentTransactions = json.decode(responseBody['checkout_sellers']);
-            // }
-            wallet = json.decode(responseBody['wallet']);
-            rider = json.decode(responseBody['rider']);
+            
+            rider = responseBody['rider'];
+            transaction = responseBody['current_transaction'];
 
             return buidContent(context);
         }
@@ -94,90 +91,54 @@ class _HomeState extends State<Home> {
         ),
         backgroundColor: SharedStyle.yellow,
         body: Center(
-          child: Column(
-            children: [
-              SizedBox(height: SharedFunction.scaleHeight(50, height)),
-              buildWallet(),
-            ],
-          ),
+          child: transaction.isEmpty ? Text("No Pending Transaction") : buildTransactionContainer(),
         ),
       )
     );
   }
 
-  Widget buildWallet(){
+  Widget buildTransactionContainer(){
     return Container(
-      width: SharedFunction.scaleWidth(300, width),
-      child: Card(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: SharedFunction.scaleHeight(50, height)),
-              buildAmountText(wallet['amount']),
-              SizedBox(height: SharedFunction.scaleHeight(10, height)),
-              buildText1("Balance"),
-              SizedBox(height: SharedFunction.scaleHeight(50, height)),
-              buildTopUpBtn(),
-              SizedBox(height: SharedFunction.scaleHeight(20, height)),
-              buildWithdrawBtn(),
-              SizedBox(height: SharedFunction.scaleHeight(50, height)),
-            ],
-          ),
-        ),
+      color: SharedStyle.white,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Seller name
+          buildContentLabel("Seller's Name"),
+          buildContentValue("${transaction['seller_name']}"),
+          // Seller address
+          buildContentLabel("Seller's Addrees"),
+          buildContentValue("${transaction['seller_address']}"),
+          // Buyer name
+          buildContentLabel("Buyer's Name"),
+          buildContentValue("${transaction['buyer_name']}"),
+          // Buyer address
+          buildContentLabel("Buyer's Address"),
+          buildContentValue("${transaction['buyer_address']}"),
+          // Buyer delivery fee
+          buildContentLabel("Buyer's Delivery Fee"),
+          buildContentValue("${transaction['buyer_delivery_fee']}"),
+          // Rider delivery fee
+          buildContentLabel("Rider's Delivery Fee"),
+          buildContentValue("${transaction['rider_delivery_fee']}"),
+          // Delivered button
+        ],
       ),
     );
   }
 
-  Widget buildAmountText(double _amount){
+  Widget buildContentLabel(String _label){
     return Text(
-      "₱${_amount.toStringAsFixed(2)}",
-      style: HomeStyle.amountText,
+      _label,
+      style: SharedStyle.labelBold
     );
   }
 
-  Widget buildText1(String _value){
+  Widget buildContentValue(String _value){
     return Text(
       _value,
-      style: HomeStyle.text1
-    );
-  }
-
-  Widget buildTopUpBtn(){
-    return ElevatedButton(
-      onPressed: (){
-        print("Top Up");
-      }, 
-      style: SharedStyle.yellowBtn,
-      child: Container(
-        width: SharedFunction.scaleWidth(btnWidth, width),
-        height: SharedFunction.scaleHeight(btnHeight, height),
-        child: Center(
-          child: Text(
-            "Top Up",
-            style: SharedStyle.yellowBtnText
-          ),
-        ),
-      )
-    );
-  }
-
-  Widget buildWithdrawBtn(){
-    return ElevatedButton(
-      onPressed: (){
-        print("Withdraw");
-      }, 
-      style: SharedStyle.yellowBtn,
-      child: Container(
-        width: SharedFunction.scaleWidth(btnWidth, width),
-        height: SharedFunction.scaleHeight(btnHeight, height),
-        child: Center(
-          child: Text(
-            "Withdraw",
-            style: SharedStyle.yellowBtnText
-          ),
-        ),
-      )
+      style: SharedStyle.labelRegular
     );
   }
 }
