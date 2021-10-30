@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_29_175138) do
+ActiveRecord::Schema.define(version: 2021_10_29_202930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -200,6 +200,7 @@ ActiveRecord::Schema.define(version: 2021_10_29_175138) do
     t.float "subtotal", default: 0.0
     t.float "vat"
     t.bigint "rider_id", null: false
+    t.float "rider_delivery_fee", default: 0.0
     t.index ["checkout_id"], name: "index_checkout_sellers_on_checkout_id"
     t.index ["rider_id"], name: "index_checkout_sellers_on_rider_id"
     t.index ["seller_id"], name: "index_checkout_sellers_on_seller_id"

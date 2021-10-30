@@ -7,11 +7,11 @@ module BuyerHelper
 
         # nearest riders
         store_coordinates = [store_latitude, store_longitude]
-        distance = 5
+        distance = 10
         nearest_riders_ids = []
 
         while nearest_riders_ids.empty?
-            nearest_riders_ids = Location.where(user_type: "Rider", user_id: available_riders).near(store_coordinates, distance, units: :km).map(&:user_id)
+            nearest_riders_ids = Location.where(user_type: "Rider", user_id: available_riders_ids).near(store_coordinates, distance, units: :km).map(&:user_id)
 
             if nearest_riders_ids.empty?
                 distance++

@@ -1,9 +1,18 @@
 class V1::Rider::RidersController < RiderController
     
     def home
+        rider = rider_info(@rider)
+        checkout_seller = @rider.checkout_seller
+
+        if checkout_seller.present?
+            current_transaction = current_transaction_info(checkout_seller)
+        else
+            current_transaction = {}
+        end
+
         render json: {
-            wallet: WalletBlueprint.render(@rider.wallet), 
-            rider: RiderBlueprint.render(@rider)
+            rider: rider,
+            current_transaction: current_transaction
         }, status: 200
     end
 

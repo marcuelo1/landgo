@@ -55,4 +55,8 @@ class Buyer < ActiveRecord::Base
   def recent_purchases
     Product.all.limit(5)
   end
+
+  def selected_address
+    self.selected_location.address
+  end
 end

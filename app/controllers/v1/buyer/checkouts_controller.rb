@@ -22,13 +22,13 @@ class V1::Buyer::CheckoutsController < BuyerController
             voucher = Voucher.find_by(id: vouchers.map{|v| v['seller_id'] == seller.id ? v['voucher']['id'] : []}.flatten.first)
 
             # find available rider
-            rider = find_available_rider()
+            rider = find_available_rider(seller.location.latitude, seller.location.longitude)
             
             @checkout_seller = CheckoutSeller.new(
                 checkout_id: @checkout.id, 
                 seller_id: seller.id, 
                 delivery_fee: delivery_fees["#{seller.id}"], 
-                voucher_id: voucher ? voucher.id : nil
+                voucher_id: voucher ? voucher.id : nil,
                 rider_id: rider.id
             )
 
