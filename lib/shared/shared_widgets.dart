@@ -99,7 +99,7 @@ class SharedWidgets {
       onTap: () async {
         String rawUrl = "${SharedUrl.root}/${SharedUrl.version}/riders/sign_out";
         
-        Map _response = await SharedFunction.sendData(rawUrl, headers, {}, "delete");
+        Map _response = await SharedFunction.sendData(rawUrl, headers, {"email": headers['uid']}, "delete");
         
         
         if (_response['status'] == 200) {

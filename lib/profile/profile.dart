@@ -17,6 +17,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   // url
   String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/rider/profile";
+  String _changeShiftUrl = "${SharedUrl.root}/${SharedUrl.version}/rider/change_shift";
 
   // variables for scale functions
   late double width;
@@ -26,6 +27,7 @@ class _ProfileState extends State<Profile> {
   // variables
   bool refresh = true;
   Map rider = {};
+  Map statuses = {0: "Not Logged In", 1: "On Shift", 2: "Off Shift", 3: "On Break", 4: "On Deliver"};
 
   // headers
   Map<String,String> _headers = {};
@@ -38,7 +40,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return !refresh ? buildContent(context) : FutureBuilder(
+    return !refresh ? _buildContent(context) : FutureBuilder(
       future: SharedFunction.getData(_dataUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         // Connection state of getting the data
@@ -62,13 +64,13 @@ class _ProfileState extends State<Profile> {
             
             rider = responseBody['rider'];
 
-            return buildContent(context);
+            return _buildContent(context);
         }
       }
     );
   }
 
-  Widget buildContent(BuildContext context){
+  Widget _buildContent(BuildContext context){
     return SafeArea(
       child: Scaffold(
         appBar: SharedWidgets.appBar(context),
@@ -76,8 +78,100 @@ class _ProfileState extends State<Profile> {
         drawer: SharedWidgets.sideBar(context, rider, _headers),
         backgroundColor: SharedStyle.yellow,
         body: Center(
-          child: Text("Profile"),
+          child: Column(
+            children: [
+              // details
+              _buildDetails(),
+              // start or end shift
+              _buildShiftBtn(),
+              // request a break
+            ],
+          ),
         ),
+      )
+    );
+  }
+
+  Widget _buildDetails(){
+    return Container(
+      color: SharedStyle.white,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // first name
+          _buildContentLabel("First Name"),
+          _buildContentValue(rider['first_name']),
+          // last name
+          _buildContentLabel("Last Name"),
+          _buildContentValue(rider['last_name']),
+          // email
+          _buildContentLabel("Email"),
+          _buildContentValue(rider['email']),
+          // phone number
+          _buildContentLabel("Phone Number"),
+          _buildContentValue(rider['phone_number']),
+          // status
+          _buildContentLabel("Status"),
+          _buildContentValue(statuses[rider['status']]),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildContentLabel(String _label){
+    return Text(
+      _label,
+      style: SharedStyle.labelBold
+    );
+  }
+
+  Widget _buildContentValue(String _value){
+    return Text(
+      _value,
+      style: SharedStyle.labelRegular
+    );
+  }
+
+  Widget _buildShiftBtn(){
+    return ElevatedButton(
+      onPressed: ()async{
+        switch (rider['status']) {
+          case 1: // status is On Shift, needs to end the shift
+            Map _data = {
+              "status": 2
+            };
+            Map _response = await SharedFunction.sendData(_changeShiftUrl, _headers, _data, 'put');
+
+            if(_response['status'] == 200){
+              setState(() {
+                rider['status'] = 2;
+              });
+            }
+
+            break;
+          case 2: // status is Off Shift, needs to start the shift
+            Map _data = {
+              "status": 1
+            };
+            Map _response = await SharedFunction.sendData(_changeShiftUrl, _headers, _data, 'put');
+
+            if(_response['status'] == 200){
+              setState(() {
+                rider['status'] = 1;
+              });
+            }
+            break;
+          case 3: // status is On Break, needs to finish the break before ending the shift
+            
+            break;
+          case 4: // status is On Deliver, needs to finish the delivery before ending the shift
+            
+            break;
+        }
+      }, 
+      child: Text(
+        rider['status'] == 2 ? "Press To Start Shift" : "Press To End Shift"
       )
     );
   }
