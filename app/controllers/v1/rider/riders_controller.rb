@@ -44,4 +44,15 @@ class V1::Rider::RidersController < RiderController
 
         render json: {success: true}, status: 200
     end
+
+    def delivered
+        checkout_seller = CheckoutSeller.find(params[:transaction_id])
+        # complete checkout seller
+        checkout_seller.update(status: 3)
+        checkout_seller.reload 
+
+        # update rider's wallet
+
+        render json: {success: true}, status: 200
+    end
 end

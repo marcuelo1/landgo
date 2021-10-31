@@ -120,6 +120,7 @@ Rails.application.routes.draw do
           get :wallet
           get :history
           put :change_shift
+          post :delivered
         end
       end
     end
