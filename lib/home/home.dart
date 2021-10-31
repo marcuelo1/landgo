@@ -19,8 +19,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   // url
-  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/rider/home";
-  String _deliveredUrl = "${SharedUrl.root}/${SharedUrl.version}/rider/delivered";
+  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/rider/delivery";
+  String _deliveredUrl = "${SharedUrl.root}/${SharedUrl.version}/rider/delivery/delivered";
 
   // dimensions
   final double btnWidth = 150;
