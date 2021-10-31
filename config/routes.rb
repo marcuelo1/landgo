@@ -117,9 +117,16 @@ Rails.application.routes.draw do
           get :home
           get :is_signed_in
           get :profile
-          get :wallet
           get :history
           put :change_shift
+        end
+      end
+
+      resources :wallet do
+      end
+
+      resources :delivery do 
+        collection do
           post :delivered
         end
       end
