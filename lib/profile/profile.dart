@@ -85,6 +85,7 @@ class _ProfileState extends State<Profile> {
               // start or end shift
               _buildShiftBtn(),
               // request a break
+              _buildBreakBtn()
             ],
           ),
         ),
@@ -172,6 +173,17 @@ class _ProfileState extends State<Profile> {
       }, 
       child: Text(
         rider['status'] == 2 ? "Press To Start Shift" : "Press To End Shift"
+      )
+    );
+  }
+
+  Widget _buildBreakBtn(){
+    return ElevatedButton(
+      onPressed: (){
+        print("break");
+      }, 
+      child: Text(
+        rider['status'] == 3 ? "Press To End Break" : "Request Break"
       )
     );
   }

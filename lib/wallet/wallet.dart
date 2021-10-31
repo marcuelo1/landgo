@@ -100,9 +100,8 @@ class _WalletState extends State<Wallet> {
       onPressed: (){
         print("Cash out");
       }, 
-      style: SharedStyle.yellowBtn,
       child: Center(
-        child: Text("Cash Out", style: SharedStyle.yellowBtnText,),
+        child: Text("Cash Out"),
       )
     );
   }
