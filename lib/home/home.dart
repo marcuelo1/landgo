@@ -20,6 +20,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   // url
   String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/rider/home";
+  String _deliveredUrl = "${SharedUrl.root}/${SharedUrl.version}/rider/delivered";
 
   // dimensions
   final double btnWidth = 150;
@@ -123,6 +124,7 @@ class _HomeState extends State<Home> {
           buildContentLabel("Rider's Delivery Fee"),
           buildContentValue("${transaction['rider_delivery_fee']}"),
           // Delivered button
+          buildDeliveredBtn()
         ],
       ),
     );
@@ -139,6 +141,24 @@ class _HomeState extends State<Home> {
     return Text(
       _value,
       style: SharedStyle.labelRegular
+    );
+  }
+
+  Widget buildDeliveredBtn(){
+    return ElevatedButton(
+      onPressed: () async{
+        Map _data = {
+          "transaction_id": transaction['id']
+        };
+        Map _response = await SharedFunction.sendData(_deliveredUrl, _headers, _data);
+        
+        if(_response['status'] == 200){
+          setState(() {
+            transaction = {};
+          });
+        }
+      }, 
+      child: Text("Delivered")
     );
   }
 }
