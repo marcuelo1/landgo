@@ -112,6 +112,15 @@ Rails.application.routes.draw do
     }
 
     namespace :rider do
+      resources :wallet do
+      end
+
+      resources :delivery do 
+        collection do
+          post :delivered
+        end
+      end
+      
       resources :riders, path: "" do
         collection do
           get :home
@@ -119,15 +128,6 @@ Rails.application.routes.draw do
           get :profile
           get :history
           put :change_shift
-        end
-      end
-
-      resources :wallet do
-      end
-
-      resources :delivery do 
-        collection do
-          post :delivered
         end
       end
     end
