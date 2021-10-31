@@ -10,7 +10,7 @@ class Rider < ActiveRecord::Base
   # has_one_attached :image
   has_one :wallet, as: :user, dependent: :destroy
   has_one :location, as: :user, dependent: :destroy
-  has_one :checkout_seller
+  has_many :checkout_sellers
   belongs_to :batch
 
   after_create :create_wallet
@@ -30,5 +30,9 @@ class Rider < ActiveRecord::Base
 
   def status_int
     Rider.statuses[self.status]
+  end
+
+  def current_checkout_seller
+    self.checkout_sellers.where.not(status: "Completed").first
   end
 end

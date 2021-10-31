@@ -2,7 +2,7 @@ class V1::Rider::DeliveryController < RiderController
 
     def index
         rider = rider_info(@rider)
-        checkout_seller = @rider.checkout_seller
+        checkout_seller = @rider.current_checkout_seller
 
         if checkout_seller.present?
             current_transaction = current_transaction_info(checkout_seller)
@@ -22,7 +22,7 @@ class V1::Rider::DeliveryController < RiderController
         checkout_seller.update(status: 3)
         checkout_seller.reload 
 
-        # update rider's wallet
+        # update rider's wallet and status
 
         render json: {success: true}, status: 200
     end
