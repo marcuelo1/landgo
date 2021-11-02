@@ -5,7 +5,7 @@ class V1::Buyer::CartsController < BuyerController
         @sellers = Seller.find(seller_ids)
         @vouchers = @buyer.vouchers
         delivery_fees = {}
-        @sellers.map{|s| delivery_fees[s.id] = s.delivery_fee(@buyer)}
+        @sellers.map{|s| delivery_fees[s.id] = s.buyer_delivery_fee(@buyer)}
 
         render json: {
             sellers: SellerBlueprint.render(@sellers),
@@ -13,7 +13,6 @@ class V1::Buyer::CartsController < BuyerController
             delivery_fees: delivery_fees
         }, status: 200
     end
-    
 
     def index
         @carts = Cart.where(buyer_id: @buyer.id, seller_id: params[:seller_id])
@@ -22,7 +21,6 @@ class V1::Buyer::CartsController < BuyerController
             carts: CartBlueprint.render(@carts)
         }
     end
-    
 
     def create # add to cart
         # check if added item is already in the cart

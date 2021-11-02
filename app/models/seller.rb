@@ -31,6 +31,7 @@ class Seller < ActiveRecord::Base
   )
 
   DISTANCE = 5
+  RATE_PER_KM = 10
 
   def rating
     4.8
@@ -46,8 +47,10 @@ class Seller < ActiveRecord::Base
     Seller.find(seller_ids)
   end
 
-  def delivery_fee buyer
-    10
+  def buyer_delivery_fee buyer
+    # get distance between seller and buyer
+    seller = self
+    return 10
   end
   
 end

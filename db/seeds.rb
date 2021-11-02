@@ -40,6 +40,8 @@ if Category.all.count == 0
             c.image.attach(io: file, filename: filename)
         end
     end
+
+    Category.first.update(status: 2)
 end
 ###########################################################################################################
 ############ SELLERS
@@ -132,7 +134,11 @@ sellers = [
                 ],
                 product_add_ons: []
             }
-        ]
+        ],
+        location: {
+            latitude: 10.6580222,
+            longitude: 122.9410383
+        }
     },
     {
         name: "Jollibee Test",
@@ -220,7 +226,11 @@ sellers = [
                 ],
                 product_add_ons: []
             }
-        ]
+        ],
+        location: {
+            latitude: 10.6612045,
+            longitude: 122.9427059
+        }
     },
     {
         name: "KFC Test",
@@ -308,7 +318,11 @@ sellers = [
                 ],
                 product_add_ons: []
             }
-        ]
+        ],
+        location: {
+            latitude: 10.6639822,
+            longitude: 122.9442182
+        }
     },
     {
         name: "Greenwich Test",
@@ -396,7 +410,11 @@ sellers = [
                 ],
                 product_add_ons: []
             }
-        ]
+        ],
+        location: {
+            latitude: 10.6660869,
+            longitude: 122.9434742
+        }
     },
     {
         name: "Sbarro Test",
@@ -484,7 +502,11 @@ sellers = [
                 ],
                 product_add_ons: []
             }
-        ]
+        ],
+        location: {
+            latitude: 10.6726666,
+            longitude: 122.9441628
+        }
     },
 ]
 if Seller.count == 0
@@ -562,6 +584,25 @@ if Seller.count == 0
                 )
             end
         end
+
+        # create location
+        geo_object = Geocoder.search([s[:location][:latitude], s[:location][:longitude]]).first.data
+        location = Location.new(
+            user_id: seller.id,
+            user_type: "Seller",
+            longitude: s[:location][:longitude], 
+            latitude: s[:location][:latitude]
+        )
+        
+        address = geo_object['address']
+        print(address)
+        location.street = address['road']
+        location.village = address['village'] ? address['village'] : address['suburb']
+        location.city = address['city']
+        location.state = address['state']
+        location.details = "GF room 101"
+        location.save
+        
     end
 end
 ###########################################################################################################
@@ -611,4 +652,37 @@ if Batch.all.count == 0
     Batch.create(name: "Batch 2", acceptance_rate: 70.0)
     Batch.create(name: "Batch 3", acceptance_rate: 60.0)
     Batch.create(name: "Batch 4", acceptance_rate: 50.0)
+end
+###########################################################################################################
+############ BUYER
+###########################################################################################################
+if Buyer.all.count == 0
+    buyer = Buyer.create(
+        email: "test1@gmail.com",
+        password: "marcuelo2",
+        first_name: "Paul Brian",
+        last_name: "Marcuelo",
+        phone_number: "09053536495"
+    )
+
+    # create location
+    latitude = 10.6636045
+    longitude = 122.9414224
+    geo_object = Geocoder.search([latitude, longitude]).first.data
+    location = Location.new(
+        user_id: buyer.id,
+        user_type: "Buyer",
+        longitude: longitude, 
+        latitude: latitude
+    )
+    
+    address = geo_object['address']
+    print(address)
+    location.street = address['road']
+    location.village = address['village'] ? address['village'] : address['suburb']
+    location.city = address['city']
+    location.state = address['state']
+    location.details = "Lot 3, Block 2"
+    location.name = "Home"
+    location.save
 end
