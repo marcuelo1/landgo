@@ -3,7 +3,11 @@ class V1::Buyer::LocationsController < BuyerController
     before_action :set_locations, only: [:index, :select_location]
 
     def index
-        render json: {locations: LocationBlueprint.render(@locations), selected_location: @buyer.selected_location ? @buyer.selected_location.id : 0, current_location: LocationBlueprint.render(@buyer.current_loc)}, status: 200
+        render json: {
+            locations: locations_info(@locations), 
+            selected_location: @buyer.selected_location ? @buyer.selected_location.id : 0, 
+            current_location: location_info(@buyer.current_loc)
+        }, status: 200
     end
 
     def create
@@ -29,7 +33,10 @@ class V1::Buyer::LocationsController < BuyerController
         @location.update(selected: true)
         @locations.reload
         
-        render json: {success: true, locations: LocationBlueprint.render(@locations)}, status: 200
+        render json: {
+            success: true, 
+            locations: locations_info(@locations)
+        }, status: 200
     end
 
     private

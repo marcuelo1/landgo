@@ -7,8 +7,8 @@ class V1::Buyer::CheckoutsController < BuyerController
         canceled_sellers = @buyer.checkout_sellers.where(status: 4)
 
         render json: {
-            completed: ListOfTransactionsBlueprint.render(completed_sellers), 
-            canceled: ListOfTransactionsBlueprint.render(canceled_sellers)
+            completed: checkout_sellers_info(completed_sellers), 
+            canceled: checkout_sellers_info(canceled_sellers)
         }, status: 200
     end
 
@@ -103,7 +103,7 @@ class V1::Buyer::CheckoutsController < BuyerController
         buyer_address = get_address(checkout.latitude, checkout.longitude)
 
         render json: {
-            checkout_products: CheckoutProductBlueprint.render(checkout_products),
+            checkout_products: checkout_products_info(checkout_products),
             buyer_address: buyer_address,
             delivery_fee: checkout_seller.delivery_fee,
             subtotal: checkout_seller.subtotal,
@@ -126,6 +126,6 @@ class V1::Buyer::CheckoutsController < BuyerController
     def current_transactions
         checkout_sellers = @buyer.checkout_sellers.where(status: 0)
 
-        render json: {checkout_sellers: ListOfTransactionsBlueprint.render(checkout_sellers)}, status: 200
+        render json: {checkout_sellers: checkout_sellers_info(checkout_sellers)}, status: 200
     end
 end

@@ -8,8 +8,8 @@ class V1::Buyer::CartsController < BuyerController
         @sellers.map{|s| delivery_fees[s.id] = s.buyer_delivery_fee(@buyer)}
 
         render json: {
-            sellers: SellerBlueprint.render(@sellers),
-            vouchers: VoucherBlueprint.render(@vouchers),
+            sellers: sellers_info(@sellers),
+            vouchers: vouchers_info(@vouchers),
             delivery_fees: delivery_fees
         }, status: 200
     end
@@ -18,7 +18,7 @@ class V1::Buyer::CartsController < BuyerController
         @carts = Cart.where(buyer_id: @buyer.id, seller_id: params[:seller_id])
 
         render json: {
-            carts: CartBlueprint.render(@carts)
+            carts: carts_info(@carts)
         }
     end
 

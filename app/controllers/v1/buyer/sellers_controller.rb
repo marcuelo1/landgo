@@ -5,10 +5,10 @@ class V1::Buyer::SellersController < BuyerController
         category_deals = category.category_deals 
 
         render json: {
-            category_deals: CategoryDealBlueprint.render(category_deals),
-            top_sellers: SellerBlueprint.render(Seller.top_sellers),
-            recent_sellers: SellerBlueprint.render(@buyer.recent_sellers),
-            all_sellers: SellerBlueprint.render(Seller.all_sellers(@buyer)),
+            category_deals: [],
+            top_sellers: sellers_info(Seller.top_sellers),
+            recent_sellers: sellers_info(@buyer.recent_sellers),
+            all_sellers: sellers_info(Seller.all_sellers(@buyer)),
         }
     end
 
@@ -16,9 +16,8 @@ class V1::Buyer::SellersController < BuyerController
         @seller = Seller.find(params[:id])
         
         render json: {
-            product_categories: ProductCategoryBlueprint.render(@seller.product_categories),
-            products: ProductBlueprint.render(@seller.products),
-            seller: SellerBlueprint.render(@seller)
+            product_categories: product_categories_info(@seller.product_categories),
+            products: products_info(@seller.products),
         }, status: 200
     end
 end

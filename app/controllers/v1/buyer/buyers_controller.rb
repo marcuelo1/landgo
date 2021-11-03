@@ -12,11 +12,11 @@ class V1::Buyer::BuyersController < BuyerController
         @categories = Category.where.not(status: 0)
 
         render json: {
-            buyer: BuyerBlueprint.render(@buyer),
-            selected_location: LocationBlueprint.render(@buyer.selected_location),
-            categories: CategoryBlueprint.render(@categories),
-            products: ProductBlueprint.render(@buyer.recent_purchases),
-            sellers: SellerBlueprint.render(Seller.top_sellers)
+            buyer: buyer_info(@buyer),
+            categories: categories_info(@categories),
+            selected_location: location_info(@buyer.selected_location),
+            products: products_info(@buyer.recent_purchases),
+            sellers: sellers_info(Seller.top_sellers)
         }, status: 200
     end
 
@@ -26,9 +26,9 @@ class V1::Buyer::BuyersController < BuyerController
 
     def review_payment_location
         render json: {
-            locations: LocationBlueprint.render(@locations), 
+            locations: locations_info(@locations), 
             selected_location_id: @buyer.selected_location.id,
-            payment_methods: PaymentMethodBlueprint.render(@payment_methods), 
+            payment_methods: payment_methods_info(@payment_methods), 
             selected_payment_method_id: @buyer.selected_payment_method.id,
         }
     end
@@ -38,9 +38,9 @@ class V1::Buyer::BuyersController < BuyerController
         seller = product.seller
 
         render json: {
-            sizes: ProductPriceBlueprint.render(product.product_prices),
-            add_on_groups: AddOnGroupBlueprint.render(product.product_add_ons),
-            seller: SellerBlueprint.render(seller)
+            sizes: sizes_and_prices_info(product.product_prices),
+            add_on_groups: product_add_on_groups_info(product.product_add_ons),
+            seller: seller_info(seller)
         }
     end
 

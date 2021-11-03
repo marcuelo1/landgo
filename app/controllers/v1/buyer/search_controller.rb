@@ -8,6 +8,6 @@ class V1::Buyer::SearchController < BuyerController
     def index
         sellers = Seller.seller_search(params[:keyword])
 
-        render json: {sellers: SellerBlueprint.render(sellers)}, status: 200
+        render json: {sellers: sellers_info(sellers)}, status: 200
     end
 end
