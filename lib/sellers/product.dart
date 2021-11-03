@@ -87,21 +87,16 @@ class _ProductState extends State<Product> {
             print(responseBody);
             print("==============================================================");
 
-            // get sizes
-            if(responseBody['sizes'].length > 0){
-              sizes = json.decode(responseBody['sizes']);
-              // check if product has only one size, so we can display at the bottom of product name
-              if(sizes.length == 1){
-                displayPrice = sizes[0]['price'].toStringAsFixed(2);
-                selectedSize["product_price_id"] = sizes[0]['product_price_id'];
-                selectedSize["price"] = sizes[0]['price'];
-              }
+            sizes = responseBody['sizes'];
+            // check if product has only one size, so we can display at the bottom of product name
+            if(sizes.length == 1){
+              displayPrice = sizes[0]['price'].toStringAsFixed(2);
+              selectedSize["product_price_id"] = sizes[0]['product_price_id'];
+              selectedSize["price"] = sizes[0]['price'];
             }
 
             // get add on groups
-            if(responseBody['add_on_groups'].length > 0){
-              add_on_groups = json.decode(responseBody['add_on_groups']);
-            }
+            add_on_groups = responseBody['add_on_groups'];
             print(add_on_groups);
             print("==============================================================");
             for (var aog in add_on_groups) {
@@ -115,7 +110,7 @@ class _ProductState extends State<Product> {
             print(selectedAddOns);
             print("==============================================================");
 
-            seller = json.decode(responseBody['seller']);
+            seller = responseBody['seller'];
 
             return content();
         }

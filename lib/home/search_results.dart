@@ -72,9 +72,7 @@ class _SearchResultsState extends State<SearchResults> {
             print(responseBody);
             print("============================================================== response body");
 
-            if(responseBody['sellers'].length > 0){
-              sellers = json.decode(responseBody['sellers']);
-            }
+            sellers = responseBody['sellers'];
 
             return content(context);
         }

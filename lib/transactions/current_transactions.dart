@@ -66,9 +66,7 @@ class _CurrentTransactionsState extends State<CurrentTransactions> {
             print(responseBody);
             print("============================================================== response body");
 
-            if(responseBody['checkout_sellers'].length > 0){
-              currentTransactions = json.decode(responseBody['checkout_sellers']);
-            }
+            currentTransactions = responseBody['checkout_sellers'];
 
             return content(context);
         }

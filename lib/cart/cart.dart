@@ -69,52 +69,47 @@ class _CartState extends State<Cart> {
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
 
-    return responseBody.isNotEmpty
-        ? content()
-        : FutureBuilder(
-            future: SharedFunction.getData(_dataUrl, _headers),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              // Connection state of getting the data
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                  return Text("check internet");
-                case ConnectionState.waiting: // Retrieving
-                  return Loading();
-                default: // Success of connecting to back end
-                  // check if snapshot has an error
-                  if (snapshot.hasError) {
-                    return Text("Error: ${snapshot.error}");
-                  }
+    return responseBody.isNotEmpty ? content() : FutureBuilder(
+      future: SharedFunction.getData(_dataUrl, _headers),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        // Connection state of getting the data
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Text("check internet");
+          case ConnectionState.waiting: // Retrieving
+            return Loading();
+          default: // Success of connecting to back end
+            // check if snapshot has an error
+            if (snapshot.hasError) {
+              return Text("Error: ${snapshot.error}");
+            }
 
-                  // get response
-                  response = snapshot.data;
-                  responseBody = response['body'];
-                  print(responseBody);
-                  print("==============================================================");
+            // get response
+            response = snapshot.data;
+            responseBody = response['body'];
+            print(responseBody);
+            print("==============================================================");
 
-                  if (responseBody["sellers"].length > 0) {
-                    sellers = json.decode(responseBody["sellers"]);
-                  }
-                  print(sellers);
-                  print("============================================================== Sellers");
+            sellers = responseBody["sellers"];
+            print(sellers);
+            print("============================================================== Sellers");
 
-                  if (responseBody["vouchers"].length > 0) {
-                    vouchers = json.decode(responseBody["vouchers"]);
-                  }
-                  print(vouchers);
-                  print("============================================================== Vouchers");
+            vouchers = responseBody["vouchers"];
+            print(vouchers);
+            print("============================================================== Vouchers");
 
-                  deliveryFees = responseBody["delivery_fees"];
-                  print(deliveryFees);
-                  print("============================================================== deliveryFees");
+            deliveryFees = responseBody["delivery_fees"];
+            print(deliveryFees);
+            print("============================================================== deliveryFees");
 
-                  for (var seller in sellers) {
-                    sellerCartProducts[seller['id']] = [];
-                  }
+            for (var seller in sellers) {
+              sellerCartProducts[seller['id']] = [];
+            }
 
-                  return content();
-              }
-            });
+            return content();
+        }
+      }
+    );
   }
 
   Widget content() {
@@ -155,9 +150,7 @@ class _CartState extends State<Cart> {
           Map _response =  await SharedFunction.getData(_rawUrl, _headers);
 
           if (_response['status'] == 200) {
-            if (_response['body']['carts'].length > 0) {
-              sellerCartProducts[seller['id']] = json.decode(_response['body']['carts']);
-            }
+            sellerCartProducts[seller['id']] = _response['body']['carts'];
           }
         }
 
@@ -241,7 +234,7 @@ class _CartState extends State<Cart> {
   }
 
   Widget cartProduct(Map _cart) {
-    Map product = json.decode(_cart['product']);
+    Map product = _cart['product'];
 
     return Column(
       children: [

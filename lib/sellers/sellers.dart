@@ -79,21 +79,12 @@ class _SellersState extends State<Sellers> {
             response = snapshot.data;
             Map responseBody = response['body'];
             print(responseBody);
-            if(responseBody['category_deals'].length > 0){
-              category_deals = json.decode(responseBody['category_deals']);
-            }
+            print("============================================================== response body");
 
-            if(responseBody['top_sellers'].length > 0){
-              top_sellers = json.decode(responseBody['top_sellers']);
-            }
-
-            if(responseBody['recent_sellers'].length > 0){
-              recent_sellers = json.decode(responseBody['recent_sellers']);
-            }
-
-            if(responseBody['all_sellers'].length > 0){
-              all_sellers = json.decode(responseBody['all_sellers']);
-            }
+            category_deals = responseBody['category_deals'];
+            top_sellers = responseBody['top_sellers'];
+            recent_sellers = responseBody['recent_sellers'];
+            all_sellers = responseBody['all_sellers'];
 
             return content(context);
         }

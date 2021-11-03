@@ -65,9 +65,7 @@ class _ListOfVouchersState extends State<ListOfVouchers> {
             print(responseBody);
             print("============================================================== response body");
 
-            if(responseBody['vouchers'].length > 0){
-              vouchers = json.decode(responseBody["vouchers"]);
-            }
+            vouchers = responseBody["vouchers"];
             print(vouchers);
             print("============================================================== vouchers");
 

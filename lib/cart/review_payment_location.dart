@@ -86,16 +86,12 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
             print(responseBody);
             print("============================================================== response body");
 
-            if(responseBody['locations'].length > 0){
-              locations = json.decode(responseBody["locations"]);
-            }
+            locations = responseBody["locations"];
             print("============================================================== locations");
 
             selectedLocationId = responseBody["selected_location_id"];
 
-            if(responseBody['payment_methods'].length > 0){
-              paymentMethods = json.decode(responseBody["payment_methods"]);
-            }
+            paymentMethods = responseBody["payment_methods"];
             print("============================================================== payment methods");
 
             selectedPaymentId = responseBody["selected_payment_method_id"];
@@ -189,6 +185,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
 
   Widget orderSummaryContainer(){
     print("================================= orderSummaryContainer");
+    
     return SharedWidgets.card(
       cardWidth: cardWidth, 
       referenceWidth: width, 
@@ -379,7 +376,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   Widget orderSummaryItems(Map _cart){
     print(_cart);
     print("================================= orderSummaryItems");
-    Map _product = json.decode(_cart['product']);
+    Map _product = _cart['product'];
 
     return Row(
       mainAxisSize: MainAxisSize.max,

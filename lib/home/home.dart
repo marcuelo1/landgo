@@ -72,21 +72,16 @@ class _HomeState extends State<Home> {
             if(snapshot.hasError){
               return Text("Error: ${snapshot.error}");
             }else{
-              response = snapshot.data;
-              // check status of response
+              var response = snapshot.data;
               Map responseBody = response['body'];
-              categories = json.decode(responseBody['categories']);
-              _buyer = json.decode(responseBody['buyer']);
-              selected_location = json.decode(responseBody['selected_location']);
-              print(selected_location);
+              print(responseBody);
+              print("============================================================== response body");
 
-              if(responseBody['sellers'].length > 0){
-                sellers = json.decode(responseBody['sellers']);
-              }
-
-              if(responseBody['products'].length > 0){
-                products = json.decode(responseBody['products']);
-              }
+              _buyer = responseBody['buyer'];
+              categories = responseBody['categories'];
+              selected_location = responseBody['selected_location'];
+              products = responseBody['products'];
+              sellers = responseBody['sellers'];
               
               return content();
             }

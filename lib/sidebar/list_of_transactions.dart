@@ -68,15 +68,11 @@ class _ListOfTransactionsState extends State<ListOfTransactions> {
             print(responseBody);
             print("============================================================== response body");
 
-            if(responseBody['completed'].length > 0){
-              completed = json.decode(responseBody["completed"]);
-            }
+            completed = responseBody["completed"];
             print(completed);
             print("============================================================== completed");
 
-            if(responseBody['canceled'].length > 0){
-              canceled = json.decode(responseBody["canceled"]);
-            }
+            canceled = responseBody["canceled"];
             print(canceled);
             print("============================================================== completed");
 

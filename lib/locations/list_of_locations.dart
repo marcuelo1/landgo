@@ -79,12 +79,9 @@ class _ListOfLocationsState extends State<ListOfLocations> {
             print(responseBody);
             print("==============================================================");
 
-            if (responseBody["locations"].length > 0) {
-              locations = json.decode(responseBody["locations"]);
-            }
-
+            locations = responseBody["locations"];
             selectedAddress = responseBody["selected_location"];
-            currentLocation = json.decode(responseBody["current_location"]);
+            currentLocation = responseBody["current_location"];
 
             return content(context);
         }

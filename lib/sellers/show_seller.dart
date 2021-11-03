@@ -75,13 +75,9 @@ class _ShowSellerState extends State<ShowSeller> {
             print(responseBody);
 
             // get product categories
-            if(responseBody['product_categories'].length > 0){
-              product_categories = json.decode(responseBody['product_categories']);
-            }
+            product_categories = responseBody['product_categories'];
             // get products
-            if(responseBody['products'].length > 0){
-              products = json.decode(responseBody['products']);
-            }
+            products = responseBody['products'];
 
             return Scaffold(
               appBar: SharedWidgets.appBar(context, title: seller['name'], showCart: true),
