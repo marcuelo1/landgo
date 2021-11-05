@@ -118,6 +118,8 @@ Rails.application.routes.draw do
       resources :delivery do 
         collection do
           post :delivered
+          post :accept_transaction
+          post :decline_transaction
         end
       end
       

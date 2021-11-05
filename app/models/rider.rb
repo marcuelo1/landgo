@@ -11,11 +11,12 @@ class Rider < ActiveRecord::Base
   has_one :wallet, as: :user, dependent: :destroy
   has_one :location, as: :user, dependent: :destroy
   has_many :checkout_sellers
+  has_many :rider_transactions
   belongs_to :batch
 
   after_create :create_wallet
 
-  enum status: {"Not Logged In" => 0, "On Shift" => 1, "Off Shift" => 2, "On Break" => 3, "On Deliver" => 4}
+  enum status: {"Not Logged In" => 0, "On Shift" => 1, "Off Shift" => 2, "On Break" => 3, "On Deliver" => 4, "Pending Order" => 5}
 
   def name
     "#{first_name} #{last_name}"

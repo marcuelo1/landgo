@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_30_060333) do
+ActiveRecord::Schema.define(version: 2021_11_05_105851) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -199,7 +199,7 @@ ActiveRecord::Schema.define(version: 2021_10_30_060333) do
     t.bigint "voucher_id"
     t.float "subtotal", default: 0.0
     t.float "vat"
-    t.bigint "rider_id", null: false
+    t.bigint "rider_id"
     t.float "rider_delivery_fee", default: 0.0
     t.index ["checkout_id"], name: "index_checkout_sellers_on_checkout_id"
     t.index ["rider_id"], name: "index_checkout_sellers_on_rider_id"
@@ -301,6 +301,16 @@ ActiveRecord::Schema.define(version: 2021_10_30_060333) do
     t.index ["seller_id"], name: "index_products_on_seller_id"
   end
 
+  create_table "rider_transactions", force: :cascade do |t|
+    t.bigint "rider_id", null: false
+    t.bigint "checkout_seller_id", null: false
+    t.integer "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["checkout_seller_id"], name: "index_rider_transactions_on_checkout_seller_id"
+    t.index ["rider_id"], name: "index_rider_transactions_on_rider_id"
+  end
+
   create_table "riders", force: :cascade do |t|
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
@@ -325,6 +335,7 @@ ActiveRecord::Schema.define(version: 2021_10_30_060333) do
     t.string "last_name"
     t.bigint "batch_id"
     t.integer "status", default: 0
+    t.float "acceptance_rate", default: 0.0
     t.index ["batch_id"], name: "index_riders_on_batch_id"
     t.index ["confirmation_token"], name: "index_riders_on_confirmation_token", unique: true
     t.index ["email"], name: "index_riders_on_email", unique: true
@@ -417,6 +428,8 @@ ActiveRecord::Schema.define(version: 2021_10_30_060333) do
   add_foreign_key "product_sizes", "sellers"
   add_foreign_key "products", "product_categories"
   add_foreign_key "products", "sellers"
+  add_foreign_key "rider_transactions", "checkout_sellers"
+  add_foreign_key "rider_transactions", "riders"
   add_foreign_key "riders", "batches"
   add_foreign_key "sellers", "categories"
 end
