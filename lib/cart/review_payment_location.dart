@@ -37,6 +37,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   List locations = [];
   List paymentMethods = [];
   bool refresh = true;
+  bool loading = false;
   bool changeLocation = false;
   bool changePayment = false;
   int selectedPaymentId = 0;
@@ -64,7 +65,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
 
     String rawUrl = _dataUrl + "?seller_ids=${argsData['sellers'].join(',')}";
 
-    return !refresh ? content() : FutureBuilder(
+    return loading ? Loading() : !refresh ? content() : FutureBuilder(
       future: SharedFunction.getData(rawUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         // Connection state of getting the data
@@ -419,6 +420,7 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
   Widget placeOrderBtn(){
     return ElevatedButton(
       onPressed: () async {
+        setState(() => loading = true);
         Map checkoutData = {
           "sellers": argsData["sellers"],
           "selectedVouchers": argsData["selectedVouchers"],
@@ -428,6 +430,9 @@ class _ReviewPaymentLocationState extends State<ReviewPaymentLocation> {
         };
         
         Map _response = await SharedFunction.sendData(_dataUrlCheckout, _headers, checkoutData);
+        
+        setState(() => loading = false);
+
         if(_response['status'] == 200){
           Navigator.popUntil(context, ModalRoute.withName(Home.routeName));
           Navigator.pushNamed(context, CurrentTransactions.routeName);
