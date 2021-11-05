@@ -21,6 +21,8 @@ class _HomeState extends State<Home> {
   // url
   String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/rider/delivery";
   String _deliveredUrl = "${SharedUrl.root}/${SharedUrl.version}/rider/delivery/delivered";
+  String _acceptTransaction = "${SharedUrl.root}/${SharedUrl.version}/rider/delivery/accept_transaction";
+  String _declineTransaction = "${SharedUrl.root}/${SharedUrl.version}/rider/delivery/decline_transaction";
 
   // dimensions
   final double btnWidth = 150;
@@ -35,6 +37,7 @@ class _HomeState extends State<Home> {
   bool refresh = true;
   Map rider = {};
   Map transaction = {};
+  Map statuses = {0: "Not Logged In", 1: "On Shift", 2: "Off Shift", 3: "On Break", 4: "On Deliver", 5: "Pending Order"};
 
   // headers
   Map<String,String> _headers = {};
@@ -123,8 +126,21 @@ class _HomeState extends State<Home> {
           // Rider delivery fee
           buildContentLabel("Rider's Delivery Fee"),
           buildContentValue("${transaction['rider_delivery_fee']}"),
-          // Delivered button
-          buildDeliveredBtn()
+          // check rider status
+          if(rider['status'] == 5)...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Decline Button
+                buildDeclineBtn(),
+                // Accept Button
+                buildAcceptBtn()
+              ],
+            )
+          ]else...[
+            // Delivered button
+            buildDeliveredBtn()
+          ]
         ],
       ),
     );
@@ -159,6 +175,48 @@ class _HomeState extends State<Home> {
         }
       }, 
       child: Text("Delivered")
+    );
+  }
+
+  Widget buildAcceptBtn(){
+    return ElevatedButton(
+      onPressed: ()async{
+        Map _data = {
+          "checkout_seller_id": transaction['id'],
+        };
+
+        Map _response = await SharedFunction.sendData(_acceptTransaction, _headers, _data);
+        
+        if(_response['status'] == 200){
+          Map _responseBody = _response['body'];
+          setState(() {
+            rider = _responseBody['rider'];
+            transaction = _responseBody['current_transaction'];
+          });
+        }
+      }, 
+      child: Text("Accept")
+    );
+  }
+
+  Widget buildDeclineBtn(){
+    return ElevatedButton(
+      onPressed: ()async{
+        Map _data = {
+          "checkout_seller_id": transaction['id'],
+        };
+
+        Map _response = await SharedFunction.sendData(_declineTransaction, _headers, _data);
+        
+        if(_response['status'] == 200){
+          Map _responseBody = _response['body'];
+          setState(() {
+            rider = _responseBody['rider'];
+            transaction = _responseBody['current_transaction'];
+          });
+        }
+      }, 
+      child: Text("Decline")
     );
   }
 }
