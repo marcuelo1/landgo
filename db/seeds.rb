@@ -706,4 +706,21 @@ if Rider.all.count == 0
         longitude: 122.9414224,
         latitude: 10.6636045,
     )
+
+    rider = Rider.create(
+        email: "test2@gmail.com",
+        password: "marcuelo2",
+        first_name: "Paul Brian",
+        last_name: "Marcuelo",
+        phone_number: "09012336495",
+        batch_id: Batch.first.id,
+    )
+
+    Location.create(
+        user_type: "Rider",
+        user_id: rider.id,
+        name: "",
+        longitude: 122.9414224,
+        latitude: 10.6636045,
+    )
 end

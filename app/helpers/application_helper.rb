@@ -280,7 +280,8 @@ module ApplicationHelper
         # query for available, nearest, and by batch
 
         # available riders
-        available_riders_ids = Rider.where(status: "On Shift").pluck(:id)
+        unwanted_riders_ids = RiderTransaction.where(status: "Decline", checkout_seller_id: checkout_seller.id).pluck(:rider_id)
+        available_riders_ids = Rider.where.not(id: unwanted_riders_ids).where(status: "On Shift").pluck(:id)
 
         # nearest riders
         store_coordinates = [store_latitude, store_longitude]
