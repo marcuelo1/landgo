@@ -36,4 +36,8 @@ class Rider < ActiveRecord::Base
   def current_checkout_seller
     self.checkout_sellers.where.not(status: "Completed").first
   end
+
+  def self.broadcast
+    ActionCable.server.broadcast("transaction", { body: "This Room is Best Room." })
+  end
 end
