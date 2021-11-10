@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
   late double scale;
 
   // socket
-  final String _channel = 'TransactionChannel';
+  final String _channel = 'RiderTransactionChannel';
   final String _actionCableUrl = 'ws://localhost:3000/cable';
   late ActionCable _cable;
 
@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
   Map rider = {};
   Map transaction = {};
   Map statuses = {0: "Not Logged In", 1: "On Shift", 2: "Off Shift", 3: "On Break", 4: "On Deliver", 5: "Pending Order"};
-  Map socket = {};
+  bool is_connected = false;
 
   // headers
   Map<String,String> _headers = {};
@@ -53,20 +53,6 @@ class _HomeState extends State<Home> {
     // headers
     _headers = Headers.getHeaders();
     print(_headers);
-
-    // socket
-    _cable = ActionCable.Stream(_actionCableUrl);
-      _cable.stream.listen((value) {
-      if (value is ActionCableConnected) {
-        print('ActionCableConnected');
-        _cable.subscribeToChannel(_channel, channelParams: {});
-      } else if (value is ActionCableSubscriptionConfirmed) {
-        print('ActionCableSubscriptionConfirmed');
-      } else if (value is ActionCableMessage) {
-        print('ActionCableMessage Received');
-        socket = value.message;
-      }
-    });
   }
 
   @override
@@ -114,6 +100,31 @@ class _HomeState extends State<Home> {
   }
 
   Widget buidContent(BuildContext context){
+    // socket
+    if (!is_connected){
+      _cable = ActionCable.Stream(_actionCableUrl);
+        _cable.stream.listen((value) {
+        if (value is ActionCableConnected) {
+          print('ActionCableConnected');
+          _cable.subscribeToChannel(_channel, channelParams: {"rider_id": rider['id']});
+        } else if (value is ActionCableSubscriptionConfirmed) {
+          print('ActionCableSubscriptionConfirmed');
+          setState(() {
+            is_connected = true;
+          });
+        } else if (value is ActionCableMessage) {
+          print('ActionCableMessage Received');
+          Map _socketBody = value.message;
+
+          setState(() {
+            transaction = _socketBody['transaction'];
+          });
+        } else {
+          is_connected = false;
+        }
+      });
+    }
+
     return StreamBuilder(
       stream: _cable.stream,
       builder: (context, snapshot) {
