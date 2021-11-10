@@ -2,6 +2,7 @@ class FindAvailableRiderJob < ApplicationJob
   queue_as :default
 
   def perform(store_latitude, store_longitude, checkout_seller)
+    return if cancelled?
     # query for available, nearest, and by batch
 
     # available riders
@@ -35,5 +36,13 @@ class FindAvailableRiderJob < ApplicationJob
     checkout_seller.reload
 
     # websocket to rider
+  end
+
+  def cancelled?
+    Sidekiq.redis {|c| c.exists("cancelled-#{jid}") } # Use c.exists? on Redis >= 4.2.0
+  end
+
+  def self.cancel!(jid)
+    Sidekiq.redis {|c| c.setex("cancelled-#{jid}", 86400, 1) }
   end
 end
