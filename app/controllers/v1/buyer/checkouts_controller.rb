@@ -84,7 +84,7 @@ class V1::Buyer::CheckoutsController < BuyerController
                 # websocket to seller
 
                 # find available rider perform later
-                find_available_rider(seller.location.latitude, seller.location.longitude, @checkout_seller)
+                FindAvailableRiderJob.perform_later(seller.location.latitude, seller.location.longitude, @checkout_seller)
 
                 return render json: {success: true, checkout_id: @checkout.id}, status: 200
             else

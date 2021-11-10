@@ -55,7 +55,7 @@ class V1::Rider::DeliveryController < RiderController
             status: 0 # decline
         )
         # find another available rider perform later
-        find_available_rider(seller.location.latitude, seller.location.longitude, checkout_seller)
+        FindAvailableRiderJob.perform_later(seller.location.latitude, seller.location.longitude, checkout_seller)
 
         rider = rider_info(@rider)
 
