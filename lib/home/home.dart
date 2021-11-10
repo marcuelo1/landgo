@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:landgo_rider/home/home_style.dart';
 import 'package:landgo_rider/shared/error_page.dart';
 import 'package:landgo_rider/shared/headers.dart';
 import 'package:landgo_rider/shared/loading.dart';
@@ -9,6 +6,8 @@ import 'package:landgo_rider/shared/shared_function.dart';
 import 'package:landgo_rider/shared/shared_style.dart';
 import 'package:landgo_rider/shared/shared_url.dart';
 import 'package:landgo_rider/shared/shared_widgets.dart';
+import 'package:action_cable_stream/action_cable_stream.dart';
+import 'package:action_cable_stream/action_cable_stream_states.dart';
 
 class Home extends StatefulWidget {
   static const String routeName = "home";
@@ -33,20 +32,49 @@ class _HomeState extends State<Home> {
   late double height;
   late double scale;
 
+  // socket
+  final String _channel = 'TransactionChannel';
+  final String _actionCableUrl = 'ws://localhost:3000/cable';
+  late ActionCable _cable;
+
   // variables
   bool refresh = true;
   Map rider = {};
   Map transaction = {};
   Map statuses = {0: "Not Logged In", 1: "On Shift", 2: "Off Shift", 3: "On Break", 4: "On Deliver", 5: "Pending Order"};
+  Map socket = {};
 
   // headers
   Map<String,String> _headers = {};
   @override
   void initState(){
     super.initState();
+
+    // headers
     _headers = Headers.getHeaders();
     print(_headers);
+
+    // socket
+    _cable = ActionCable.Stream(_actionCableUrl);
+      _cable.stream.listen((value) {
+      if (value is ActionCableConnected) {
+        print('ActionCableConnected');
+        _cable.subscribeToChannel(_channel, channelParams: {});
+      } else if (value is ActionCableSubscriptionConfirmed) {
+        print('ActionCableSubscriptionConfirmed');
+      } else if (value is ActionCableMessage) {
+        print('ActionCableMessage Received');
+        socket = value.message;
+      }
+    });
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _cable.disconnect();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -86,18 +114,23 @@ class _HomeState extends State<Home> {
   }
 
   Widget buidContent(BuildContext context){
-    return SafeArea(
-      child: Scaffold(
-        appBar: SharedWidgets.appBar(context),
-        bottomNavigationBar: SharedWidgets.bottomAppBar(context),
-        drawer: Drawer(
-          child: SharedWidgets.sideBar(context, rider, _headers),
-        ),
-        backgroundColor: SharedStyle.yellow,
-        body: Center(
-          child: transaction.isEmpty ? Text("No Pending Transaction") : buildTransactionContainer(),
-        ),
-      )
+    return StreamBuilder(
+      stream: _cable.stream,
+      builder: (context, snapshot) {
+        return SafeArea(
+          child: Scaffold(
+            appBar: SharedWidgets.appBar(context),
+            bottomNavigationBar: SharedWidgets.bottomAppBar(context),
+            drawer: Drawer(
+              child: SharedWidgets.sideBar(context, rider, _headers),
+            ),
+            backgroundColor: SharedStyle.yellow,
+            body: Center(
+              child: transaction.isEmpty ? Text("No Pending Transaction") : buildTransactionContainer(),
+            ),
+          )
+        );
+      }
     );
   }
 
