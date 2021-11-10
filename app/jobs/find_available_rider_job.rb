@@ -1,4 +1,5 @@
 class FindAvailableRiderJob < ApplicationJob
+  include ApplicationHelper
   queue_as :default
 
   def perform(store_latitude, store_longitude, checkout_seller)
@@ -36,6 +37,9 @@ class FindAvailableRiderJob < ApplicationJob
     checkout_seller.reload
 
     # websocket to rider
+    data = current_transaction_info(checkout_seller)
+    channel = "rider_transaction_#{checkout_seller.id}"
+    broadcast(channel, data)
   end
 
   def cancelled?

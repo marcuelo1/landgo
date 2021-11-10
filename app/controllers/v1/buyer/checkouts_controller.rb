@@ -82,6 +82,9 @@ class V1::Buyer::CheckoutsController < BuyerController
                 @buyer.carts.where(seller_id: seller.id).destroy_all
                 
                 # websocket to seller
+                data = {}
+                channel = "seller_transaction_#{@checkout_seller.id}"
+                broadcast(channel, data)
 
                 # find available rider perform later
                 FindAvailableRiderJob.perform_later(seller.location.latitude, seller.location.longitude, @checkout_seller)
