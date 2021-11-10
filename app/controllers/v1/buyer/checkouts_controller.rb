@@ -83,7 +83,7 @@ class V1::Buyer::CheckoutsController < BuyerController
                 
                 # websocket to seller
                 data = {}
-                channel = "seller_transaction_#{@checkout_seller.id}"
+                channel = "seller_transaction_#{seller.id}"
                 broadcast(channel, data)
 
                 # find available rider perform later

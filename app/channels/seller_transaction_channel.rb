@@ -2,7 +2,7 @@ class SellerTransactionChannel < ApplicationCable::Channel
     rescue_from StandardError, with: :deliver_error_message
 
     def subscribed
-        stream_from "seller_transaction_#{params[:checkout_seller_id]}"
+        stream_from "seller_transaction_#{params[:seller_id]}"
     end
 
     private
