@@ -27,7 +27,7 @@ class _ProfileState extends State<Profile> {
   // variables
   bool refresh = true;
   Map rider = {};
-  Map statuses = {0: "Not Logged In", 1: "On Shift", 2: "Off Shift", 3: "On Break", 4: "On Deliver"};
+  Map statuses = {0: "Not Logged In", 1: "On Shift", 2: "Off Shift", 3: "On Break", 4: "On Deliver", 5: "Pending Order"};
 
   // headers
   Map<String,String> _headers = {};
