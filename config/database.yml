@@ -43,5 +43,5 @@ production:
   encoding: unicode
   database: landgo
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: deploy
+  username: landgo
   password: <%= ENV['DATABASE_URL'] %>
