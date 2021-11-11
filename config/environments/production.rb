@@ -110,4 +110,8 @@ Rails.application.configure do
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
   config.active_job.queue_adapter = :sidekiq
+  config.action_cable.mount_path = "/cable"
+  config.action_cable.url = 'ws://159.223.56.152/cable'
+  config.action_cable.allowed_request_origins = [/http:\/\/*/, /https:\/\/*/]
+  config.action_cable.disable_request_forgery_protection = true
 end
