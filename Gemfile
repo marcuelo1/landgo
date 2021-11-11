@@ -62,3 +62,11 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'geocoder'
 gem 'pg_search'
 gem 'sidekiq'
+
+# production
+group :production do
+  gem 'capistrano', '~> 3.11'
+  gem 'capistrano-rails', '~> 1.4'
+  gem 'capistrano-passenger', '~> 0.2.0'
+  gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
+end

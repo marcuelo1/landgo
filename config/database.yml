@@ -41,7 +41,7 @@ production:
   # database: db/production.sqlite3
   adapter: postgresql
   encoding: unicode
-  database: postgresql-spherical-98967
+  database: landgo
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: landgo
-  password: <%= ENV['HEROKU_POSTGRESQL_BLUE_URL'] %>
+  password: <%= ENV['DATABASE_URL'] %>
