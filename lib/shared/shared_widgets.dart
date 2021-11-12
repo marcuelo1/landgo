@@ -8,7 +8,7 @@ class SharedWidgets {
   /////////////////////
   /// A P P  B A R
   /// /////////////////
-  static AppBar appBar(BuildContext context, {String title = "", String locName = "", String locDescription = "", bool showCurrTrans = false, bool showLoc = false, bool showCart = false, iconThemeColor}){
+  static AppBar appBar(BuildContext context, {String title = "", iconThemeColor}){
     if(iconThemeColor == null){
       iconThemeColor = SharedStyle.red;
     }
@@ -123,250 +123,51 @@ class SharedWidgets {
   }
 
   /////////////////////
-  /// P R O D U C T
+  // B O T T O M  B A R
   /////////////////////
-  static final double productHeight = 70;
-  static final double productWidth = 327;
-  static final double productImageWidth = 70;
-  static final double productImageHeight = 70;
-
-  static Widget product(Map product, double width, double height){
-    return Column(
-      children: [
-        // Space
-        SizedBox(height: SharedFunction.scaleHeight(15, height),),
-        // product
-        _productContent(product, width, height),
-        // Space
-        SizedBox(height: SharedFunction.scaleHeight(15, height),),
-        // Divider
-        Divider(color: SharedStyle.black,height: 1,),
-      ],
-    );
-  }
-
-  static Widget _productContent(Map product, double width, double height){
-    return Container(
-      height: SharedFunction.scaleHeight(productHeight, height),
-      width: SharedFunction.scaleWidth(productWidth, width),
-      child: Row( 
-        children: [
-          // product image
-          productImage(product['image'], width, height),
-          // space
-          SizedBox(width: SharedFunction.scaleWidth(21, width),),
-          // product details
-          _productDetails(product, width),
-        ],
-      ),
-    );
-  }
-
-  static Widget productImage(String url, double width, double height){
-    return Container(
-      width: SharedFunction.scaleWidth(productImageWidth, width),
-      height: SharedFunction.scaleHeight(productImageHeight, height),
-      child: Image.network(
-        url,
-        fit: BoxFit.fill,
-      ),
-    );
-  }
-
-  static Widget _productDetails(Map product, double width){
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // product name
-        _productName(product['name']),
-        // product description
-        _productDescription(product['description'], width),
-        // product price
-        _productPrice(product['price'], product['base_price'], width)
-      ],
-    );
-  }
-
-  static Widget _productName(String name){
-    return Text(
-      name,
-      style: SharedStyle.productName,
-    );
-  }
-
-  static Widget _productPrice(double price, double basePrice, double width){
-    bool _isSame = price == basePrice;
-    String _stringPrice = price.toStringAsFixed(2);
-    String _stringBasePrice = basePrice.toStringAsFixed(2);
-
-    return Row(
-      children: [
-        Text(
-          "₱$_stringBasePrice",
-          style: _isSame ? SharedStyle.productPrice : SharedStyle.productPriceLineThrough,
-        ),
-        if(!_isSame) ... [
-          SizedBox(width: SharedFunction.scaleWidth(10, width)),
-          Text(
-            "₱$_stringPrice",
-            style: SharedStyle.productPrice,
-          )
-        ]
-      ],
-    );
-  }
-
-  static Widget _productDescription(String _description, double width){
-    return Container(
-      width: SharedFunction.scaleWidth(230, width),
-      child: Text(
-        _description,
-        overflow: TextOverflow.ellipsis,
-        style: SharedStyle.productPrice,
-      ),
-    );
-  }
-
-  /////////////////////
-  /// S E L L E R 
-  /////////////////////
-  static final double sellerWidth = 327;
-  static final double sellerHeight = 198;
-  static final double sellerFinalHeight = 229;
-  static final double sellerImageWidth = 327;
-  static final double sellerImageHeight = 125;
-  static final double sellerAddressWidth = 232;
-
-  static Widget seller(Map seller, double width, double height){
-    String url = seller['image'];
-    String name = seller['name'];
-    String address = seller['address'];
-    String rating = seller['rating'].toStringAsFixed(1);
-
-    return Column(
-      children: [
-        // Seller content
-        _sellerContent(url, name, address, rating, width, height),
-        // Space
-        SizedBox(height: SharedFunction.scaleHeight(10, height),),
-        // Divider
-        Divider(color: SharedStyle.black,height: 1,),
-        // Space
-        SizedBox(height: SharedFunction.scaleHeight(20, height),)
-      ],
-    );
-  }
-
-  static Widget _sellerContent(String url, String name, String address, String rating, double width, double height){
-    return Container(
-      width: SharedFunction.scaleWidth(sellerWidth, width),
-      child: Column(
-        children: [
-          // Image
-          _sellerImage(url, width, height),
-          // Space
-          SizedBox(height: SharedFunction.scaleHeight(9, height),),
-          // Name and rating
-          _sellerNameAndRating(name, rating, width, height),
-          // Space
-          SizedBox(height: SharedFunction.scaleHeight(5, height),),
-          // address
-          _sellerAddress(address, width, height)
-        ],
-      ),
-    );
-  }
-
-  static Widget _sellerImage(String url, double width, double height){
-    return ClipRRect(
-      borderRadius: SharedStyle.borderRadius(15, 15, 15, 15),
+  static double bottomAppBarHeight = 60;
+  static BottomAppBar bottomAppBar(BuildContext context){
+    return BottomAppBar(
+      shape: CircularNotchedRectangle(),
+      notchMargin: 4.0,
       child: Container(
-        width: SharedFunction.scaleWidth(sellerImageWidth, width),
-        height: SharedFunction.scaleHeight(sellerImageHeight, height),
-        child: Image.network(
-          url,
-          fit: BoxFit.cover,
+        width: double.infinity,
+        height: bottomAppBarHeight,
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children:[
+            // Profile
+            _bottomAppBarBtn(context, Icon(Icons.person), "Profile", ""),
+            // Deliveries
+            _bottomAppBarBtn(context, Icon(Icons.bike_scooter), "Delivery", ""),
+            // History
+            _bottomAppBarBtn(context, Icon(Icons.timer), "History", ""),
+            // Wallet
+            _bottomAppBarBtn(context, Icon(Icons.account_balance_wallet), "Wallet", ""),
+          ]
         ),
-      ),
+      )
     );
   }
 
-  static Widget _sellerNameAndRating(String name, String rating, double width, double height){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _sellerName(name),
-        _sellerRating(rating, width, height)
-      ],
-    );
-  }
-
-  static Widget _sellerName(String name){
-    return Text(
-      name,
-      style: SharedStyle.sellerName,
-    );
-  }
-
-  static Widget _sellerRating(String rating, double width, double height){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // star icon
-        Icon(
-          Icons.star_rounded,
-          size: 20,
-          color: SharedStyle.yellow,
-        ),
-        // space
-        SizedBox(width: SharedFunction.scaleWidth(5, width),),
-        // rating
-        Text(
-          rating,
-          style: SharedStyle.sellerRating,
-        )
-      ],
-    );
-  }
-
-  static Widget _sellerAddress(String address, double width, double height){
-    return Row(
-      children: [
-        Container(
-          width: SharedFunction.scaleWidth(sellerAddressWidth, width),
-          child: Text(
-            address,
-            style: SharedStyle.sellerAddress,
-          ),
-        )
-      ],
-    );
-  }
-
-  /////////////////////
-  /// V O U C H E R
-  /////////////////////
-  static final double voucherWidth = 200;
-  static final double voucherHeight = 60;
-
-  static Widget voucher(Map _voucher, double width, double height){
-    return Container(
-      width: SharedFunction.scaleWidth(voucherWidth, width),
-      height: SharedFunction.scaleHeight(voucherHeight, height),
-      color: SharedStyle.yellow,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  static Widget _bottomAppBarBtn(BuildContext context, Icon _icon, String _name, String _route){
+    return GestureDetector(
+      onTap: (){
+        Navigator.popAndPushNamed(context, _route);
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(_voucher['code']),
-          Text(_voucher['description'])
+          _icon,
+          Text(
+            _name
+          )
         ],
       ),
     );
   }
-
 
   // BUTTONS
   static Widget redBtn(Function()function, String name, double width, double height){
