@@ -136,8 +136,22 @@ Rails.application.routes.draw do
     ### E N D  O F  R I D E R ###
     #############################
 
-    ###############################################
-    mount_devise_token_auth_for 'Seller', at: 'sellers'
+    #############################
+    #### S E L L E R ############
+    mount_devise_token_auth_for 'Seller', at: 'sellers', controllers: {
+      sessions: 'v1/seller/sessions'
+    }
+
+    namespace :seller do
+      resources :sellers, except: [:show], path: "" do
+      end
+
+      resources :transactions do
+        get :pending
+      end
+    end
+    ## E N D  O F  S E L L E R ##
+    #############################
   end
 
   # default_url_options :host => "http://192.168.1.9:3000"

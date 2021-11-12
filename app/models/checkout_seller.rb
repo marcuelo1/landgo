@@ -6,4 +6,6 @@ class CheckoutSeller < ApplicationRecord
   has_many :checkout_products, dependent: :destroy
 
   enum status: {:Pending => 0, :Accepted => 1, :Delivering => 2, :Completed => 3, :Cancelled => 4}
+
+  scope :pending, -> {}
 end
