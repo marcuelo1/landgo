@@ -7,5 +7,5 @@ class CheckoutSeller < ApplicationRecord
 
   enum status: {:Pending => 0, :Accepted => 1, :Delivering => 2, :Completed => 3, :Cancelled => 4}
 
-  scope :pending, -> {}
+  scope :pending, -> {where.not(status: [:Completed, :Cancelled])}
 end
