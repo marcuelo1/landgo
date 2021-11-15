@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:landgo_seller/pending_transactions/pending_transactions.dart';
-import 'package:landgo_seller/shared/headers.dart';
+import 'package:landgo_seller/features/sign_in/controllers/sign_in_controller.dart';
 import 'package:landgo_seller/shared/loading.dart';
 import 'package:landgo_seller/shared/pop_up.dart';
 import 'package:landgo_seller/shared/shared_function.dart';
 import 'package:landgo_seller/shared/shared_style.dart';
-import 'package:landgo_seller/shared/shared_url.dart';
 import 'package:landgo_seller/shared/shared_widgets.dart';
-import 'package:landgo_seller/sign_in/sign_in_style.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class SignIn extends StatefulWidget {
   static const String routeName = "signin";
-  
+
   @override
   _SignInState createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
-  // data url
-  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyers/sign_in";
+  SignInController con = SignInController();
 
   // dimensions of needed in displays
   final double signInBtnWidth = 300;
@@ -33,10 +27,6 @@ class _SignInState extends State<SignIn> {
 
   // form key
   final formKey = GlobalKey<FormState>();
-
-  // form variables
-  var _email;
-  var _password;
 
   // loading screen
   bool loading = false;
@@ -56,11 +46,14 @@ class _SignInState extends State<SignIn> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Title
-                title(),
+                Text(
+                  "Welcome back!",
+                  style: SharedStyle.h1,
+                ),
                 // Space betweeen title and form
                 SizedBox(height: SharedFunction.scaleHeight(80, height)),
                 // Form
-                form()
+                _buildForm()
               ],
             ),
           ),
@@ -69,68 +62,47 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Widget title () {
-    return Text(
-      "Welcome back!",
-      style: SignInStyle.title,
-    );
-  }
-
-  Widget form () {
+  Widget _buildForm () {
     return Form(
       key: formKey,
       child: Column(
         children: [
           // email
-          email(),
+          _buildEmail(),
           // password
           SizedBox(height: SharedFunction.scaleHeight(10, height)),
-          password(),
+          _buildPassword(),
           SizedBox(height: SharedFunction.scaleHeight(10, height)),
           // reset password
-          resetPass(),
+          _buildResetPass(),
           // space
           SizedBox(height: SharedFunction.scaleHeight(68, height)),
           // sign in button
-          signInBtn(),
+          _buildSignInBtn(),
           SizedBox(height: SharedFunction.scaleHeight(20, height)),
         ],
       )
     );
   }
 
-  Widget email () {
+  Widget _buildEmail () {
     return TextFormField(
       decoration: SharedStyle.textFormFieldDecoration('Email'),
-      validator: (value){
-        // check if input field is empty
-        if(value!.isEmpty){
-          return "Email is required";
-        }
-
-        // check if input is valid email
-        if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)){
-          return "Please enter a valid email";
-        }
-      },
-      onSaved: (value) => _email = value,
+      validator: con.validateEmail,
+      onSaved: con.saveEmail,
     );
   }
 
-  Widget password () {
+  Widget _buildPassword () {
     return TextFormField(
       obscureText: true,
       decoration: SharedStyle.textFormFieldDecoration('Password'),
-      validator: (value) {
-        if(value!.isEmpty){
-          return "Password is required";
-        }
-      },
-      onSaved: (value) => _password = value,
+      validator: con.validatePassword,
+      onSaved: con.savePassword,
     );
   }
 
-  Widget resetPass () {
+  Widget _buildResetPass () {
     return TextButton(
       onPressed: (){}, 
       child: Text(
@@ -140,39 +112,25 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Widget signInBtn () {
-    Function() _onPressedFunction = ()async{
-      if(!formKey.currentState!.validate()){
-        return;
-      }
-      // start loading page
-      setState(() => loading = true);
-      // Save form inputs to their variables
-      formKey.currentState!.save();
-
-      // Send data to backend
-      Map _data = {"email": _email, "password": _password};
-      Map _response = await SharedFunction.sendData(_dataUrl, {}, _data);
-      Map _responseBody = _response['body'];
-
-      // end loading page
-      setState(() => loading = false);
-
-      if(_response['status'] == 200){ // successful
-        // save headers
-        await Headers.setHeaders(_response['headers']);
-        // go to home
-        Navigator.pushNamed(context, PendingTransactions.routeName);
-      }else if(_response['status'] == 422){ // doesnt have account
-        PopUp.error(context, _responseBody['status']);
-      }else if(_response['status'] == 401){ // invalid creds
-        PopUp.error(context, _responseBody['errors'][0]);
-      }else{  // 500 status code
-        PopUp.error(context);
-      }
-    };
+  Widget _buildSignInBtn () {
     return SharedWidgets.redBtn(
-      onPressed: _onPressedFunction, 
+      onPressed: ()async{
+        if(!formKey.currentState!.validate()){
+          return;
+        }
+        // start loading page
+        setState(() => loading = true);
+        // Save form inputs to their variables
+        formKey.currentState!.save();
+
+        // Send data to backend
+        var _response = await con.sendData(context); 
+
+        // start loading page
+        setState(() => loading = false);
+
+        return _response;
+      }, 
       name: 'Sign In', 
       width: width, 
       height: height

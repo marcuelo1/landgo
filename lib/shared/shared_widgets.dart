@@ -170,11 +170,11 @@ class SharedWidgets {
   }
 
   // BUTTONS
-  static Widget redBtn(Function()function, String name, double width, double height){
+  static Widget redBtn({required void Function()onPressed, String name = "", double width = 0, double height = 0}){
     return Container(
       decoration: SharedStyle.btnContainerDecor,
       child: ElevatedButton(
-        onPressed: function, 
+        onPressed: onPressed, 
         style: SharedStyle.redBtn,
         child: Container(
           width: SharedFunction.scaleWidth(SharedStyle.btnWidth, width),

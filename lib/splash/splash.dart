@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:landgo_seller/pending%20transacstions/pending_transactions.dart';
+import 'package:landgo_seller/pending_transactions/pending_transactions.dart';
 import 'package:landgo_seller/shared/headers.dart';
 import 'package:landgo_seller/shared/shared_function.dart';
 import 'package:landgo_seller/shared/shared_style.dart';
 import 'package:landgo_seller/shared/shared_url.dart';
-import 'package:landgo_seller/sign_in/sign_in.dart';
+import 'package:landgo_seller/features/sign_in/views/sign_in.dart';
 
 class Splash extends StatefulWidget {
   static const String routeName = "splash";
