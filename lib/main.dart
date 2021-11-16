@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:landgo_seller/core/entities/headers.dart';
 import 'package:landgo_seller/features/sign_in/views/sign_in.dart';
 import 'package:landgo_seller/pending_transactions/pending_transactions.dart';
-import 'package:landgo_seller/shared/headers.dart';
 import 'package:landgo_seller/splash/splash.dart';
 
 void main() async{

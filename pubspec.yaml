@@ -37,8 +37,7 @@ dependencies:
   http: ^0.13.3
   google_maps_flutter: ^2.0.2
   geolocator: ^7.6.1
-  equatable: ^2.0.3
-  dartz: ^0.10.0
+  data_connection_checker: ^0.3.4
 
 
   # The following adds the Cupertino Icons font to your application.

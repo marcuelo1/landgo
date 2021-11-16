@@ -55,10 +55,10 @@ class SharedFunction {
     }
   }
   
-  static Future<Map> getData(String rawUrl, Map<String,String> headers) async {
+  static Future<Map> getData(String rawUrl, Map headers) async {
     try {
       var url = Uri.parse(rawUrl);
-      var data = await http.get(url, headers: headers);
+      var data = await http.get(url, headers: headers as Map<String, String>);
 
       return {"status": data.statusCode, "body": json.decode(data.body)};
     } catch (e) {
