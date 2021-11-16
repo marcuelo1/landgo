@@ -147,7 +147,9 @@ Rails.application.routes.draw do
       end
 
       resources :transactions do
-        get :pending
+        collection do
+          get :pending
+        end
       end
     end
     ## E N D  O F  S E L L E R ##
