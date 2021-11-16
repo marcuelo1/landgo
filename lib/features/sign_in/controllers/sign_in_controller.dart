@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:landgo_seller/pending_transactions/pending_transactions.dart';
-import 'package:landgo_seller/shared/headers.dart';
+import 'package:landgo_seller/core/entities/headers.dart';
+import 'package:landgo_seller/core/functions/http_request_function.dart';
+import 'package:landgo_seller/core/network/app_url.dart';
+import 'package:landgo_seller/features/pending_transactions/views/pending_transactions.dart';
 import 'package:landgo_seller/shared/pop_up.dart';
-import 'package:landgo_seller/shared/shared_function.dart';
-import 'package:landgo_seller/shared/shared_url.dart';
 
 class SignInController {
-  String signInUrl = "${SharedUrl.root}/${SharedUrl.version}/buyers/sign_in";
+  String signInUrl = "${AppUrl.root}/${AppUrl.version}/buyers/sign_in";
   String _email = "";
   String _password = "";
 
@@ -38,12 +38,12 @@ class SignInController {
 
   Future sendData(BuildContext context)async{
     Map _data = {"email": _email, "password": _password};
-    Map _response = await SharedFunction.sendData(this.signInUrl, {}, _data);
+    Map _response = await HttpRequestFunction.sendData(this.signInUrl, {}, _data);
     Map _responseBody = _response['body'];
 
     if(_response['status'] == 200){ // successful
       // save headers
-      await Headers.setHeaders(_response['headers']);
+      Headers.save(_response['headers']);
       // go to home
       Navigator.pushNamed(context, PendingTransactions.routeName);
     }else if(_response['status'] == 422){ // doesnt have account

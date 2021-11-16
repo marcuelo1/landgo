@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:landgo_seller/core/functions/style_function.dart';
+import 'package:landgo_seller/core/widgets/button_widgets.dart';
+import 'package:landgo_seller/core/widgets/loading.dart';
 import 'package:landgo_seller/features/sign_in/controllers/sign_in_controller.dart';
-import 'package:landgo_seller/shared/loading.dart';
-import 'package:landgo_seller/shared/pop_up.dart';
-import 'package:landgo_seller/shared/shared_function.dart';
 import 'package:landgo_seller/shared/shared_style.dart';
-import 'package:landgo_seller/shared/shared_widgets.dart';
 
 class SignIn extends StatefulWidget {
   static const String routeName = "signin";
@@ -41,7 +40,7 @@ class _SignInState extends State<SignIn> {
       child: Scaffold(
         body: Center(
           child: Container(
-            width: SharedFunction.scaleWidth(300, width),
+            width: StyleFunction.scaleWidth(300, width),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -51,7 +50,7 @@ class _SignInState extends State<SignIn> {
                   style: SharedStyle.h1,
                 ),
                 // Space betweeen title and form
-                SizedBox(height: SharedFunction.scaleHeight(80, height)),
+                SizedBox(height: StyleFunction.scaleHeight(80, height)),
                 // Form
                 _buildForm()
               ],
@@ -70,16 +69,16 @@ class _SignInState extends State<SignIn> {
           // email
           _buildEmail(),
           // password
-          SizedBox(height: SharedFunction.scaleHeight(10, height)),
+          SizedBox(height: StyleFunction.scaleHeight(10, height)),
           _buildPassword(),
-          SizedBox(height: SharedFunction.scaleHeight(10, height)),
+          SizedBox(height: StyleFunction.scaleHeight(10, height)),
           // reset password
           _buildResetPass(),
           // space
-          SizedBox(height: SharedFunction.scaleHeight(68, height)),
+          SizedBox(height: StyleFunction.scaleHeight(68, height)),
           // sign in button
           _buildSignInBtn(),
-          SizedBox(height: SharedFunction.scaleHeight(20, height)),
+          SizedBox(height: StyleFunction.scaleHeight(20, height)),
         ],
       )
     );
@@ -113,7 +112,7 @@ class _SignInState extends State<SignIn> {
   }
 
   Widget _buildSignInBtn () {
-    return SharedWidgets.redBtn(
+    return ButtonWidgets.redBtn(
       onPressed: ()async{
         if(!formKey.currentState!.validate()){
           return;

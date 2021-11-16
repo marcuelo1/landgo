@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:landgo_seller/pending_transactions/pending_transactions.dart';
-import 'package:landgo_seller/shared/headers.dart';
-import 'package:landgo_seller/shared/shared_function.dart';
+import 'package:landgo_seller/core/entities/headers.dart';
+import 'package:landgo_seller/core/functions/http_request_function.dart';
+import 'package:landgo_seller/core/functions/style_function.dart';
+import 'package:landgo_seller/core/network/app_url.dart';
+import 'package:landgo_seller/features/pending_transactions/views/pending_transactions.dart';
 import 'package:landgo_seller/shared/shared_style.dart';
-import 'package:landgo_seller/shared/shared_url.dart';
 import 'package:landgo_seller/features/sign_in/views/sign_in.dart';
 
 class Splash extends StatefulWidget {
@@ -15,18 +16,18 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
   // url
-  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyer/is_signed_in";
+  String _dataUrl = "${AppUrl.root}/${AppUrl.version}/buyer/is_signed_in";
 
   // variables for scale functions
   late double width;
   late double height;
   late double scale;
 
-  Map<String,String> _headers = {};
+  Map _headers = {};
   @override
   void initState(){
     super.initState();
-    _headers = Headers.getHeaders();
+    _headers = Headers.getJson();
     print(_headers);
   }
 
@@ -37,7 +38,7 @@ class _SplashState extends State<Splash> {
     scale = SharedStyle.referenceWidth / width;
 
     return FutureBuilder(
-      future: SharedFunction.getData(_dataUrl, _headers),
+      future: HttpRequestFunction.getData(_dataUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         // Connection state of getting the data
         switch (snapshot.connectionState) {
@@ -67,8 +68,8 @@ class _SplashState extends State<Splash> {
         backgroundColor: SharedStyle.white,
         body: Center(
           child: Container(
-            width: SharedFunction.scaleWidth(234, width),
-            height: SharedFunction.scaleHeight(324, height),
+            width: StyleFunction.scaleWidth(234, width),
+            height: StyleFunction.scaleHeight(324, height),
             child: Image.asset('images/logo_white.png')
           ),
         ),

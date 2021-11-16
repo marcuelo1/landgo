@@ -1,31 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'shared_style.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class SharedFunction {
-  static Color hexToColor(String code){
-    return Color(int.parse(code.substring(0, 6), radix: 16) + 0xFF000000);
-  }
-  
-  static double scaleWidth(double num, double width){
-    return (num / SharedStyle.referenceWidth) * width;
-  }
-  
-  static double scaleHeight(double num, double height){
-    return (num / SharedStyle.referenceHeight) * height;
-  }
-
-  static double textScale(double width){
-    if(width > SharedStyle.referenceWidth){
-      return SharedStyle.referenceWidth / width;
-    }else{
-      return width / SharedStyle.referenceWidth;
-    }
-  }
-  
+class HttpRequestFunction {
   static Future<Map> getDataWithLoc(String rawUrl, Map<String,String> headers, [body]) async {
     // location
     var _latitude;

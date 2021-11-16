@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:landgo_seller/core/functions/http_request_function.dart';
+import 'package:landgo_seller/core/network/app_url.dart';
 import 'package:landgo_seller/features/sign_in/views/sign_in.dart';
-import 'package:landgo_seller/shared/shared_function.dart';
 import 'package:landgo_seller/shared/shared_style.dart';
-import 'package:landgo_seller/shared/shared_url.dart';
 
-class SharedWidgets {
+class BarWidgets {
   /////////////////////
   /// A P P  B A R
   /// /////////////////
@@ -104,9 +104,9 @@ class SharedWidgets {
         ],
       ),
       onTap: () async {
-        String rawUrl = "${SharedUrl.root}/${SharedUrl.version}/buyers/sign_out";
+        String rawUrl = "${AppUrl.root}/${AppUrl.version}/buyers/sign_out";
         
-        Map _response = await SharedFunction.sendData(rawUrl, headers, {}, "delete");
+        Map _response = await HttpRequestFunction.sendData(rawUrl, headers, {}, "delete");
         
         
         if (_response['status'] == 200) {
@@ -169,56 +169,4 @@ class SharedWidgets {
     );
   }
 
-  // BUTTONS
-  static Widget redBtn({required void Function()onPressed, String name = "", double width = 0, double height = 0}){
-    return Container(
-      decoration: SharedStyle.btnContainerDecor,
-      child: ElevatedButton(
-        onPressed: onPressed, 
-        style: SharedStyle.redBtn,
-        child: Container(
-          width: SharedFunction.scaleWidth(SharedStyle.btnWidth, width),
-          height: SharedFunction.scaleHeight(SharedStyle.btnHeight, height),
-          child: Center(
-            child: Text(
-              name,
-              style: SharedStyle.redBtnText,
-            ),
-          ),
-        )
-      ),
-    );
-  }
-
-  static Widget whiteBtn(Function()function, String name, double width, double height){
-    return Container(
-      decoration: SharedStyle.btnContainerDecor,
-      child: ElevatedButton(
-        onPressed: function, 
-        style: SharedStyle.whiteBtn,
-        child: Container(
-          width: SharedFunction.scaleWidth(SharedStyle.btnWidth, width),
-          height: SharedFunction.scaleHeight(SharedStyle.btnHeight, height),
-          child: Center(
-            child: Text(
-              name,
-              style: SharedStyle.whiteBtnText,
-            ),
-          ),
-        )
-      ),
-    );
-  }
-
-  static Widget card({required double cardWidth, required double referenceWidth, required Widget child}){
-    return Container(
-      width: SharedFunction.scaleWidth(cardWidth, referenceWidth),
-      decoration: BoxDecoration(
-        borderRadius: SharedStyle.borderRadius(10, 10, 10, 10),
-        color: SharedStyle.white,
-      ),
-      padding: EdgeInsets.all(10),
-      child: child,
-    );
-  }
 }

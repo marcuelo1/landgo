@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:landgo_seller/shared/shared_widgets.dart';
+import 'package:landgo_seller/core/widgets/bar_widgets.dart';
 
 class ErrorPage extends StatefulWidget {
   const ErrorPage({ Key? key }) : super(key: key);
@@ -13,7 +13,7 @@ class _ErrorPageState extends State<ErrorPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: SharedWidgets.appBar(context),
+        appBar: BarWidgets.appBar(context),
         body: Center(
           child: Text("Error"),
         ),
