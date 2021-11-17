@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/functions/style_function.dart';
-import 'package:landgo_seller/shared/shared_style.dart';
+import 'package:landgo_seller/core/styles/shared_style.dart';
 
 class CardWidgets {
   static Widget card({required double cardWidth, required double referenceWidth, required Widget child}){

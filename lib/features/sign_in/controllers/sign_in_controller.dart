@@ -3,7 +3,7 @@ import 'package:landgo_seller/core/entities/headers.dart';
 import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/network/app_url.dart';
 import 'package:landgo_seller/features/pending_transactions/views/pending_transactions.dart';
-import 'package:landgo_seller/shared/pop_up.dart';
+import 'package:landgo_seller/core/widgets/pop_up.dart';
 
 class SignInController {
   String signInUrl = "${AppUrl.root}/${AppUrl.version}/buyers/sign_in";

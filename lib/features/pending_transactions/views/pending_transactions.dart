@@ -3,7 +3,8 @@ import 'package:landgo_seller/core/functions/style_function.dart';
 import 'package:landgo_seller/core/models/transaction_model.dart';
 import 'package:landgo_seller/core/widgets/bar_widgets.dart';
 import 'package:landgo_seller/features/pending_transactions/controllers/pending_transactions_controller.dart';
-import 'package:landgo_seller/shared/shared_style.dart';
+import 'package:landgo_seller/core/styles/shared_style.dart';
+import 'package:provider/provider.dart';
 
 class PendingTransactions extends StatefulWidget {
   static const String routeName = "pending_transactions";
@@ -13,7 +14,6 @@ class PendingTransactions extends StatefulWidget {
 }
 
 class _PendingTransactionsState extends State<PendingTransactions> {
-  PendingTransactionsController con = PendingTransactionsController();
 
   // variables for scale functions
   late double width;
@@ -25,12 +25,14 @@ class _PendingTransactionsState extends State<PendingTransactions> {
   @override
   void initState(){
     super.initState();
-    // get data
-    con.getPendingTransactionsData();
   }
 
   @override
   Widget build(BuildContext context) {
+    PendingTransactionsController con = Provider.of<PendingTransactionsController>(context);
+    // get data
+    con.getPendingTransactionsData();
+
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;

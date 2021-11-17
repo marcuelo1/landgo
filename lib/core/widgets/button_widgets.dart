@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/functions/style_function.dart';
-import 'package:landgo_seller/shared/shared_style.dart';
+import 'package:landgo_seller/core/styles/shared_style.dart';
 
 class ButtonWidgets {
   static Widget redBtn({required void Function()onPressed, String name = "", double width = 0, double height = 0}){

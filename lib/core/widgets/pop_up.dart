@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:landgo_seller/shared/shared_style.dart';
+import 'package:landgo_seller/core/styles/shared_style.dart';
 
 class PopUp {
   ///////////////////////////

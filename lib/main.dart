@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/entities/headers.dart';
+import 'package:landgo_seller/features/pending_transactions/controllers/pending_transactions_controller.dart';
 import 'package:landgo_seller/features/pending_transactions/views/pending_transactions.dart';
 import 'package:landgo_seller/features/sign_in/views/sign_in.dart';
-import 'package:landgo_seller/splash/splash.dart';
+import 'package:landgo_seller/features/splash/views/splash.dart';
+import 'package:provider/provider.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Headers.init();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PendingTransactionsController())
+      ],
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {

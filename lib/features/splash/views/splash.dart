@@ -4,7 +4,7 @@ import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/functions/style_function.dart';
 import 'package:landgo_seller/core/network/app_url.dart';
 import 'package:landgo_seller/features/pending_transactions/views/pending_transactions.dart';
-import 'package:landgo_seller/shared/shared_style.dart';
+import 'package:landgo_seller/core/styles/shared_style.dart';
 import 'package:landgo_seller/features/sign_in/views/sign_in.dart';
 
 class Splash extends StatefulWidget {

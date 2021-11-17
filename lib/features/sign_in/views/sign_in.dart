@@ -3,7 +3,7 @@ import 'package:landgo_seller/core/functions/style_function.dart';
 import 'package:landgo_seller/core/widgets/button_widgets.dart';
 import 'package:landgo_seller/core/widgets/loading.dart';
 import 'package:landgo_seller/features/sign_in/controllers/sign_in_controller.dart';
-import 'package:landgo_seller/shared/shared_style.dart';
+import 'package:landgo_seller/core/styles/shared_style.dart';
 
 class SignIn extends StatefulWidget {
   static const String routeName = "signin";
