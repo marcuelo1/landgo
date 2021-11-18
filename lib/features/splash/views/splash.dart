@@ -23,7 +23,7 @@ class _SplashState extends State<Splash> {
   late double height;
   late double scale;
 
-  Map _headers = {};
+  Map<String, String> _headers = {};
   @override
   void initState(){
     super.initState();

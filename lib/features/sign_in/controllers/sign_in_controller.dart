@@ -6,7 +6,7 @@ import 'package:landgo_seller/features/pending_transactions/views/pending_transa
 import 'package:landgo_seller/core/widgets/pop_up.dart';
 
 class SignInController {
-  String signInUrl = "${AppUrl.root}/${AppUrl.version}/buyers/sign_in";
+  String signInUrl = "${AppUrl.root}/${AppUrl.version}/sellers/sign_in";
   String _email = "";
   String _password = "";
 

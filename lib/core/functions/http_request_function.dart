@@ -33,10 +33,10 @@ class HttpRequestFunction {
     }
   }
   
-  static Future<Map> getData(String rawUrl, Map headers) async {
+  static Future<Map> getData(String rawUrl, Map<String, String> headers) async {
     try {
       var url = Uri.parse(rawUrl);
-      var data = await http.get(url, headers: headers as Map<String, String>);
+      var data = await http.get(url, headers: headers);
 
       return {"status": data.statusCode, "body": json.decode(data.body)};
     } catch (e) {
@@ -44,7 +44,7 @@ class HttpRequestFunction {
     }
   }
   
-  static Future<Map> sendData(String rawUrl, Map<String,String> headers, Map rawBody, [String method = "post"]) async {
+  static Future<Map> sendData(String rawUrl, Map<String, String> headers, Map rawBody, [String method = "post"]) async {
     try {
       var url = Uri.parse(rawUrl);
       var data;

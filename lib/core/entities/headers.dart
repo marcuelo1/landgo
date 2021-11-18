@@ -1,16 +1,16 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Headers {
-  static late String accessToken;
-  static late String client;
-  static late String uid;
+  static String accessToken = 'access-token';
+  static String client = 'client';
+  static String uid = 'uid';
 
   static late SharedPreferences _preferences;
   static Future init() async {
     _preferences = await SharedPreferences.getInstance();
   }
 
-  static Map getJson(){
+  static Map<String, String> getJson(){
     return {
       accessToken: _preferences.getString(accessToken).toString(),
       client: _preferences.getString(client).toString(),

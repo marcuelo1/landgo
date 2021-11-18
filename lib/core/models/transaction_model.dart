@@ -21,7 +21,7 @@ class TransactionModel extends Transaction {
 
   static fromJson(json){
     if(json is List){ // if json received is an array
-      List _data = [];
+      List<TransactionModel> _data = [];
 
       for (var tm in json) {
         _data.add(_transactionInfo(tm));

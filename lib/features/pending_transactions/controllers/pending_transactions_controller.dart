@@ -9,8 +9,9 @@ import 'package:landgo_seller/core/network/app_url.dart';
 class PendingTransactionsController extends ChangeNotifier {
   // Private Variables
   String _getPendingTransactionsDataUrl = "${AppUrl.root}/${AppUrl.version}/seller/transactions/pending";
+  String _acceptTransactionUrl = "";
   List<TransactionModel> _transactions = [];
-  Map _headers = {};
+  Map<String, String> _headers = {};
 
   // Public Variable
   UnmodifiableListView<TransactionModel> get transactions => UnmodifiableListView(_transactions);
@@ -22,11 +23,14 @@ class PendingTransactionsController extends ChangeNotifier {
   }
 
   void getPendingTransactionsData()async{
+    print("GETTING PENDING TRANSACTIONS DATA");
     // get headers
     setHeader();
     // request data from the server
     Map _response = await HttpRequestFunction.getData(_getPendingTransactionsDataUrl, _headers);
     Map _responseBody = _response['body'];
+    print("=============================");
+    print(_responseBody);
 
     _transactions = TransactionModel.fromJson(_responseBody['pending_transactions']);
     notifyListeners();
@@ -34,7 +38,11 @@ class PendingTransactionsController extends ChangeNotifier {
 
   void Function()? toDeliver(){}
 
-  void Function()? acceptTransaction(){}
+  acceptTransaction()async{
+    Map _data = {};
+    Map _response = await HttpRequestFunction.sendData(_acceptTransactionUrl, _headers, _data);
+
+  }
   
   void Function()? declinceTransaction(){}
 }

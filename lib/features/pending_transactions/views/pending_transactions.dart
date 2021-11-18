@@ -20,79 +20,77 @@ class _PendingTransactionsState extends State<PendingTransactions> {
   late double width;
   late double height;
   late double scale;
+  late PendingTransactionsController con;
 
   double _containerHeight = SharedStyle.referenceHeight - AppBar().preferredSize.height - BarWidgets.bottomAppBarHeight;
   
   @override
   void initState(){
     super.initState();
+    con = Provider.of<PendingTransactionsController>(context, listen: false);
+    // get data
+    con.getPendingTransactionsData();
   }
 
   @override
   Widget build(BuildContext context) {
-    PendingTransactionsController con = Provider.of<PendingTransactionsController>(context);
-    // get data
-    con.getPendingTransactionsData();
 
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
 
-    return StreamBuilder(
-      builder: (BuildContext context, AsyncSnapshot snapshot){
-        return SafeArea(
-          child: Scaffold(
-            appBar: BarWidgets.appBar(context, ),
-            bottomNavigationBar: BarWidgets.bottomAppBar(context),
-            backgroundColor: SharedStyle.white,
-            body: Container(
-              width: double.infinity,
-              height: StyleFunction.scaleHeight(_containerHeight, height),
-              child: ListView(
-                children: [
-                  for (TransactionModel transaction in con.transactions) ... [
-                    CardWidgets.card(
-                      cardWidth: 250, 
-                      referenceWidth: width, 
-                      child: Column(
+    print("BUILDING VIEW");
+    return SafeArea(
+      child: Scaffold(
+        appBar: BarWidgets.appBar(context, ),
+        bottomNavigationBar: BarWidgets.bottomAppBar(context),
+        backgroundColor: SharedStyle.white,
+        body: Container(
+          width: double.infinity,
+          height: StyleFunction.scaleHeight(_containerHeight, height),
+          child: ListView(
+            children: [
+              for (TransactionModel transaction in con.transactions) ... [
+                CardWidgets.card(
+                  cardWidth: 250, 
+                  referenceWidth: width, 
+                  child: Column(
+                    children: [
+                      // transaction id
+                      Text(transaction.idString),
+                      // transaction seller total
+                      Text(transaction.totalString),
+                      // buttons
+                      Row(
                         children: [
-                          // transaction id
-                          Text(transaction.idString),
-                          // transaction seller total
-                          Text(transaction.totalString),
-                          // buttons
-                          Row(
-                            children: [
-                              if(transaction.is_accepted)...[
-                                // complete button
-                                ElevatedButton(
-                                  onPressed: con.toDeliver(), 
-                                  child: const Text("Complete")
-                                )
-                              ]else...[
-                                // accept and decline button
-                                ElevatedButton(
-                                  onPressed: con.acceptTransaction(), 
-                                  child: const Text("Accept")
-                                ),
-                                ElevatedButton(
-                                  onPressed: con.declinceTransaction(), 
-                                  child: const Text("Decline")
-                                )
-                              ],
-                              // view details button
-                            ],
-                          )
+                          if(transaction.is_accepted)...[
+                            // complete button
+                            ElevatedButton(
+                              onPressed: con.toDeliver(), 
+                              child: const Text("Complete")
+                            )
+                          ]else...[
+                            // accept and decline button
+                            ElevatedButton(
+                              onPressed: con.acceptTransaction(), 
+                              child: const Text("Accept")
+                            ),
+                            ElevatedButton(
+                              onPressed: con.declinceTransaction(), 
+                              child: const Text("Decline")
+                            )
+                          ],
+                          // view details button
                         ],
                       )
-                    )
-                  ]
-                ],
-              ),
-            ),
-          )
-        );
-      }
+                    ],
+                  )
+                )
+              ]
+            ],
+          ),
+        ),
+      )
     );
   }
 }
