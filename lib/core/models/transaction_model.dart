@@ -15,6 +15,10 @@ class TransactionModel extends Transaction {
     updatedAt: updatedAt
   );
 
+  String get idString => id.toString();
+  String get totalString => "₱${total.toStringAsFixed(2)}";
+  bool get is_accepted => status == "Accepted";
+
   static fromJson(json){
     if(json is List){ // if json received is an array
       List _data = [];
@@ -38,4 +42,5 @@ class TransactionModel extends Transaction {
       updatedAt: (json['updatedAt'] as DateTime), 
     );
   }
+
 }

@@ -31,4 +31,10 @@ class PendingTransactionsController extends ChangeNotifier {
     _transactions = TransactionModel.fromJson(_responseBody['pending_transactions']);
     notifyListeners();
   }
+
+  void Function()? toDeliver(){}
+
+  void Function()? acceptTransaction(){}
+  
+  void Function()? declinceTransaction(){}
 }
