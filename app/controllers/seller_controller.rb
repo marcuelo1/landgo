@@ -4,7 +4,7 @@ class SellerController < ApiController
     include SellerHelper
 
     private
-    def set_rider
+    def set_seller
         @seller = current_v1_seller
     end
 end

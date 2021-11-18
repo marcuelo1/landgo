@@ -12,5 +12,6 @@ class V1::Seller::SessionsController < DeviseTokenAuth::SessionsController
         # else
         #     render json: {status: "Need to verify account"}, status: 401
         # end
+        super
     end
 end
