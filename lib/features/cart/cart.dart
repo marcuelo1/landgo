@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:ryve_mobile/cart/review_payment_location.dart';
+import 'package:ryve_mobile/features/cart/review_payment_location.dart';
 import 'package:ryve_mobile/sellers/product_style.dart';
 import 'package:ryve_mobile/shared/headers.dart';
 import 'package:ryve_mobile/shared/loading.dart';
@@ -19,9 +19,11 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   // url
-  String _dataUrl ="${SharedUrl.root}/${SharedUrl.version}/buyer/carts/list_of_sellers";
-  String _dataUrlCartProduct ="${SharedUrl.root}/${SharedUrl.version}/buyer/carts";
-  
+  String _dataUrl =
+      "${SharedUrl.root}/${SharedUrl.version}/buyer/carts/list_of_sellers";
+  String _dataUrlCartProduct =
+      "${SharedUrl.root}/${SharedUrl.version}/buyer/carts";
+
   // variables for scale functions
   late double width;
   late double height;
@@ -69,47 +71,52 @@ class _CartState extends State<Cart> {
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
 
-    return responseBody.isNotEmpty ? content() : FutureBuilder(
-      future: SharedFunction.getData(_dataUrl, _headers),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        // Connection state of getting the data
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return Text("check internet");
-          case ConnectionState.waiting: // Retrieving
-            return Loading();
-          default: // Success of connecting to back end
-            // check if snapshot has an error
-            if (snapshot.hasError) {
-              return Text("Error: ${snapshot.error}");
-            }
+    return responseBody.isNotEmpty
+        ? content()
+        : FutureBuilder(
+            future: SharedFunction.getData(_dataUrl, _headers),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              // Connection state of getting the data
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return Text("check internet");
+                case ConnectionState.waiting: // Retrieving
+                  return Loading();
+                default: // Success of connecting to back end
+                  // check if snapshot has an error
+                  if (snapshot.hasError) {
+                    return Text("Error: ${snapshot.error}");
+                  }
 
-            // get response
-            response = snapshot.data;
-            responseBody = response['body'];
-            print(responseBody);
-            print("==============================================================");
+                  // get response
+                  response = snapshot.data;
+                  responseBody = response['body'];
+                  print(responseBody);
+                  print(
+                      "==============================================================");
 
-            sellers = responseBody["sellers"];
-            print(sellers);
-            print("============================================================== Sellers");
+                  sellers = responseBody["sellers"];
+                  print(sellers);
+                  print(
+                      "============================================================== Sellers");
 
-            vouchers = responseBody["vouchers"];
-            print(vouchers);
-            print("============================================================== Vouchers");
+                  vouchers = responseBody["vouchers"];
+                  print(vouchers);
+                  print(
+                      "============================================================== Vouchers");
 
-            deliveryFees = responseBody["delivery_fees"];
-            print(deliveryFees);
-            print("============================================================== deliveryFees");
+                  deliveryFees = responseBody["delivery_fees"];
+                  print(deliveryFees);
+                  print(
+                      "============================================================== deliveryFees");
 
-            for (var seller in sellers) {
-              sellerCartProducts[seller['id']] = [];
-            }
+                  for (var seller in sellers) {
+                    sellerCartProducts[seller['id']] = [];
+                  }
 
-            return content();
-        }
-      }
-    );
+                  return content();
+              }
+            });
   }
 
   Widget content() {
@@ -132,9 +139,7 @@ class _CartState extends State<Cart> {
                   checkoutDetails(seller)
                 ]
               ],
-              if (selectedSellersId.length > 0) ... [
-                checkoutBtn()
-              ]
+              if (selectedSellersId.length > 0) ...[checkoutBtn()]
             ],
           ),
         ),
@@ -147,7 +152,7 @@ class _CartState extends State<Cart> {
       onTap: () async {
         if (sellerCartProducts[seller['id']].isEmpty) {
           String _rawUrl = _dataUrlCartProduct + "?seller_id=${seller['id']}";
-          Map _response =  await SharedFunction.getData(_rawUrl, _headers);
+          Map _response = await SharedFunction.getData(_rawUrl, _headers);
 
           if (_response['status'] == 200) {
             sellerCartProducts[seller['id']] = _response['body']['carts'];
@@ -169,9 +174,10 @@ class _CartState extends State<Cart> {
   Widget checkoutDetails(Map _seller) {
     int seller_id = _seller['id'];
     List _carts = sellerCartProducts[seller_id];
-    
+
     // GET SUB TOTAL
-    double _subTotalPrice = _carts.map((_cart) => _cart['total']).toList().reduce((a, b) => a + b);
+    double _subTotalPrice =
+        _carts.map((_cart) => _cart['total']).toList().reduce((a, b) => a + b);
     sellerSubTotals[seller_id] = _subTotalPrice;
 
     // GET DELIVERY FEE
@@ -187,13 +193,15 @@ class _CartState extends State<Cart> {
     double discountAmount = 0;
 
     for (var _voucherRaw in selectedVouchers) {
-      if(_voucherRaw['seller_id'] == seller_id){
+      if (_voucherRaw['seller_id'] == seller_id) {
         Map _voucher = _voucherRaw['voucher'];
-        if(_voucher['discount_type'] == 'Percent'){
+        if (_voucher['discount_type'] == 'Percent') {
           // check if the discount amount is greater than the max discount
-          discountAmount = _total * (_voucher['discount']/100);
-          discountAmount = discountAmount < _voucher['max_discount'] ? discountAmount : _voucher['max_discount'];
-        }else{
+          discountAmount = _total * (_voucher['discount'] / 100);
+          discountAmount = discountAmount < _voucher['max_discount']
+              ? discountAmount
+              : _voucher['max_discount'];
+        } else {
           discountAmount = _voucher['discount'];
         }
 
@@ -207,9 +215,7 @@ class _CartState extends State<Cart> {
     return Column(
       children: [
         // products
-        for (var _cart in _carts) ...[
-          cartProduct(_cart)
-        ],
+        for (var _cart in _carts) ...[cartProduct(_cart)],
         // sub total
         rowWithValue("Sub Total", _subTotalPrice),
         SizedBox(height: SharedFunction.scaleHeight(5, height)),
@@ -223,7 +229,7 @@ class _CartState extends State<Cart> {
         voucherRow(seller_id, discountAmount),
         SizedBox(height: SharedFunction.scaleHeight(2, height)),
         // voucher list
-        if(selectVoucherSellerId == seller_id) ... [
+        if (selectVoucherSellerId == seller_id) ...[
           voucherList(seller_id),
           SizedBox(height: SharedFunction.scaleHeight(5, height)),
         ],
@@ -239,13 +245,20 @@ class _CartState extends State<Cart> {
     return Column(
       children: [
         // Space
-        SizedBox(height: SharedFunction.scaleHeight(15, height),),
+        SizedBox(
+          height: SharedFunction.scaleHeight(15, height),
+        ),
         // product
         _productContent(_cart, product),
         // Space
-        SizedBox(height: SharedFunction.scaleHeight(15, height),),
+        SizedBox(
+          height: SharedFunction.scaleHeight(15, height),
+        ),
         // Divider
-        Divider(color: SharedStyle.black,height: 1,),
+        Divider(
+          color: SharedStyle.black,
+          height: 1,
+        ),
       ],
     );
   }
@@ -256,7 +269,7 @@ class _CartState extends State<Cart> {
     String price = product['price'].toStringAsFixed(2);
     String cartProductDescription = _cart['product_description'];
     String total = _cart['total'].toStringAsFixed(2);
-    
+
     return Container(
       height: SharedFunction.scaleHeight(productHeight, height),
       width: SharedFunction.scaleWidth(productWidth, width),
@@ -265,7 +278,9 @@ class _CartState extends State<Cart> {
           // quantity
           quantityBar(_cart),
           // space
-          SizedBox(width: SharedFunction.scaleWidth(10, width),),
+          SizedBox(
+            width: SharedFunction.scaleWidth(10, width),
+          ),
           // product details
           _productDetails(name, price, cartProductDescription),
           // add button
@@ -286,7 +301,8 @@ class _CartState extends State<Cart> {
     );
   }
 
-  Widget _productDetails(String name, String price, String cartProuctDescription) {
+  Widget _productDetails(
+      String name, String price, String cartProuctDescription) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -333,8 +349,8 @@ class _CartState extends State<Cart> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          quantityMinus(_cart), 
-          quantityNum(_cart), 
+          quantityMinus(_cart),
+          quantityNum(_cart),
           quantityAdd(_cart)
         ],
       ),
@@ -354,12 +370,13 @@ class _CartState extends State<Cart> {
               "quantity": _cart['quantity'],
             };
 
-            Map response = await SharedFunction.sendData(_rawUrl, _headers, _data, "put");
+            Map response =
+                await SharedFunction.sendData(_rawUrl, _headers, _data, "put");
 
-            if(response['status'] == 200){
+            if (response['status'] == 200) {
               _cart['total'] = response['body']['total'];
             }
-            
+
             setState(() {});
           }
         },
@@ -384,9 +401,10 @@ class _CartState extends State<Cart> {
               "quantity": _cart['quantity'],
             };
 
-            Map response = await SharedFunction.sendData(_rawUrl, _headers, _data, "put");
+            Map response =
+                await SharedFunction.sendData(_rawUrl, _headers, _data, "put");
 
-            if(response['status'] == 200){
+            if (response['status'] == 200) {
               _cart['total'] = response['body']['total'];
             }
           });
@@ -404,20 +422,26 @@ class _CartState extends State<Cart> {
     );
   }
 
-  Widget rowWithValue(String _name, double _amount){
+  Widget rowWithValue(String _name, double _amount) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(_name, style: SharedStyle.subTitle,),
-        Text("₱${_amount.toStringAsFixed(2)}", style: SharedStyle.subTitleYellow,)
+        Text(
+          _name,
+          style: SharedStyle.subTitle,
+        ),
+        Text(
+          "₱${_amount.toStringAsFixed(2)}",
+          style: SharedStyle.subTitleYellow,
+        )
       ],
     );
   }
 
-  Widget checkoutBtn(){
+  Widget checkoutBtn() {
     double _totalPrice = 0;
     sellerTotals.forEach((key, value) {
-      if(selectedSellersId.contains(key)){
+      if (selectedSellersId.contains(key)) {
         _totalPrice += value;
       }
     });
@@ -425,83 +449,94 @@ class _CartState extends State<Cart> {
     List selectedSellers = [];
 
     for (var _seller in sellers) {
-      if(selectedSellersId.contains(_seller['id'])){
+      if (selectedSellersId.contains(_seller['id'])) {
         selectedSellers.add(_seller);
       }
     }
 
     return ElevatedButton(
-      onPressed: () async {
-        // send data for checkout
-        Map rawBody = {
-          "sellers": selectedSellers,
-          "selectedVouchers": selectedVouchers,
-          "sellerSubTotals": sellerSubTotals,
-          "deliveryFees": deliveryFees,
-          "sellerTotals": sellerTotals,
-          "sellerCartProducts": sellerCartProducts
-        };
-        
-        Navigator.pushNamed(context, ReviewPaymentLocation.routeName, arguments: rawBody);
-      }, 
-      style: SharedStyle.yellowBtn,
-      child: Container(
-        width: SharedFunction.scaleWidth(checkoutBtnWidth, width),
-        height: SharedFunction.scaleHeight(checkoutBtnHeight, height),
-        child: Center(
-          child: Text("Checkout ${_totalPrice.toStringAsFixed(2)}", style: SharedStyle.yellowBtnText,),
-        ),
-      )
-    );
+        onPressed: () async {
+          // send data for checkout
+          Map rawBody = {
+            "sellers": selectedSellers,
+            "selectedVouchers": selectedVouchers,
+            "sellerSubTotals": sellerSubTotals,
+            "deliveryFees": deliveryFees,
+            "sellerTotals": sellerTotals,
+            "sellerCartProducts": sellerCartProducts
+          };
+
+          Navigator.pushNamed(context, ReviewPaymentLocation.routeName,
+              arguments: rawBody);
+        },
+        style: SharedStyle.yellowBtn,
+        child: Container(
+          width: SharedFunction.scaleWidth(checkoutBtnWidth, width),
+          height: SharedFunction.scaleHeight(checkoutBtnHeight, height),
+          child: Center(
+            child: Text(
+              "Checkout ${_totalPrice.toStringAsFixed(2)}",
+              style: SharedStyle.yellowBtnText,
+            ),
+          ),
+        ));
   }
 
-  Widget voucherRow(int _sellerId, double discountAmount){    
+  Widget voucherRow(int _sellerId, double discountAmount) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           children: [
-            Text("Voucher", style: SharedStyle.subTitle,),
+            Text(
+              "Voucher",
+              style: SharedStyle.subTitle,
+            ),
             TextButton(
-              onPressed: (){
-                setState(() {
-                  selectVoucherSellerId = _sellerId;
-                });
-              }, 
-              child: Text("Select Voucher")
-            )
+                onPressed: () {
+                  setState(() {
+                    selectVoucherSellerId = _sellerId;
+                  });
+                },
+                child: Text("Select Voucher"))
           ],
         ),
-        Text("₱${discountAmount.toStringAsFixed(2)}", style: SharedStyle.subTitleYellow,)
+        Text(
+          "₱${discountAmount.toStringAsFixed(2)}",
+          style: SharedStyle.subTitleYellow,
+        )
       ],
     );
   }
 
-  Widget voucherList(int _sellerId){
+  Widget voucherList(int _sellerId) {
     return Container(
       height: SharedFunction.scaleHeight(SharedWidgets.voucherHeight, height),
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          for (var _voucher in vouchers) ... [
+          for (var _voucher in vouchers) ...[
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 setState(() {
                   selectVoucherSellerId = 0;
-                  
+
                   for (var i = 0; i < selectedVouchers.length; i++) {
-                    if(selectedVouchers[i]['seller_id'] == _sellerId){
+                    if (selectedVouchers[i]['seller_id'] == _sellerId) {
                       selectedVouchers.removeAt(i);
                       break;
                     }
                   }
 
-                  selectedVouchers.add({'seller_id': _sellerId, 'voucher': _voucher});
+                  selectedVouchers
+                      .add({'seller_id': _sellerId, 'voucher': _voucher});
                 });
               },
               child: SharedWidgets.voucher(_voucher, width, height),
             ),
-            SizedBox(width: SharedFunction.scaleWidth(10, width),)
+            SizedBox(
+              width: SharedFunction.scaleWidth(10, width),
+            )
           ]
         ],
       ),
