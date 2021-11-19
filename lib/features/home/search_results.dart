@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:ryve_mobile/sellers/show_seller.dart';
+import 'package:ryve_mobile/features/sellers/views/show_seller.dart';
 import 'package:ryve_mobile/core/widgets/error_page.dart';
 import 'package:ryve_mobile/core/entities/headers.dart';
 import 'package:ryve_mobile/core/widgets/loading.dart';

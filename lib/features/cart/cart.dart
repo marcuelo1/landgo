@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ryve_mobile/features/cart/review_payment_location.dart';
-import 'package:ryve_mobile/sellers/product_style.dart';
+import 'package:ryve_mobile/features/sellers/styles/product_style.dart';
 import 'package:ryve_mobile/core/entities/headers.dart';
 import 'package:ryve_mobile/core/widgets/loading.dart';
 import 'package:ryve_mobile/core/widgets/pop_up.dart';
