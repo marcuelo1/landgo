@@ -36,13 +36,13 @@ class PendingTransactionsController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void Function()? toDeliver(){}
+  void toDeliver(){}
 
-  acceptTransaction()async{
+  void acceptTransaction()async{
     Map _data = {};
     Map _response = await HttpRequestFunction.sendData(_acceptTransactionUrl, _headers, _data);
 
   }
   
-  void Function()? declinceTransaction(){}
+  void declinceTransaction(){}
 }

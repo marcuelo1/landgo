@@ -43,7 +43,7 @@ class _PendingTransactionsState extends State<PendingTransactions> {
       child: Scaffold(
         appBar: BarWidgets.appBar(context, ),
         bottomNavigationBar: BarWidgets.bottomAppBar(context),
-        backgroundColor: SharedStyle.white,
+        backgroundColor: SharedStyle.red,
         body: Container(
           width: double.infinity,
           height: StyleFunction.scaleHeight(_containerHeight, height),
@@ -65,17 +65,17 @@ class _PendingTransactionsState extends State<PendingTransactions> {
                           if(transaction.is_accepted)...[
                             // complete button
                             ElevatedButton(
-                              onPressed: con.toDeliver(), 
+                              onPressed: () => con.toDeliver(), 
                               child: const Text("Complete")
                             )
                           ]else...[
                             // accept and decline button
                             ElevatedButton(
-                              onPressed: con.acceptTransaction(), 
+                              onPressed: () => con.acceptTransaction(), 
                               child: const Text("Accept")
                             ),
                             ElevatedButton(
-                              onPressed: con.declinceTransaction(), 
+                              onPressed: () => con.declinceTransaction(), 
                               child: const Text("Decline")
                             )
                           ],
