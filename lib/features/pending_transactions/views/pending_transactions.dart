@@ -15,7 +15,6 @@ class PendingTransactions extends StatefulWidget {
 }
 
 class _PendingTransactionsState extends State<PendingTransactions> {
-
   // variables for scale functions
   late double width;
   late double height;
@@ -37,8 +36,7 @@ class _PendingTransactionsState extends State<PendingTransactions> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
-
-    print("BUILDING VIEW");
+    
     return SafeArea(
       child: Scaffold(
         appBar: BarWidgets.appBar(context),

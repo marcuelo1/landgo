@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/network/app_url.dart';
+import 'package:landgo_seller/features/pending_transactions/views/pending_transactions.dart';
+import 'package:landgo_seller/features/profile/views/profile.dart';
 import 'package:landgo_seller/features/sign_in/views/sign_in.dart';
 import 'package:landgo_seller/core/styles/shared_style.dart';
 
@@ -138,9 +140,11 @@ class BarWidgets {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children:[
             // Profile
-            _bottomAppBarBtn(context, Icon(Icons.person), "Profile", ""),
-            // Deliveries
-            _bottomAppBarBtn(context, Icon(Icons.bike_scooter), "Delivery", ""),
+            _bottomAppBarBtn(context, Icon(Icons.person), "Profile", Profile.routeName),
+            // Operations
+            _bottomAppBarBtn(context, Icon(Icons.settings), "Operations", ""),
+            // Orders
+            _bottomAppBarBtn(context, Icon(Icons.receipt_long), "Orders", PendingTransactions.routeName),
             // History
             _bottomAppBarBtn(context, Icon(Icons.timer), "History", ""),
             // Wallet
