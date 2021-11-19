@@ -41,52 +41,66 @@ class _PendingTransactionsState extends State<PendingTransactions> {
     print("BUILDING VIEW");
     return SafeArea(
       child: Scaffold(
-        appBar: BarWidgets.appBar(context, ),
+        appBar: BarWidgets.appBar(context),
         bottomNavigationBar: BarWidgets.bottomAppBar(context),
         backgroundColor: SharedStyle.red,
         body: Container(
           width: double.infinity,
           height: StyleFunction.scaleHeight(_containerHeight, height),
-          child: ListView(
-            children: [
-              for (TransactionModel transaction in con.transactions) ... [
-                CardWidgets.card(
-                  cardWidth: 250, 
-                  referenceWidth: width, 
-                  child: Column(
-                    children: [
-                      // transaction id
-                      Text(transaction.idString),
-                      // transaction seller total
-                      Text(transaction.totalString),
-                      // buttons
-                      Row(
-                        children: [
-                          if(transaction.is_accepted)...[
-                            // complete button
-                            ElevatedButton(
-                              onPressed: () => con.toDeliver(), 
-                              child: const Text("Complete")
-                            )
-                          ]else...[
-                            // accept and decline button
-                            ElevatedButton(
-                              onPressed: () => con.acceptTransaction(), 
-                              child: const Text("Accept")
-                            ),
-                            ElevatedButton(
-                              onPressed: () => con.declinceTransaction(), 
-                              child: const Text("Decline")
+          child: Padding(
+            padding: EdgeInsets.only(left: StyleFunction.scaleWidth(24, width), right: StyleFunction.scaleWidth(24, width)),
+            child: Consumer<PendingTransactionsController>(
+              builder: (_, _ptc, __){
+                return ListView(
+                  children: [
+                    for (TransactionModel transaction in _ptc.transactions) ... [
+                      CardWidgets.card(
+                        cardWidth: 250, 
+                        referenceWidth: width, 
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // transaction id
+                            Text("Transaction ID: ${transaction.idString}"),
+                            // transaction seller total
+                            Text("Transaction Total: ${transaction.totalString}"),
+                            // buttons
+                            Row(
+                              children: [
+                                if(transaction.is_accepted)...[
+                                  // complete button
+                                  ElevatedButton(
+                                    onPressed: () => con.toDeliver(transaction.id), 
+                                    child: const Text("Complete")
+                                  )
+                                ]else if(transaction.delivering)...[
+                                  Text("Delivering")
+                                ]else...[
+                                  // accept and decline button
+                                  ElevatedButton(
+                                    onPressed: () => con.acceptTransaction(transaction.id), 
+                                    child: const Text("Accept")
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () => con.declinceTransaction(), 
+                                    child: const Text("Decline")
+                                  )
+                                ],
+                                // view details button
+                                ElevatedButton(
+                                  onPressed: () => con.transactionDetails(transaction.id), 
+                                  child: const Text("View Details")
+                                )
+                              ],
                             )
                           ],
-                          // view details button
-                        ],
+                        )
                       )
-                    ],
-                  )
-                )
-              ]
-            ],
+                    ]
+                  ],
+                );
+              }
+            ),
           ),
         ),
       )

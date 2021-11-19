@@ -1,9 +1,9 @@
 class Transaction {
-  final int id;
-  final double total;
-  final String status;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  int id;
+  double total;
+  String status;
+  DateTime createdAt;
+  DateTime updatedAt;
 
   Transaction({
     required this.id, 

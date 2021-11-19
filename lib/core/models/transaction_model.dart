@@ -18,6 +18,7 @@ class TransactionModel extends Transaction {
   String get idString => id.toString();
   String get totalString => "₱${total.toStringAsFixed(2)}";
   bool get is_accepted => status == "Accepted";
+  bool get delivering => status == "Delivering";
 
   static fromJson(json){
     if(json is List){ // if json received is an array
