@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ryve_mobile/shared/headers.dart';
+import 'package:ryve_mobile/core/entities/headers.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
-import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
-import 'package:ryve_mobile/shared/shared_widgets.dart';
+import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
 
 class Profile extends StatefulWidget {
   static const String routeName = "profile";

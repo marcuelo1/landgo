@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ryve_mobile/sellers/show_seller_style.dart';
 import 'package:ryve_mobile/sellers/product.dart';
-import 'package:ryve_mobile/shared/headers.dart';
-import 'package:ryve_mobile/shared/loading.dart';
+import 'package:ryve_mobile/core/entities/headers.dart';
+import 'package:ryve_mobile/core/widgets/loading.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
-import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
-import 'package:ryve_mobile/shared/shared_widgets.dart';
+import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
 
 class ShowSeller extends StatefulWidget {
   static const String routeName = "show_seller";

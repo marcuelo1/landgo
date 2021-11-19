@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ryve_mobile/features/home/home.dart';
-import 'package:ryve_mobile/shared/headers.dart';
-import 'package:ryve_mobile/shared/loading.dart';
-import 'package:ryve_mobile/shared/pop_up.dart';
+import 'package:ryve_mobile/core/entities/headers.dart';
+import 'package:ryve_mobile/core/widgets/loading.dart';
+import 'package:ryve_mobile/core/widgets/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
-import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
-import 'package:ryve_mobile/shared/shared_widgets.dart';
+import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
 import 'package:ryve_mobile/features/sign_in/sign_in_style.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

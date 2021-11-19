@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'shared_function.dart';
+import '../../shared/shared_function.dart';
 
 class SharedStyle {
   static final double referenceWidth = 375;

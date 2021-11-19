@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
-import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/features/sign_in/sign_in.dart';
 import 'package:ryve_mobile/features/sign_up/sign_up.dart';
 import 'welcome_page_style.dart';

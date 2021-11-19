@@ -1,18 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:ryve_mobile/shared/loading.dart';
-import 'package:ryve_mobile/shared/pop_up.dart';
+import 'package:ryve_mobile/core/widgets/loading.dart';
+import 'package:ryve_mobile/core/widgets/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
-import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
-import 'package:ryve_mobile/shared/shared_widgets.dart';
-import 'package:ryve_mobile/sign_in/sign_in.dart';
+import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
+import 'package:ryve_mobile/features/sign_in/sign_in.dart';
 import 'package:http/http.dart' as http;
 
 class SignUp extends StatefulWidget {
   static const String routeName = "signup";
-  
+
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -23,7 +23,7 @@ class _SignUpState extends State<SignUp> {
   final double signUpBtnHeight = 60;
   final double navBtnWidth = 300;
   final double navUpBtnHeight = 60;
-  
+
   // variables for scale functions
   late double width;
   late double height;
@@ -57,65 +57,86 @@ class _SignUpState extends State<SignUp> {
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
 
-    return loading ? Loading() : SafeArea(
-      child: Scaffold(
-        body: Center(
-          child: Container(
-            width: SharedFunction.scaleWidth(300, width),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // Space
-                  SizedBox(height: SharedFunction.scaleHeight(50, height),),
-                  /// TITLE
-                  title(),
-                  // Space
-                  SizedBox(height: SharedFunction.scaleHeight(20, height),),
-                  /// FORM
-                  form(),
-                  // Space
-                  SizedBox(height: SharedFunction.scaleHeight(20, height),),
-                  /// Already registered
-                  signIn()
-                ],
+    return loading
+        ? Loading()
+        : SafeArea(
+            child: Scaffold(
+              body: Center(
+                child: Container(
+                  width: SharedFunction.scaleWidth(300, width),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // Space
+                        SizedBox(
+                          height: SharedFunction.scaleHeight(50, height),
+                        ),
+
+                        /// TITLE
+                        title(),
+                        // Space
+                        SizedBox(
+                          height: SharedFunction.scaleHeight(20, height),
+                        ),
+
+                        /// FORM
+                        form(),
+                        // Space
+                        SizedBox(
+                          height: SharedFunction.scaleHeight(20, height),
+                        ),
+
+                        /// Already registered
+                        signIn()
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
   }
 
-  Widget title(){
+  Widget title() {
     return Text(
       "Let's get started",
       style: SharedStyle.h1,
     );
   }
 
-  Widget form(){
+  Widget form() {
     return Form(
       key: formKey,
       child: Column(
         children: [
           /// First Name
           firstName(),
+
           /// Last Name
           lastName(),
+
           /// Confirm Password
           mobileNumber(),
+
           /// Email
           email(),
+
           /// Password
           password(),
+
           /// Confirm Password
           confirmPassword(),
           // space
-          SizedBox(height: SharedFunction.scaleHeight(30, height),),
+          SizedBox(
+            height: SharedFunction.scaleHeight(30, height),
+          ),
           // terms and policy
           termsAndPolicyContainer(),
           // Space
-          SizedBox(height: SharedFunction.scaleHeight(50, height),),
+          SizedBox(
+            height: SharedFunction.scaleHeight(50, height),
+          ),
+
           /// sign up
           signUp()
         ],
@@ -123,18 +144,20 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget email(){
+  Widget email() {
     return TextFormField(
       decoration: SharedStyle.textFormFieldDecoration('Email'),
       controller: emailCon,
-      validator: (value){
+      validator: (value) {
         // check if input field is empty
-        if(value!.isEmpty){
+        if (value!.isEmpty) {
           return "Email is required";
         }
 
         // check if input is valid email
-        if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)){
+        if (!RegExp(
+                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+            .hasMatch(value)) {
           return "Please enter a valid email";
         }
       },
@@ -144,14 +167,14 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget password(){
+  Widget password() {
     return TextFormField(
       obscureText: true,
       decoration: SharedStyle.textFormFieldDecoration('Password'),
       controller: passwordCon,
-      validator: (value){
+      validator: (value) {
         // check if input field is empty
-        if(value!.isEmpty){
+        if (value!.isEmpty) {
           return "Password is required";
         }
 
@@ -163,18 +186,18 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget confirmPassword(){
+  Widget confirmPassword() {
     return TextFormField(
       obscureText: true,
       decoration: SharedStyle.textFormFieldDecoration('Confirm Password'),
       controller: confirmPasswordCon,
-      validator: (value){
+      validator: (value) {
         // check if input field is empty
-        if(value!.isEmpty){
+        if (value!.isEmpty) {
           return "Confirm Password is required";
         }
         // check if password and confirm password is the same
-        if(value != _password){
+        if (value != _password) {
           return "Confirm Password is not same with Password";
         }
       },
@@ -184,12 +207,12 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget firstName(){
+  Widget firstName() {
     return TextFormField(
       decoration: SharedStyle.textFormFieldDecoration('First Name'),
       controller: firstNameCon,
       validator: (value) {
-        if(value!.isEmpty){
+        if (value!.isEmpty) {
           return "First Name is required";
         }
       },
@@ -199,12 +222,12 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget lastName(){
+  Widget lastName() {
     return TextFormField(
       decoration: SharedStyle.textFormFieldDecoration('Last Name'),
       controller: lastNameCon,
       validator: (value) {
-        if(value!.isEmpty){
+        if (value!.isEmpty) {
           return "Last Name is required";
         }
       },
@@ -214,19 +237,19 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget mobileNumber(){
+  Widget mobileNumber() {
     return TextFormField(
       decoration: SharedStyle.textFormFieldDecoration('Mobile Number'),
       controller: mobileNumberCon,
       validator: (value) {
         int? check = int.tryParse(value!);
         // check if empty or not numeric
-        if(check == null){
+        if (check == null) {
           return "Please put valid mobile number";
         }
 
         // check if it has 10 numbers
-        if(value.length < 10){
+        if (value.length < 10) {
           return "Please put 10 digit mobile number";
         }
       },
@@ -236,7 +259,7 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget termsAndPolicyContainer(){
+  Widget termsAndPolicyContainer() {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -255,18 +278,20 @@ class _SignUpState extends State<SignUp> {
             children: [
               Text("I agree with the ", style: SharedStyle.regularText),
               InkWell(
-                onTap: (){
-                  print("object");
-                }, 
-                child: Text("Terms of Conditions", style: SharedStyle.redRegularText,)
-              ),
+                  onTap: () {
+                    print("object");
+                  },
+                  child: Text(
+                    "Terms of Conditions",
+                    style: SharedStyle.redRegularText,
+                  )),
               Text(" and ", style: SharedStyle.regularText),
               InkWell(
-                onTap: (){
-                  print("object2");
-                }, 
-                child: Text("Privacy and Policy", style: SharedStyle.redRegularText)
-              ),
+                  onTap: () {
+                    print("object2");
+                  },
+                  child: Text("Privacy and Policy",
+                      style: SharedStyle.redRegularText)),
             ],
           ),
         )
@@ -274,9 +299,9 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget signUp(){
-    Function() _onPressedFunction = ()async{
-      if(!formKey.currentState!.validate()){
+  Widget signUp() {
+    Function() _onPressedFunction = () async {
+      if (!formKey.currentState!.validate()) {
         return;
       }
 
@@ -299,24 +324,27 @@ class _SignUpState extends State<SignUp> {
 
       setState(() => loading = false);
 
-      if(_response['status'] == 200){ // successful
+      if (_response['status'] == 200) {
+        // successful
         Navigator.pushNamed(context, 'signin');
-      }else if(_response['status'] == 422){ // email has already been taken
+      } else if (_response['status'] == 422) {
+        // email has already been taken
         PopUp.error(context, responseBody['errors']['full_messages'][0]);
-      }else{  // 500 error
+      } else {
+        // 500 error
         PopUp.error(context);
       }
     };
 
     return SharedWidgets.redBtn(_onPressedFunction, 'Sign Up', width, height);
   }
-  
-  Widget signIn(){
+
+  Widget signIn() {
     return Center(
       child: TextButton(
-        onPressed: (){
+        onPressed: () {
           Navigator.pushNamed(context, SignIn.routeName);
-        }, 
+        },
         child: Text(
           "Sign in.",
           style: SharedStyle.linkText,

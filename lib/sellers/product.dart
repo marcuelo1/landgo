@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ryve_mobile/sellers/product_style.dart';
-import 'package:ryve_mobile/shared/headers.dart';
-import 'package:ryve_mobile/shared/loading.dart';
-import 'package:ryve_mobile/shared/pop_up.dart';
+import 'package:ryve_mobile/core/entities/headers.dart';
+import 'package:ryve_mobile/core/widgets/loading.dart';
+import 'package:ryve_mobile/core/widgets/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
-import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
-import 'package:ryve_mobile/shared/shared_widgets.dart';
+import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
 
 class Product extends StatefulWidget {
   const Product({ Key? key }) : super(key: key);

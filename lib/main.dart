@@ -9,7 +9,7 @@ import 'package:ryve_mobile/locations/list_of_locations.dart';
 import 'package:ryve_mobile/sellers/show_seller.dart';
 import 'package:ryve_mobile/sellers/product.dart';
 import 'package:ryve_mobile/sellers/sellers.dart';
-import 'package:ryve_mobile/shared/headers.dart';
+import 'package:ryve_mobile/core/entities/headers.dart';
 import 'package:ryve_mobile/features/sidebar/list_of_transactions.dart';
 import 'package:ryve_mobile/features/sidebar/list_of_vouchers.dart';
 import 'package:ryve_mobile/features/sidebar/profile.dart';
@@ -18,7 +18,7 @@ import 'package:ryve_mobile/features/sign_up/sign_up.dart';
 import 'package:ryve_mobile/features/splash/splash.dart';
 import 'package:ryve_mobile/transactions/current_transaction_show.dart';
 import 'package:ryve_mobile/transactions/current_transactions.dart';
-import 'welcome_page/welcome_page.dart';
+import 'features/welcome_page/welcome_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

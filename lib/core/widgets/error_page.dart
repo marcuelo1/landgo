@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ryve_mobile/shared/shared_widgets.dart';
+import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
 
 class ErrorPage extends StatefulWidget {
   const ErrorPage({ Key? key }) : super(key: key);

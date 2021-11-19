@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:ryve_mobile/home/home.dart';
-import 'package:ryve_mobile/shared/headers.dart';
+import 'package:ryve_mobile/features/home/home.dart';
+import 'package:ryve_mobile/core/entities/headers.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
-import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
-import 'package:ryve_mobile/sign_in/sign_in.dart';
+import 'package:ryve_mobile/features/sign_in/sign_in.dart';
 
 class Splash extends StatefulWidget {
   static const String routeName = "splash";
@@ -22,9 +22,9 @@ class _SplashState extends State<Splash> {
   late double height;
   late double scale;
 
-  Map<String,String> _headers = {};
+  Map<String, String> _headers = {};
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _headers = Headers.getHeaders();
     print(_headers);
@@ -37,42 +37,39 @@ class _SplashState extends State<Splash> {
     scale = SharedStyle.referenceWidth / width;
 
     return FutureBuilder(
-      future: SharedFunction.getData(_dataUrl, _headers),
-      builder: (BuildContext context, AsyncSnapshot snapshot){
-        // Connection state of getting the data
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return Text("check internet");
-          case ConnectionState.waiting: // Retrieving
-            return content(context);
-          default: // Success of connecting to back end
-            var response = snapshot.data;
-            print(response);
-            print("====================");
-            // check status of response
-            if (response['status'] == 200) {
-              return Home();
-            } else {
-              return SignIn();
-            }
+        future: SharedFunction.getData(_dataUrl, _headers),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          // Connection state of getting the data
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return Text("check internet");
+            case ConnectionState.waiting: // Retrieving
+              return content(context);
+            default: // Success of connecting to back end
+              var response = snapshot.data;
+              print(response);
+              print("====================");
+              // check status of response
+              if (response['status'] == 200) {
+                return Home();
+              } else {
+                return SignIn();
+              }
             // return content(context);
-        }
-      }
-    );
+          }
+        });
   }
 
-  Widget content(BuildContext context){
+  Widget content(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: SharedStyle.white,
-        body: Center(
-          child: Container(
+        child: Scaffold(
+      backgroundColor: SharedStyle.white,
+      body: Center(
+        child: Container(
             width: SharedFunction.scaleWidth(234, width),
             height: SharedFunction.scaleHeight(324, height),
-            child: Image.asset('images/logo_white.png')
-          ),
-        ),
-      )
-    );
+            child: Image.asset('images/logo_white.png')),
+      ),
+    ));
   }
 }

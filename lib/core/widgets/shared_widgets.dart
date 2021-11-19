@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ryve_mobile/features/cart/cart.dart';
 import 'package:ryve_mobile/locations/list_of_locations.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
-import 'package:ryve_mobile/shared/shared_style.dart';
+import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/features/sidebar/list_of_transactions.dart';
 import 'package:ryve_mobile/features/sidebar/list_of_vouchers.dart';
