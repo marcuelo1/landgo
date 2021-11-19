@@ -7,7 +7,8 @@ import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
-import 'package:ryve_mobile/features/sign_in/sign_in.dart';
+import 'package:ryve_mobile/features/sign_in/views/sign_in.dart';
+import 'package:ryve_mobile/features/sign_up/controllers/sign_up_controller.dart';
 import 'package:http/http.dart' as http;
 
 class SignUp extends StatefulWidget {
@@ -18,6 +19,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  SignUpController con = SignUpController();
   // dimensions of needed in displays
   final double signUpBtnWidth = 300;
   final double signUpBtnHeight = 60;
@@ -33,12 +35,12 @@ class _SignUpState extends State<SignUp> {
   final formKey = GlobalKey<FormState>();
 
   // Page and variable for values of the form
-  var _email;
-  var _password;
-  var _confirmPassword;
-  var _firstName;
-  var _lastName;
-  var _mobileNumber;
+  // var _email;
+  // var _password;
+  // var _confirmPassword;
+  // var _firstName;
+  // var _lastName;
+  // var _mobileNumber;
 
   bool isChecked = false;
   bool loading = false;
@@ -148,22 +150,8 @@ class _SignUpState extends State<SignUp> {
     return TextFormField(
       decoration: SharedStyle.textFormFieldDecoration('Email'),
       controller: emailCon,
-      validator: (value) {
-        // check if input field is empty
-        if (value!.isEmpty) {
-          return "Email is required";
-        }
-
-        // check if input is valid email
-        if (!RegExp(
-                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-            .hasMatch(value)) {
-          return "Please enter a valid email";
-        }
-      },
-      onSaved: (value) {
-        _email = value;
-      },
+      validator: con.validateEmail,
+      onSaved: con.saveEmail,
     );
   }
 
@@ -172,17 +160,8 @@ class _SignUpState extends State<SignUp> {
       obscureText: true,
       decoration: SharedStyle.textFormFieldDecoration('Password'),
       controller: passwordCon,
-      validator: (value) {
-        // check if input field is empty
-        if (value!.isEmpty) {
-          return "Password is required";
-        }
-
-        _password = value;
-      },
-      onSaved: (value) {
-        _password = value;
-      },
+      validator: con.validatePassword,
+      onSaved: con.savePassword,
     );
   }
 
@@ -191,19 +170,8 @@ class _SignUpState extends State<SignUp> {
       obscureText: true,
       decoration: SharedStyle.textFormFieldDecoration('Confirm Password'),
       controller: confirmPasswordCon,
-      validator: (value) {
-        // check if input field is empty
-        if (value!.isEmpty) {
-          return "Confirm Password is required";
-        }
-        // check if password and confirm password is the same
-        if (value != _password) {
-          return "Confirm Password is not same with Password";
-        }
-      },
-      onSaved: (value) {
-        _confirmPassword = value;
-      },
+      validator: con.validateConfirmPassword,
+      onSaved: con.saveConfirmPassword,
     );
   }
 
@@ -211,14 +179,8 @@ class _SignUpState extends State<SignUp> {
     return TextFormField(
       decoration: SharedStyle.textFormFieldDecoration('First Name'),
       controller: firstNameCon,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "First Name is required";
-        }
-      },
-      onSaved: (value) {
-        _firstName = value;
-      },
+      validator: con.validateFirstname,
+      onSaved: con.saveFirstName,
     );
   }
 
@@ -226,14 +188,8 @@ class _SignUpState extends State<SignUp> {
     return TextFormField(
       decoration: SharedStyle.textFormFieldDecoration('Last Name'),
       controller: lastNameCon,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Last Name is required";
-        }
-      },
-      onSaved: (value) {
-        _lastName = value;
-      },
+      validator: con.validateLastName,
+      onSaved: con.saveLastName,
     );
   }
 
@@ -241,21 +197,8 @@ class _SignUpState extends State<SignUp> {
     return TextFormField(
       decoration: SharedStyle.textFormFieldDecoration('Mobile Number'),
       controller: mobileNumberCon,
-      validator: (value) {
-        int? check = int.tryParse(value!);
-        // check if empty or not numeric
-        if (check == null) {
-          return "Please put valid mobile number";
-        }
-
-        // check if it has 10 numbers
-        if (value.length < 10) {
-          return "Please put 10 digit mobile number";
-        }
-      },
-      onSaved: (value) {
-        _mobileNumber = value;
-      },
+      validator: con.validateMobileNumber,
+      onSaved: con.saveMoblieNumber,
     );
   }
 
@@ -300,43 +243,22 @@ class _SignUpState extends State<SignUp> {
   }
 
   Widget signUp() {
-    Function() _onPressedFunction = () async {
-      if (!formKey.currentState!.validate()) {
-        return;
-      }
-
-      setState(() {
-        loading = true;
-      });
-      formKey.currentState!.save();
-
-      // Sends data to back end
-      var url = '${SharedUrl.root}/${SharedUrl.version}/buyers';
-      var data = {
-        "email": _email,
-        "password": _password,
-        "first_name": _firstName,
-        "last_name": _lastName,
-        "phone_number": _mobileNumber
-      };
-      var _response = await SharedFunction.sendData(url, {}, data);
-      Map responseBody = _response['body'];
-
-      setState(() => loading = false);
-
-      if (_response['status'] == 200) {
-        // successful
-        Navigator.pushNamed(context, 'signin');
-      } else if (_response['status'] == 422) {
-        // email has already been taken
-        PopUp.error(context, responseBody['errors']['full_messages'][0]);
-      } else {
-        // 500 error
-        PopUp.error(context);
-      }
-    };
-
-    return SharedWidgets.redBtn(_onPressedFunction, 'Sign Up', width, height);
+    return SharedWidgets.redBtn(
+        onPressed: () async {
+          if (!formKey.currentState!.validate()) {
+            return;
+          }
+          setState(() {
+            loading = true;
+          });
+          formKey.currentState!.save();
+          var _response = await con.sendData(context);
+          setState(() => loading = false);
+          return _response;
+        },
+        name: 'Sign Up',
+        width: width,
+        height: height);
   }
 
   Widget signIn() {

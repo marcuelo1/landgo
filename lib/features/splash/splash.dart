@@ -4,7 +4,7 @@ import 'package:ryve_mobile/core/entities/headers.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
-import 'package:ryve_mobile/features/sign_in/sign_in.dart';
+import 'package:ryve_mobile/features/sign_in/views/sign_in.dart';
 
 class Splash extends StatefulWidget {
   static const String routeName = "splash";

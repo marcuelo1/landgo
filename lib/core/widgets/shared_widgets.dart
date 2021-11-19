@@ -7,7 +7,7 @@ import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/features/sidebar/list_of_transactions.dart';
 import 'package:ryve_mobile/features/sidebar/list_of_vouchers.dart';
 import 'package:ryve_mobile/features/sidebar/profile.dart';
-import 'package:ryve_mobile/features/sign_in/sign_in.dart';
+import 'package:ryve_mobile/features/sign_in/views/sign_in.dart';
 import 'package:ryve_mobile/transactions/current_transactions.dart';
 
 class SharedWidgets {
@@ -463,11 +463,11 @@ class SharedWidgets {
 
   // BUTTONS
   static Widget redBtn(
-      Function() function, String name, double width, double height) {
+      {required void Function()onPressed, String name = "", double width = 0, double height = 0}) {
     return Container(
       decoration: SharedStyle.btnContainerDecor,
       child: ElevatedButton(
-          onPressed: function,
+          onPressed: onPressed,
           style: SharedStyle.redBtn,
           child: Container(
             width: SharedFunction.scaleWidth(SharedStyle.btnWidth, width),

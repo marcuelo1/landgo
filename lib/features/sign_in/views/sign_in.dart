@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ryve_mobile/features/home/home.dart';
-import 'package:ryve_mobile/core/entities/headers.dart';
 import 'package:ryve_mobile/core/widgets/loading.dart';
-import 'package:ryve_mobile/core/widgets/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/core/styles/shared_style.dart';
-import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
-import 'package:ryve_mobile/features/sign_in/sign_in_style.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-import 'package:ryve_mobile/features/sign_up/sign_up.dart';
+import 'package:ryve_mobile/features/sign_in/styles/sign_in_style.dart';
+import 'package:ryve_mobile/features/sign_in/controllers/sign_in_controller.dart';
+import 'package:ryve_mobile/features/sign_up/views/sign_up.dart';
 
 class SignIn extends StatefulWidget {
   static const String routeName = "signin";
@@ -22,8 +16,8 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   // data url
-  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyers/sign_in";
-
+  //String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyers/sign_in";
+  SignInController con = SignInController();
   // dimensions of needed in displays
   final double signInBtnWidth = 300;
   final double signInBtnHeight = 60;
@@ -37,8 +31,8 @@ class _SignInState extends State<SignIn> {
   final formKey = GlobalKey<FormState>();
 
   // form variables
-  var _email;
-  var _password;
+  // var _email;
+  // var _password;
 
   // loading screen
   bool loading = false;
@@ -107,20 +101,8 @@ class _SignInState extends State<SignIn> {
   Widget email() {
     return TextFormField(
       decoration: SharedStyle.textFormFieldDecoration('Email'),
-      validator: (value) {
-        // check if input field is empty
-        if (value!.isEmpty) {
-          return "Email is required";
-        }
-
-        // check if input is valid email
-        if (!RegExp(
-                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-            .hasMatch(value)) {
-          return "Please enter a valid email";
-        }
-      },
-      onSaved: (value) => _email = value,
+      validator: con.validateEmail,
+      onSaved: con.saveEmail,
     );
   }
 
@@ -128,12 +110,8 @@ class _SignInState extends State<SignIn> {
     return TextFormField(
       obscureText: true,
       decoration: SharedStyle.textFormFieldDecoration('Password'),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Password is required";
-        }
-      },
-      onSaved: (value) => _password = value,
+      validator: con.validatePassword,
+      onSaved: con.savePassword,
     );
   }
 
@@ -147,41 +125,22 @@ class _SignInState extends State<SignIn> {
   }
 
   Widget signInBtn() {
-    Function() _onPressedFunction = () async {
-      if (!formKey.currentState!.validate()) {
-        return;
-      }
-      // start loading page
-      setState(() => loading = true);
-      // Save form inputs to their variables
-      formKey.currentState!.save();
+    return SharedWidgets.redBtn(
+      onPressed: () async {
+        if (!formKey.currentState!.validate()) {
+          return;
+        }
+        setState(() => loading = true);
+        formKey.currentState!.save();
 
-      // Send data to backend
-      Map _data = {"email": _email, "password": _password};
-      Map _response = await SharedFunction.sendData(_dataUrl, {}, _data);
-      Map _responseBody = _response['body'];
-
-      // end loading page
-      setState(() => loading = false);
-
-      if (_response['status'] == 200) {
-        // successful
-        // save headers
-        await Headers.setHeaders(_response['headers']);
-        // go to home
-        Navigator.pushNamed(context, Home.routeName);
-      } else if (_response['status'] == 422) {
-        // doesnt have account
-        PopUp.error(context, _responseBody['status']);
-      } else if (_response['status'] == 401) {
-        // invalid creds
-        PopUp.error(context, _responseBody['errors'][0]);
-      } else {
-        // 500 status code
-        PopUp.error(context);
-      }
-    };
-    return SharedWidgets.redBtn(_onPressedFunction, 'Sign In', width, height);
+        var _response = await con.sendData(context);
+        setState(() => loading = false);
+        return _response;
+      },
+      name: 'Sign In',
+      width: width,
+      height: height,
+    );
   }
 
   Widget createAcc() {
