@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:landgo_seller/core/entities/headers.dart';
+import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/network/app_url.dart';
 import 'package:landgo_seller/features/pending_transactions/views/pending_transactions.dart';
 import 'package:landgo_seller/core/widgets/pop_up.dart';
+import 'package:landgo_seller/features/splash/controllers/splash_controller.dart';
 
 class SignInController {
   String signInUrl = "${AppUrl.root}/${AppUrl.version}/sellers/sign_in";
@@ -43,7 +44,9 @@ class SignInController {
 
     if(_response['status'] == 200){ // successful
       // save headers
-      Headers.save(_response['headers']);
+      SharedPreferencesData.saveHeader(_response['headers']);
+      // save is_logged_in
+      SharedPreferencesData.saveBoolData(SplashController.isLoggedInString, true);
       // go to home
       Navigator.pushNamed(context, PendingTransactions.routeName);
     }else if(_response['status'] == 422){ // doesnt have account

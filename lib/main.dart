@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:landgo_seller/core/entities/headers.dart';
+import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/features/pending_transactions/controllers/pending_transactions_controller.dart';
 import 'package:landgo_seller/features/pending_transactions/views/pending_transactions.dart';
 import 'package:landgo_seller/features/sign_in/views/sign_in.dart';
@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Headers.init();
+  await SharedPreferencesData.init();
   runApp(
     MultiProvider(
       providers: [

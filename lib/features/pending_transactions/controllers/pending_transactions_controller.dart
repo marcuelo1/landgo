@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:landgo_seller/core/entities/headers.dart';
+import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/models/transaction_model.dart';
 import 'package:landgo_seller/core/network/app_url.dart';
@@ -18,7 +18,7 @@ class PendingTransactionsController extends ChangeNotifier {
 
   // Functions
   void setHeader(){
-    _headers = Headers.getJson();
+    _headers = SharedPreferencesData.getHeader();
     print(_headers);
   }
 

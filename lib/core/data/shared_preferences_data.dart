@@ -1,16 +1,18 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Headers {
-  static String accessToken = 'access-token';
-  static String client = 'client';
-  static String uid = 'uid';
-
+class SharedPreferencesData {
+  // INITIALIZE SHARED PREFERENCES
   static late SharedPreferences _preferences;
   static Future init() async {
     _preferences = await SharedPreferences.getInstance();
   }
 
-  static Map<String, String> getJson(){
+  // HEADERS
+  static String accessToken = 'access-token';
+  static String client = 'client';
+  static String uid = 'uid';
+
+  static Map<String, String> getHeader(){
     return {
       accessToken: _preferences.getString(accessToken).toString(),
       client: _preferences.getString(client).toString(),
@@ -18,10 +20,19 @@ class Headers {
     };
   }
   
-  static void save(Map json)async{
+  static void saveHeader(Map json)async{
     // set headers to shared preferences
     await _preferences.setString(accessToken, json['access-token']);
     await _preferences.setString(client, json['client']);
     await _preferences.setString(uid, json['uid']);
+  }
+
+  // KEY DATA
+  static dynamic getKeyData(String _key){
+    return _preferences.get(_key);
+  }
+
+  static void saveBoolData(String _key, bool _data)async{
+    await _preferences.setBool(_key, _data);
   }
 }

@@ -34,7 +34,6 @@ class _PendingTransactionsState extends State<PendingTransactions> {
 
   @override
   Widget build(BuildContext context) {
-
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
