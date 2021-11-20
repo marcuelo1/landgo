@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/data/shared_preferences_data.dart';
+import 'package:landgo_seller/features/operations/views/operations_view.dart';
 import 'package:landgo_seller/features/pending_transactions/controllers/pending_transactions_controller.dart';
 import 'package:landgo_seller/features/pending_transactions/views/pending_transactions.dart';
 import 'package:landgo_seller/features/profile/controllers/profile_controller.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         SignIn.routeName: (context) => SignIn(),
         PendingTransactions.routeName: (context) => PendingTransactions(),
         Profile.routeName: (context) => Profile(),
+        OperationsView.routeName: (context) => OperationsView(),
       },
     );
   }

@@ -43,6 +43,8 @@ class SignInController {
     Map _data = {"email": _email, "password": _password};
     Map _response = await HttpRequestFunction.sendData(this.signInUrl, {}, _data);
     Map _responseBody = _response['body'];
+    print("============================= AFTER SELLER SIGN IN");
+    print(_responseBody);
 
     if(_response['status'] == 200){ // successful
       // save headers

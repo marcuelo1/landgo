@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/network/app_url.dart';
+import 'package:landgo_seller/features/operations/views/operations_view.dart';
 import 'package:landgo_seller/features/pending_transactions/views/pending_transactions.dart';
 import 'package:landgo_seller/features/profile/views/profile.dart';
 import 'package:landgo_seller/features/sign_in/views/sign_in.dart';
@@ -142,7 +143,7 @@ class BarWidgets {
             // Profile
             _bottomAppBarBtn(context, Icon(Icons.person), "Profile", Profile.routeName),
             // Operations
-            _bottomAppBarBtn(context, Icon(Icons.settings), "Operations", ""),
+            _bottomAppBarBtn(context, Icon(Icons.settings), "Operations", OperationsView.routeName),
             // Orders
             _bottomAppBarBtn(context, Icon(Icons.receipt_long), "Orders", PendingTransactions.routeName),
             // History
@@ -158,7 +159,7 @@ class BarWidgets {
   static Widget _bottomAppBarBtn(BuildContext context, Icon _icon, String _name, String _route){
     return GestureDetector(
       onTap: (){
-        Navigator.popAndPushNamed(context, _route);
+        Navigator.pushNamedAndRemoveUntil(context, _route, (route) => false);
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,

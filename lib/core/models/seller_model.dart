@@ -43,5 +43,5 @@ class SellerModel extends Seller {
     );
   }
 
-  static get getSeller => jsonDecode(SharedPreferencesData.getKeyData('seller'));
+  static SellerModel get getSeller => SellerModel.fromJson(jsonDecode(SharedPreferencesData.getKeyData('seller')));
 }

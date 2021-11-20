@@ -66,7 +66,7 @@ class _ProfileState extends State<Profile> {
                   Text(pc.seller.address),
                   // Phone Number
                   Text("Phone Number"),
-                  Text(pc.seller.phoneNumber)
+                  Text(pc.seller.phoneNumber),
                   // Schedule
                 ],
               );
