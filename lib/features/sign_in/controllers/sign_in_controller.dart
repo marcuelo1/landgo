@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/core/functions/http_request_function.dart';
@@ -47,6 +49,8 @@ class SignInController {
       SharedPreferencesData.saveHeader(_response['headers']);
       // save is_logged_in
       SharedPreferencesData.saveBoolData(SplashController.isLoggedInString, true);
+      // save seller
+      SharedPreferencesData.saveStringData("seller", jsonEncode(_responseBody['data']));
       // go to home
       Navigator.pushNamed(context, PendingTransactions.routeName);
     }else if(_response['status'] == 422){ // doesnt have account

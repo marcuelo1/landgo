@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/core/entities/seller.dart';
 
 class SellerModel extends Seller {
@@ -35,8 +38,10 @@ class SellerModel extends Seller {
       id: (json['id'] as num).toInt(), 
       name: json['name'], 
       address: json['address'],
-      phoneNumber: json['address'], 
+      phoneNumber: json['phone_number'], 
       image: json['image'], 
     );
   }
+
+  static get getSeller => jsonDecode(SharedPreferencesData.getKeyData('seller'));
 }

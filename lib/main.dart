@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/features/pending_transactions/controllers/pending_transactions_controller.dart';
 import 'package:landgo_seller/features/pending_transactions/views/pending_transactions.dart';
+import 'package:landgo_seller/features/profile/controllers/profile_controller.dart';
 import 'package:landgo_seller/features/profile/views/profile.dart';
 import 'package:landgo_seller/features/sign_in/views/sign_in.dart';
 import 'package:landgo_seller/features/splash/views/splash.dart';
@@ -13,7 +14,8 @@ void main() async{
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => PendingTransactionsController())
+        ChangeNotifierProvider(create: (_) => PendingTransactionsController()),
+        ChangeNotifierProvider(create: (_) => ProfileController())
       ],
       child: const MyApp(),
     )

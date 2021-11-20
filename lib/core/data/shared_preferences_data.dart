@@ -35,4 +35,8 @@ class SharedPreferencesData {
   static void saveBoolData(String _key, bool _data)async{
     await _preferences.setBool(_key, _data);
   }
+
+  static void saveStringData(String _key, String _data)async{
+    await _preferences.setString(_key, _data);
+  }
 }
