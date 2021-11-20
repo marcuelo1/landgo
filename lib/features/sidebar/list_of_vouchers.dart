@@ -8,17 +8,16 @@ import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
-import 'package:ryve_mobile/transactions/current_transaction_show.dart';
 
-class CurrentTransactions extends StatefulWidget {
-  static const String routeName = "current_transaction";
+class ListOfVouchers extends StatefulWidget {
+  static const String routeName = "list_of_vouchers";
 
   @override
-  _CurrentTransactionsState createState() => _CurrentTransactionsState();
+  _ListOfVouchersState createState() => _ListOfVouchersState();
 }
 
-class _CurrentTransactionsState extends State<CurrentTransactions> {
-  String _dataUrl ="${SharedUrl.root}/${SharedUrl.version}/buyer/checkouts/current_transactions";
+class _ListOfVouchersState extends State<ListOfVouchers> {
+  String _dataUrl ="${SharedUrl.root}/${SharedUrl.version}/buyer/vouchers";
 
   // variables for scale functions
   late double width;
@@ -26,7 +25,7 @@ class _CurrentTransactionsState extends State<CurrentTransactions> {
   late double scale;
 
   // variables
-  List currentTransactions = [];
+  List vouchers = [];
   bool refresh = true;
 
   // headers
@@ -43,10 +42,10 @@ class _CurrentTransactionsState extends State<CurrentTransactions> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
-
+    
     return !refresh ? content(context) : FutureBuilder(
       future: SharedFunction.getData(_dataUrl, _headers),
-      builder: (BuildContext context, AsyncSnapshot snapshot){
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
         // Connection state of getting the data
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -66,7 +65,9 @@ class _CurrentTransactionsState extends State<CurrentTransactions> {
             print(responseBody);
             print("============================================================== response body");
 
-            currentTransactions = responseBody['checkout_sellers'];
+            vouchers = responseBody["vouchers"];
+            print(vouchers);
+            print("============================================================== vouchers");
 
             return content(context);
         }
@@ -77,42 +78,18 @@ class _CurrentTransactionsState extends State<CurrentTransactions> {
   Widget content(BuildContext context){
     return SafeArea(
       child: Scaffold(
-        appBar: SharedWidgets.appBar(context),
-        body: currentTransactions.isEmpty ? emptyContent() : currentTransactionsContainer(),
-      )
-    );
-  }
-
-  Widget emptyContent() {
-    return Center(
-      child: Text("No Current Transactions"),
-    );
-  }
-
-  Widget currentTransactionsContainer(){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (var _ct in currentTransactions) ... [
-          GestureDetector(
-            onTap: (){
-              Navigator.pushNamed(context, CurrentTransactionShow.routeName, arguments: {"checkout_seller": _ct});
-            },
-            child: currentTransactionContent(_ct),
+        appBar: SharedWidgets.appBar(context, title: "Vouchers"),
+        body: Center(
+          child: Column(
+            children: [
+              for (var _voucher in vouchers) ... [
+                SharedWidgets.voucher(_voucher, width, height),
+                SizedBox(height: SharedFunction.scaleHeight(10, height),)
+              ]
+            ],
           ),
-          SizedBox(height: SharedFunction.scaleHeight(20, height),)
-        ]
-      ],
-    );
-  }
-
-  Widget currentTransactionContent(Map _ct){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(_ct['seller_name']),
-        Text(_ct['status']),
-      ],
+        ),
+      )
     );
   }
 }

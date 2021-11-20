@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/features/sellers/views/show_seller.dart';
 import 'package:ryve_mobile/core/widgets/error_page.dart';
 import 'package:ryve_mobile/core/entities/headers.dart';
 import 'package:ryve_mobile/core/widgets/loading.dart';
@@ -8,44 +9,49 @@ import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
-import 'package:ryve_mobile/transactions/current_transaction_show.dart';
 
-class CurrentTransactions extends StatefulWidget {
-  static const String routeName = "current_transaction";
+class SearchResults extends StatefulWidget {
+  static const String routeName = "search_results";
 
   @override
-  _CurrentTransactionsState createState() => _CurrentTransactionsState();
+  _SearchResultsState createState() => _SearchResultsState();
 }
 
-class _CurrentTransactionsState extends State<CurrentTransactions> {
-  String _dataUrl ="${SharedUrl.root}/${SharedUrl.version}/buyer/checkouts/current_transactions";
-
+class _SearchResultsState extends State<SearchResults> {
+  // url
+  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyer/search";
+  
   // variables for scale functions
   late double width;
   late double height;
   late double scale;
 
   // variables
-  List currentTransactions = [];
+  String keyword = "";
   bool refresh = true;
+  List sellers = [];
 
-  // headers
-  Map<String, String> _headers = {};
+  // Headers
+  Map<String,String> _headers = {};
   @override
-  void initState() {
+  void initState(){
     super.initState();
     _headers = Headers.getHeaders();
     print(_headers);
   }
-
+  
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
 
+    final Map args = ModalRoute.of(context)!.settings.arguments as Map;
+    keyword = args["keyword"];
+    String _rawUrl = _dataUrl + "?keyword=$keyword";
+
     return !refresh ? content(context) : FutureBuilder(
-      future: SharedFunction.getData(_dataUrl, _headers),
+      future: SharedFunction.getData(_rawUrl, _headers),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         // Connection state of getting the data
         switch (snapshot.connectionState) {
@@ -66,7 +72,7 @@ class _CurrentTransactionsState extends State<CurrentTransactions> {
             print(responseBody);
             print("============================================================== response body");
 
-            currentTransactions = responseBody['checkout_sellers'];
+            sellers = responseBody['sellers'];
 
             return content(context);
         }
@@ -78,41 +84,22 @@ class _CurrentTransactionsState extends State<CurrentTransactions> {
     return SafeArea(
       child: Scaffold(
         appBar: SharedWidgets.appBar(context),
-        body: currentTransactions.isEmpty ? emptyContent() : currentTransactionsContainer(),
-      )
-    );
-  }
-
-  Widget emptyContent() {
-    return Center(
-      child: Text("No Current Transactions"),
-    );
-  }
-
-  Widget currentTransactionsContainer(){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (var _ct in currentTransactions) ... [
-          GestureDetector(
-            onTap: (){
-              Navigator.pushNamed(context, CurrentTransactionShow.routeName, arguments: {"checkout_seller": _ct});
-            },
-            child: currentTransactionContent(_ct),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (var _seller in sellers) ... [
+                GestureDetector(
+                  onTap: (){
+                    Navigator.pushNamed(context, ShowSeller.routeName, arguments: _seller);
+                  },
+                  child: SharedWidgets.seller(_seller, width, height),
+                )
+              ]
+            ],
           ),
-          SizedBox(height: SharedFunction.scaleHeight(20, height),)
-        ]
-      ],
-    );
-  }
-
-  Widget currentTransactionContent(Map _ct){
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(_ct['seller_name']),
-        Text(_ct['status']),
-      ],
+        ),
+      )
     );
   }
 }
