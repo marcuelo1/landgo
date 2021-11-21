@@ -78,7 +78,7 @@ module ApplicationHelper
             id: category.id,
             name: category.name,
             status: category.status,
-            image: category.image.attached? ? Rails.application.routes.url_helpers.url_for(category.image) : no_image()
+            image: category.image.attached? ? category.image.service_url : no_image()
         }
     end
 
@@ -114,7 +114,7 @@ module ApplicationHelper
             product_category_id: product.product_category_id,
             price: product.product_prices.first.price,
             base_price: product.product_prices.first.base_price,
-            image: product.image.attached? ? Rails.application.routes.url_helpers.url_for(product.image) : no_image()
+            image: product.image.attached? ? product.image.service_url : no_image()
         }
     end
 
@@ -132,7 +132,7 @@ module ApplicationHelper
             phone_number: seller.phone_number,
             rating: seller.rating,
             address: seller.location.address,
-            image: seller.image.attached? ? Rails.application.routes.url_helpers.url_for(seller.image) : no_image()
+            image: seller.image.attached? ? seller.image.service_url : no_image()
         }
     end
 
