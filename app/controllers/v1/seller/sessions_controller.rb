@@ -14,4 +14,9 @@ class V1::Seller::SessionsController < DeviseTokenAuth::SessionsController
         # end
         super
     end
+
+    def render_create_success
+        puts @resource
+        render json: {data: seller_info(@resource)}, status: 200
+    end
 end

@@ -144,6 +144,9 @@ Rails.application.routes.draw do
 
     namespace :seller do
       resources :sellers, except: [:show], path: "" do
+        collection do
+          get :profile
+        end
       end
 
       resources :transactions do
