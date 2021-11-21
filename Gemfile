@@ -71,4 +71,5 @@ group :production do
   gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
   gem 'ed25519', '>= 1.2', '< 2.0'
   gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'
+  gem "aws-sdk-s3", require: false
 end
