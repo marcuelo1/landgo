@@ -152,6 +152,9 @@ Rails.application.routes.draw do
       resources :transactions do
         collection do
           get :pending
+          put :accept
+          get :details
+          put :to_deliver
         end
       end
     end
