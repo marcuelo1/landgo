@@ -1,5 +1,6 @@
 class V1::Seller::SessionsController < DeviseTokenAuth::SessionsController   
     include DeviseTokenAuth::Concerns::SetUserByToken
+    include SellerHelper
 
     def create
         seller = Seller.find_by(email: params[:email])
