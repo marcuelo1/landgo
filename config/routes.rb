@@ -153,7 +153,6 @@ Rails.application.routes.draw do
         collection do
           get :pending
           put :accept
-          get :details
           put :to_deliver
         end
       end
