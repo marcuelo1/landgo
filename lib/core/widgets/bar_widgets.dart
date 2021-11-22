@@ -24,7 +24,7 @@ class BarWidgets {
           ]
         ],
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.yellow,
       iconTheme: IconThemeData(color: iconThemeColor),
       titleSpacing: 0,
       elevation: 0,

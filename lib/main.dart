@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/data/shared_preferences_data.dart';
+import 'package:landgo_seller/features/operations/controllers/list_of_products_controller.dart';
 import 'package:landgo_seller/features/operations/views/list_of_products_view.dart';
 import 'package:landgo_seller/features/operations/views/operations_view.dart';
 import 'package:landgo_seller/features/pending_transactions/controllers/pending_transactions_controller.dart';
@@ -17,7 +18,8 @@ void main() async{
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PendingTransactionsController()),
-        ChangeNotifierProvider(create: (_) => ProfileController())
+        ChangeNotifierProvider(create: (_) => ProfileController()),
+        ChangeNotifierProvider(create: (_) => ListOfProductsController())
       ],
       child: const MyApp(),
     )

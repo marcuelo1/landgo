@@ -14,7 +14,6 @@ class ProfileController extends SellerController {
   Map<String, String> _headers = {};
 
   // Public Variable
-  SellerModel get seller => super.seller;
 
   // Functions
   void setHeader(){

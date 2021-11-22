@@ -18,7 +18,6 @@ class SellerModel extends Seller {
     image: image
   );
 
-
   static fromJson(json){
     if(json is List){ // if json received is an array
       List<SellerModel> _data = [];
