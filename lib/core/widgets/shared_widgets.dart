@@ -9,6 +9,7 @@ import 'package:ryve_mobile/features/sidebar/list_of_vouchers.dart';
 import 'package:ryve_mobile/features/sidebar/profile.dart';
 import 'package:ryve_mobile/features/sign_in/views/sign_in.dart';
 import 'package:ryve_mobile/transactions/current_transactions.dart';
+import 'package:ryve_mobile/core/models/seller_model.dart';
 
 class SharedWidgets {
   /////////////////////
@@ -319,16 +320,16 @@ class SharedWidgets {
   /////////////////////
   static final double sellerWidth = 327;
   static final double sellerHeight = 198;
-  static final double sellerFinalHeight = 229;
+  static final double sellerFinalHeight = 250;
   static final double sellerImageWidth = 327;
   static final double sellerImageHeight = 125;
   static final double sellerAddressWidth = 232;
 
-  static Widget seller(Map seller, double width, double height) {
-    String url = seller['image'];
-    String name = seller['name'];
-    String address = seller['address'];
-    String rating = seller['rating'].toStringAsFixed(1);
+  static Widget seller(SellerModel seller, double width, double height) {
+    String url = seller.image;
+    String name = seller.name;
+    String address = seller.address;
+    String rating = seller.rating.toString();
 
     return Column(
       children: [
@@ -463,7 +464,10 @@ class SharedWidgets {
 
   // BUTTONS
   static Widget redBtn(
-      {required void Function()onPressed, String name = "", double width = 0, double height = 0}) {
+      {required void Function() onPressed,
+      String name = "",
+      double width = 0,
+      double height = 0}) {
     return Container(
       decoration: SharedStyle.btnContainerDecor,
       child: ElevatedButton(

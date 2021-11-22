@@ -10,6 +10,7 @@ import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'dart:convert';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
+import 'package:ryve_mobile/core/models/seller_model.dart';
 
 class Home extends StatefulWidget {
   static const String routeName = "home";
@@ -38,7 +39,7 @@ class _HomeState extends State<Home> {
   List products = [];
 
   // sellers
-  List sellers = [];
+  List<SellerModel> sellers = [];
 
   Map selected_location = {};
   Map _buyer = {};
@@ -82,7 +83,7 @@ class _HomeState extends State<Home> {
                 categories = responseBody['categories'];
                 selected_location = responseBody['selected_location'];
                 products = responseBody['products'];
-                sellers = responseBody['sellers'];
+                sellers = SellerModel.fromJson(responseBody['sellers']);
 
                 return content();
               }
@@ -216,6 +217,9 @@ class _HomeState extends State<Home> {
       ); // empty
     }
 
+    print(
+        "food category==================================================================");
+    print(category);
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, Sellers.routeName, arguments: {
