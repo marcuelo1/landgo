@@ -12,6 +12,44 @@ module SellerHelper
         }
     end
 
+    def products_info products
+        products.collect do |p|
+            product_info(p)
+        end
+    end
+
+    def product_info product
+        sizes = product.product_prices.collect do |pp|
+            {
+                name: pp.product_size.name,
+                price: pp.price,
+                base_price: pp.base_price
+            }
+        end
+
+        add_on_groups = product.product_add_ons.collect do |pao|
+            add_on_group = pao.add_on_group
+            
+            {
+                id: add_on_group.id,
+                name: add_on_group.name,
+                require: pao.require,
+                num_of_select: pao.num_of_select,
+                add_ons: add_on_group.add_ons.map{|ao| {id: ao.id, name: ao.name, price: ao.price} }
+            }
+        end
+
+        return {
+            id: product.id,
+            name: product.name,
+            product_category_name: product.product_category.name,
+            description: product.description,
+            image: product.image.attached? ? Rails.application.routes.url_helpers.url_for(product.image) : no_image(),
+            sizes: sizes,
+            add_on_groups: add_on_groups
+        }
+    end
+
     def transaction_details css
         css.collect do |cs|
             transaction_detail(cs)

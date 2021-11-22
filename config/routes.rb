@@ -156,6 +156,10 @@ Rails.application.routes.draw do
           put :to_deliver
         end
       end
+
+      resources :products do
+        
+      end
     end
     ## E N D  O F  S E L L E R ##
     #############################
