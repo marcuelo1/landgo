@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/functions/style_function.dart';
+import 'package:landgo_seller/core/models/add_on_group_model.dart';
 import 'package:landgo_seller/core/models/product_add_on_groups_model.dart';
 import 'package:landgo_seller/core/models/product_model.dart';
 import 'package:landgo_seller/core/models/product_size_model.dart';
@@ -43,53 +44,55 @@ class _ListOfProductsViewState extends State<ListOfProductsView> {
         backgroundColor: SharedStyle.red,
         body: Consumer<ListOfProductsController>(
           builder: (_, lofc, __) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text("Product"),
-                // Add Product Button
-                ElevatedButton(
-                  onPressed: (){}, 
-                  child: Text("Add Product")
-                ),
-                Divider(thickness: 2),
-                // List of Products
-                for (ProductModel product in lofc.products) ... [
-                  CardWidgets.card(
-                    cardWidth: 250, 
-                    referenceWidth: width, 
-                    child: Column(
-                      children: [
-                        // head
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // Image
-                            _buildProductThumb(product),
-                            // Info
-                            _buildProductInfo(product),
-                            // Edit Button
-                            // ElevatedButton(
-                            //   onPressed: (){}, 
-                            //   child: Text("Edit")
-                            // ),
-                            // View Details
-                            ElevatedButton(
-                              onPressed: () => con.viewDetails(product.id), 
-                              child: Text("View")
-                            ),
-                          ],
-                        ),
-                        // body
-                        if(con.isShow[product.id] == true)...[
-                          _buildProductBody(product)
-                        ]
-                      ],
-                    )
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text("Product"),
+                  // Add Product Button
+                  ElevatedButton(
+                    onPressed: (){}, 
+                    child: Text("Add Product")
                   ),
-                  SizedBox(height: 10,)
-                ]
-              ],
+                  Divider(thickness: 2),
+                  // List of Products
+                  for (ProductModel product in lofc.products) ... [
+                    CardWidgets.card(
+                      cardWidth: 250, 
+                      referenceWidth: width, 
+                      child: Column(
+                        children: [
+                          // head
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              // Image
+                              _buildProductThumb(product),
+                              // Info
+                              _buildProductInfo(product),
+                              // Edit Button
+                              // ElevatedButton(
+                              //   onPressed: (){}, 
+                              //   child: Text("Edit")
+                              // ),
+                              // View Details
+                              ElevatedButton(
+                                onPressed: () => con.viewDetails(product.id), 
+                                child: Text("View")
+                              ),
+                            ],
+                          ),
+                          // body
+                          if(con.isShow[product.id] == true)...[
+                            _buildProductBody(product)
+                          ]
+                        ],
+                      )
+                    ),
+                    SizedBox(height: 10,)
+                  ]
+                ],
+              ),
             );
           }
         ),
@@ -183,7 +186,25 @@ class _ListOfProductsViewState extends State<ListOfProductsView> {
                   Text("Num of Selected Choices: ${_paog.numOfSelect.toString()}"),
                 ],
               ),
-              Text("Add Ons")
+              Table(
+                border: TableBorder.all(color: Colors.black, style: BorderStyle.solid, width: 1),
+                children: [
+                  TableRow(
+                    children: [
+                      Text("Name"),
+                      Text("Price"),
+                    ]
+                  ),
+                  for (AddOnModel _ao in _paog.addOns) ...[
+                    TableRow(
+                      children: [
+                        Text(_ao.name),
+                        Text(_ao.price.toStringAsFixed(2)),
+                      ]
+                    ),
+                  ]
+                ],
+              )
             ]
           ),
         ]
