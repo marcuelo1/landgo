@@ -1,4 +1,17 @@
 module RiderHelper
+
+    def rider_info(rider)
+        {
+            id: rider.id,
+            email: rider.email,
+            first_name: rider.first_name,
+            last_name: rider.last_name,
+            phone_number: rider.phone_number,
+            name: rider.name,
+            status: rider.status_int,
+        }
+    end
+    
     def current_transaction_info(checkout_seller)
         checkout = checkout_seller.checkout
         seller = checkout_seller.seller
