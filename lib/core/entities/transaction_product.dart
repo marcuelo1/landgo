@@ -2,12 +2,14 @@ class TransactionProduct {
   int productId;
   int quantity;
   String size;
-  List addOns;
+  List<String> addOns;
+  String name;
 
   TransactionProduct({
     required this.productId,
     required this.quantity,
     required this.size,
-    required this.addOns
+    required this.addOns,
+    required this.name
   });
 }

@@ -1,4 +1,6 @@
 import 'package:landgo_seller/core/entities/transaction.dart';
+import 'package:landgo_seller/core/entities/transaction_product.dart';
+import 'package:landgo_seller/core/models/transaction_product_model.dart';
 
 class TransactionModel extends Transaction {
   TransactionModel({
@@ -6,13 +8,15 @@ class TransactionModel extends Transaction {
     required double total,
     required String status,
     required DateTime createdAt, 
-    required DateTime updatedAt
+    required DateTime updatedAt,
+    required List<TransactionProductModel> products
   }) : super(
     id: id, 
     total: total,
     status: status,
     createdAt: createdAt,
-    updatedAt: updatedAt
+    updatedAt: updatedAt,
+    products: products
   );
 
   String get idString => id.toString();
@@ -41,6 +45,7 @@ class TransactionModel extends Transaction {
       status: json['status'],
       createdAt: (json['createdAt'] as DateTime), 
       updatedAt: (json['updatedAt'] as DateTime), 
+      products: TransactionProductModel.fromJson(json['products'])
     );
   }
 

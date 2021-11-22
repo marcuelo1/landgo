@@ -5,12 +5,14 @@ class TransactionProductModel extends TransactionProduct {
     required int productId,
     required int quantity,
     required String size,
-    required List addOns
+    required String name,
+    required List<String> addOns
   }) : super(
     productId: productId,
     quantity: quantity,
     size: size,
-    addOns: addOns
+    addOns: addOns,
+    name: name
   );
   
   static fromJson(json){
@@ -32,8 +34,10 @@ class TransactionProductModel extends TransactionProduct {
       productId: (json['product_id'] as num).toInt(), 
       quantity: (json['quantity'] as num).toInt(), 
       size: json['size'],
-      addOns: json['add_ons']
+      addOns: List<String>.from(json['add_ons']),
+      name: json['name']
     );
   }
 
+  String get addOnsString => this.addOns.join(', ');
 }

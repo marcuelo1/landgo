@@ -11,10 +11,10 @@ class PendingTransactionsController extends ChangeNotifier {
   // Private Variables
   String _getPendingTransactionsDataUrl = "${AppUrl.root}/${AppUrl.version}/seller/transactions/pending";
   String _acceptTransactionUrl = "${AppUrl.root}/${AppUrl.version}/seller/transactions/accept";
-  String _transactionDetailsUrl = "${AppUrl.root}/${AppUrl.version}/seller/transactions/details";
   String _toDeliverTransactionUrl = "${AppUrl.root}/${AppUrl.version}/seller/transactions/to_deliver";
   List<TransactionModel> _transactions = [];
   Map<String, String> _headers = {};
+  Map isShow = {};
 
   // Public Variable
   UnmodifiableListView<TransactionModel> get transactions => UnmodifiableListView(_transactions);
@@ -72,14 +72,11 @@ class PendingTransactionsController extends ChangeNotifier {
   void declinceTransaction(){}
 
   void transactionDetails(int _transactionId)async{
-    String _rawUrl = _transactionDetailsUrl + "?transaction_id=$_transactionId";
-    Map _response = await HttpRequestFunction.getData(_rawUrl, _headers);
-    Map _responseBody = _response['body'];
-    print("=============================");
-    print(_responseBody);
-
-    List<TransactionProductModel> _transactionProducts = TransactionProductModel.fromJson(_responseBody['order']);
-
-    print(_transactionProducts);
+    if(isShow[_transactionId] == true){
+      isShow[_transactionId] = false;
+    }else{
+      isShow[_transactionId] = true;
+    }
+    notifyListeners();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/functions/style_function.dart';
 import 'package:landgo_seller/core/models/transaction_model.dart';
+import 'package:landgo_seller/core/models/transaction_product_model.dart';
 import 'package:landgo_seller/core/widgets/bar_widgets.dart';
 import 'package:landgo_seller/core/widgets/card_widgets.dart';
 import 'package:landgo_seller/features/pending_transactions/controllers/pending_transactions_controller.dart';
@@ -90,7 +91,11 @@ class _PendingTransactionsState extends State<PendingTransactions> {
                                   child: const Text("View Details")
                                 )
                               ],
-                            )
+                            ),
+                            // Details
+                            if(con.isShow[transaction.id] == true)...[
+                              _buildTransactionDetails(transaction)
+                            ]
                           ],
                         )
                       )
@@ -102,6 +107,24 @@ class _PendingTransactionsState extends State<PendingTransactions> {
           ),
         ),
       )
+    );
+  }
+
+  Widget _buildTransactionDetails(TransactionModel _transaction){
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (TransactionProductModel product in _transaction.products) ...[
+            Text("Id: ${product.productId.toString()}"),
+            Text("Name: ${product.name}"),
+            Text("Size: ${product.size}"),
+            Text("Quantity: ${product.quantity.toString()}"),
+            Text("AddOns: ${product.addOnsString}"),
+            Divider(height: 1, color: Colors.black,)
+          ]
+        ],
+      ),
     );
   }
 }
