@@ -62,6 +62,7 @@ class _ProductFormViewState extends State<ProductFormView> {
           // product category
           _buildFormProductCategory(),
           // image
+          _buildPickImage()
           // sizes
           // add ons
         ],
@@ -105,6 +106,17 @@ class _ProductFormViewState extends State<ProductFormView> {
             );
           }).toList(),
           onChanged: (value) => pfc.onChangeProductCategory(value as Map),
+        );
+      }
+    );
+  }
+
+  Widget _buildPickImage(){
+    return Consumer<ProductFormController>(
+      builder: (_, pfc, __) {
+        return ElevatedButton(
+          onPressed: () async => pfc.onPickImage(), 
+          child: Text("Upload Image")
         );
       }
     );

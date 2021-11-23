@@ -1,6 +1,6 @@
 import 'dart:collection';
-
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/models/product_model.dart';
@@ -13,7 +13,9 @@ class ProductFormController extends ChangeNotifier {
   bool _isNew = false;
   List _productCategories = [];
   Map<String, String> _headers = {};
-  // form
+  final ImagePicker _picker = ImagePicker();
+
+  // form variables
   String _formName = "";
   String _formDescription = "";
   Map _selectedProductCategory = {"id": 0,   "name": ""};
@@ -75,5 +77,9 @@ class ProductFormController extends ChangeNotifier {
   void onChangeProductCategory(Map value){
     _selectedProductCategory = value;
     notifyListeners();
+  }
+
+  void onPickImage()async{
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
   }
 }
