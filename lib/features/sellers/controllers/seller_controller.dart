@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/core/models/product_model.dart';
 import 'package:ryve_mobile/core/models/seller_model.dart';
 import 'package:ryve_mobile/features/home/home.dart';
 import 'package:ryve_mobile/core/entities/headers.dart';
@@ -16,6 +17,9 @@ class SellerController extends ChangeNotifier {
   List<SellerModel> recent_sellers = []; // recent_sellers
   List<SellerModel> all_sellers = []; // all sellers
 
+  List product_categories = [];
+  List<ProductModel> products = [];
+  
   UnmodifiableListView<SellerModel> get topSellers =>
       UnmodifiableListView(top_sellers);
   UnmodifiableListView<SellerModel> get recentSellers =>
@@ -55,8 +59,10 @@ class SellerController extends ChangeNotifier {
 
     Map _response = await SharedFunction.getData(_dataUrl, _headers);
     Map _responseBody = _response['body'];
-    product_categories = responseBody['product_categories'];
+    product_categories = _responseBody['product_categories'];
     // get products
-    products = responseBody['products'];
+    products = ProductModel.fromJson(_responseBody['products']);
+
+    notifyListeners();
   }
 }

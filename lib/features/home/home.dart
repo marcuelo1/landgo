@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/core/models/product_model.dart';
 import 'package:ryve_mobile/features/home/home_style.dart';
 import 'package:ryve_mobile/features/home/search_page.dart';
 import 'package:ryve_mobile/features/sellers/views/product.dart';
@@ -36,7 +37,7 @@ class _HomeState extends State<Home> {
   late List categories;
 
   // products
-  List products = [];
+  List<ProductModel> products = [];
 
   // sellers
   List<SellerModel> sellers = [];
@@ -82,7 +83,7 @@ class _HomeState extends State<Home> {
                 _buyer = responseBody['buyer'];
                 categories = responseBody['categories'];
                 selected_location = responseBody['selected_location'];
-                products = responseBody['products'];
+                products = ProductModel.fromJson(responseBody['products']);
                 sellers = SellerModel.fromJson(responseBody['sellers']);
 
                 return content();

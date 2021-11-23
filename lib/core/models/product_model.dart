@@ -4,15 +4,19 @@ class ProductModel extends Product {
   ProductModel({
     required int id,
     required String name,
-    required String categoryName,
+    required int product_category_id,
     required String description,
     required String image,
+    required double price,
+    required double base_price,
   }) : super(
           id: id,
           name: name,
-          categoryName: categoryName,
           description: description,
+          product_category_id: product_category_id,
           image: image,
+          price: price,
+          base_price: base_price,
         );
 
   static fromJson(json) {
@@ -35,8 +39,10 @@ class ProductModel extends Product {
     return ProductModel(
       id: (json['id'] as num).toInt(),
       name: json['name'],
-      categoryName: json['product_category_name'],
+      product_category_id: (json['product_category_id'] as num).toInt(),
       description: json['description'],
+      price: json['price'],
+      base_price: json['base_price'],
       image: json['image'],
     );
   }

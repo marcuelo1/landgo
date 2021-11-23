@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/core/models/product_model.dart';
 import 'package:ryve_mobile/features/cart/cart.dart';
 import 'package:ryve_mobile/locations/list_of_locations.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
@@ -205,7 +206,7 @@ class SharedWidgets {
   static final double productImageWidth = 70;
   static final double productImageHeight = 70;
 
-  static Widget product(Map product, double width, double height) {
+  static Widget product(ProductModel product, double width, double height) {
     return Column(
       children: [
         // Space
@@ -227,14 +228,15 @@ class SharedWidgets {
     );
   }
 
-  static Widget _productContent(Map product, double width, double height) {
+  static Widget _productContent(
+      ProductModel product, double width, double height) {
     return Container(
       height: SharedFunction.scaleHeight(productHeight, height),
       width: SharedFunction.scaleWidth(productWidth, width),
       child: Row(
         children: [
           // product image
-          productImage(product['image'], width, height),
+          productImage(product.image, width, height),
           // space
           SizedBox(
             width: SharedFunction.scaleWidth(21, width),
@@ -257,18 +259,18 @@ class SharedWidgets {
     );
   }
 
-  static Widget _productDetails(Map product, double width) {
+  static Widget _productDetails(ProductModel product, double width) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // product name
-        _productName(product['name']),
+        _productName(product.name),
         // product description
-        _productDescription(product['description'], width),
+        _productDescription(product.description, width),
         // product price
-        _productPrice(product['price'], product['base_price'], width)
+        _productPrice(product.price, product.base_price, width)
       ],
     );
   }
