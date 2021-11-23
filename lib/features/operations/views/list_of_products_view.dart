@@ -51,7 +51,7 @@ class _ListOfProductsViewState extends State<ListOfProductsView> {
                   Text("Product"),
                   // Add Product Button
                   ElevatedButton(
-                    onPressed: (){}, 
+                    onPressed: () => lofc.addProductBtn(context), 
                     child: Text("Add Product")
                   ),
                   Divider(thickness: 2),

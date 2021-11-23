@@ -1,11 +1,11 @@
 import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/models/product_model.dart';
 import 'package:landgo_seller/core/models/seller_model.dart';
 import 'package:landgo_seller/core/network/app_url.dart';
+import 'package:landgo_seller/features/operations/views/product_form_view.dart';
 
 class ListOfProductsController extends ChangeNotifier {
   // Private Variables
@@ -47,5 +47,10 @@ class ListOfProductsController extends ChangeNotifier {
       isShow[_productId] = true;
     }
     notifyListeners();
+  }
+
+  void addProductBtn(BuildContext context){
+    ProductModel _newProduct = ProductModel(id: 0, name: "", categoryName: "", description: "", image: "", sizes: [], addOnGroups: []);
+    Navigator.pushNamed(context, ProductFormView.routeName, arguments: {"product": _newProduct});
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/features/operations/controllers/list_of_products_controller.dart';
+import 'package:landgo_seller/features/operations/controllers/product_form_controller.dart';
 import 'package:landgo_seller/features/operations/views/list_of_products_view.dart';
 import 'package:landgo_seller/features/operations/views/operations_view.dart';
+import 'package:landgo_seller/features/operations/views/product_form_view.dart';
 import 'package:landgo_seller/features/pending_transactions/controllers/pending_transactions_controller.dart';
 import 'package:landgo_seller/features/pending_transactions/views/pending_transactions.dart';
 import 'package:landgo_seller/features/profile/controllers/profile_controller.dart';
@@ -19,7 +21,8 @@ void main() async{
       providers: [
         ChangeNotifierProvider(create: (_) => PendingTransactionsController()),
         ChangeNotifierProvider(create: (_) => ProfileController()),
-        ChangeNotifierProvider(create: (_) => ListOfProductsController())
+        ChangeNotifierProvider(create: (_) => ListOfProductsController()),
+        ChangeNotifierProvider(create: (_) => ProductFormController())
       ],
       child: const MyApp(),
     )
@@ -42,6 +45,7 @@ class MyApp extends StatelessWidget {
         Profile.routeName: (context) => Profile(),
         OperationsView.routeName: (context) => OperationsView(),
         ListOfProductsView.routeName: (context) => ListOfProductsView(),
+        ProductFormView.routeName: (context) => ProductFormView()
       },
     );
   }
