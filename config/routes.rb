@@ -158,7 +158,9 @@ Rails.application.routes.draw do
       end
 
       resources :products do
-        
+        collection do
+          get :product_form
+        end
       end
     end
     ## E N D  O F  S E L L E R ##
