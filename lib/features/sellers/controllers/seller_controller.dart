@@ -48,4 +48,15 @@ class SellerController extends ChangeNotifier {
 
     notifyListeners(); //install provider
   }
+
+  void getSpecificSeller(seller) async {
+    setHeader();
+    String _dataUrl = _getSellersUrl + "/${seller.id}";
+
+    Map _response = await SharedFunction.getData(_dataUrl, _headers);
+    Map _responseBody = _response['body'];
+    product_categories = responseBody['product_categories'];
+    // get products
+    products = responseBody['products'];
+  }
 }

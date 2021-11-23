@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/core/entities/seller.dart';
+import 'package:ryve_mobile/core/models/seller_model.dart';
 import 'package:ryve_mobile/features/sellers/styles/show_seller_style.dart';
 import 'package:ryve_mobile/features/sellers/views/product.dart';
 import 'package:ryve_mobile/core/entities/headers.dart';
@@ -31,7 +33,7 @@ class _ShowSellerState extends State<ShowSeller> {
   final double categoryHeight = 40;
   final double categoryNameWidth = 70;
 
-  Map seller = {};
+  
   List product_categories = [];
   List products = [];
   // response
@@ -47,12 +49,13 @@ class _ShowSellerState extends State<ShowSeller> {
 
   @override
   Widget build(BuildContext context) {
+    SellerModel seller;
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
-    seller = ModalRoute.of(context)!.settings.arguments as Map;
+    seller = ModalRoute.of(context)!.settings.arguments as SellerModel;
     print(seller);
-    _dataUrl = _dataUrl + "/${seller['id']}";
+    _dataUrl = _dataUrl + "/${seller.id}";
 
     return FutureBuilder(
       future: SharedFunction.getData(_dataUrl, _headers),
