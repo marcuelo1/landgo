@@ -5,6 +5,7 @@ import 'package:landgo_seller/core/styles/shared_style.dart';
 import 'package:landgo_seller/core/widgets/bar_widgets.dart';
 import 'package:landgo_seller/core/widgets/card_widgets.dart';
 import 'package:landgo_seller/features/operations/controllers/product_form_controller.dart';
+import 'package:landgo_seller/features/profile/controllers/profile_controller.dart';
 import 'package:provider/provider.dart';
 
 class ProductFormView extends StatefulWidget {
@@ -156,30 +157,15 @@ class _ProductFormViewState extends State<ProductFormView> {
   Widget _buildListOfSizes(){
     return Container(
       width: StyleFunction.scaleWidth(320, width),
-      height: StyleFunction.scaleHeight(120, height),
+      height: StyleFunction.scaleHeight(170, height),
       child: Consumer<ProductFormController>(
         builder: (_, pfc, __) {
           return ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              for (var _sps in pfc.selectedProductSizes) ...[
-                _buildListItem(_sps, pfc.productSizes)
+              for (var i = 0; i < pfc.selectedProductSizes.length; i++) ...[
+                _buildListItem(pfc, i)
               ],
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
-              Text("data    "),
             ],
           );
         }
@@ -187,28 +173,38 @@ class _ProductFormViewState extends State<ProductFormView> {
     );
   }
 
-  Widget _buildListItem(_sps, List productSizes){
+  Widget _buildListItem(ProductFormController _pfc, int _index){
     return CardWidgets.cardRed(
-      cardWidth: 100, 
+      cardWidth: 120, 
       referenceWidth: width, 
       child: Column(
         children: [
+          // remove item
+          if(_index != 0)...[
+            Center(
+              child: IconButton(
+                onPressed: ()=> _pfc.removeSize(_index), 
+                icon: Icon(Icons.close)
+              ),
+            )
+          ],
           // Sizes
           DropdownButton<Map>(
-            value: _sps,
-            items: productSizes.map((_ps) {
+            value: _pfc.selectedProductSizes[_index]['size'],
+            items: _pfc.productSizes.map((_productSize) {
               return DropdownMenuItem<Map>(
-                value: _ps,
-                child: Text(_ps['size']['name']),
+                value: _productSize,
+                child: Text(_productSize['name']),
               );
             }).toList(),
-            onChanged: (value) => con.sizeOnChange(value, _sps),
+            onChanged: (value) => _pfc.sizeOnChange(value, _index),
           ),
           // Price Field
           TextFormField(
             decoration: SharedStyle.textFormFieldDecoration('Price'),
-            validator: (value) {},
-            onSaved: (value) {},
+            keyboardType: TextInputType.number,
+            validator: (value) => _pfc.validatePrice(value),
+            onSaved: (value) => _pfc.saveSizePrice(value, _index),
           )
         ],
       )

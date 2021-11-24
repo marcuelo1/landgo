@@ -15,7 +15,6 @@ class ProductFormController extends ChangeNotifier {
   Map<String, String> _headers = {};
   final ImagePicker _picker = ImagePicker();
   List _productSizes = [];
-  int _sizeCount = 1;
 
   // form variables
   String _formName = "";
@@ -55,16 +54,14 @@ class ProductFormController extends ChangeNotifier {
     // save sizes and set selected size
     for (var _ps in _responseBody['product_sizes']) {
       _productSizes.add({
-      'id': _sizeCount, 
-      'size': {
         'id': _ps['id'],
         'name': _ps['name']
-      },
-      'price': 0
       });
-      _sizeCount++;
     }
-    _selectedProductSizes.add(_productSizes.first);
+    _selectedProductSizes.add({
+      'size': _productSizes.first,
+      'price': 0
+    });
 
     refresh = false;
     notifyListeners();
@@ -105,19 +102,33 @@ class ProductFormController extends ChangeNotifier {
     print(image);
   }
 
-  void sizeOnChange(value, _selected){
-    int _selectedIndex = _selectedProductSizes.indexWhere((_spc) => _spc['id'] == _selected['id']);
-    _selectedProductSizes[_selectedIndex] = value;
+  void sizeOnChange(value, int _index){
+    _selectedProductSizes[_index]['size'] = value;
     notifyListeners();
   }
 
   void addSize(){
     _selectedProductSizes.add({
-      'id': _sizeCount,
-      'size': _productSizes.first['size'],
+      'size': _productSizes.first,
       'price': 0
     });
-    _sizeCount++;
     notifyListeners();
+  }
+
+  void removeSize(int _index){
+    _selectedProductSizes.removeAt(_index);
+    notifyListeners();
+  }
+
+  String? validatePrice(String? value){
+    if(value == null || value == ""){
+      return "Price is required";
+    }
+
+    return null;
+  }
+
+  void saveSizePrice(value, int _index){
+    _selectedProductSizes[_index]['price'] = value;
   }
 }
