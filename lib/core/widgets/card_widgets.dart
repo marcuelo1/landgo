@@ -14,4 +14,16 @@ class CardWidgets {
       child: child,
     );
   }
+
+  static Widget cardRed({required double cardWidth, required double referenceWidth, required Widget child}){
+    return Container(
+      width: StyleFunction.scaleWidth(cardWidth, referenceWidth),
+      decoration: BoxDecoration(
+        borderRadius: SharedStyle.borderRadius(10, 10, 10, 10),
+        color: SharedStyle.red,
+      ),
+      padding: EdgeInsets.all(10),
+      child: child,
+    );
+  }
 }

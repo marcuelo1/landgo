@@ -14,11 +14,14 @@ class ProductFormController extends ChangeNotifier {
   List _productCategories = [];
   Map<String, String> _headers = {};
   final ImagePicker _picker = ImagePicker();
+  List _productSizes = [];
+  int _sizeCount = 1;
 
   // form variables
   String _formName = "";
   String _formDescription = "";
   Map _selectedProductCategory = {"id": 0,   "name": ""};
+  List _selectedProductSizes = [];
 
   // Public Variables
   bool get isNew => _isNew;
@@ -26,6 +29,8 @@ class ProductFormController extends ChangeNotifier {
   bool refresh = true;
   UnmodifiableListView get productCategories => UnmodifiableListView(_productCategories);
   Map get selectedProductCategory => _selectedProductCategory;
+  UnmodifiableListView get productSizes => UnmodifiableListView(_productSizes);
+  UnmodifiableListView get selectedProductSizes => UnmodifiableListView(_selectedProductSizes);
 
   // Functions
   void setHeader(){
@@ -43,8 +48,24 @@ class ProductFormController extends ChangeNotifier {
     print("==================");
     print(_responseBody);
 
+    // save categories and set selected category
     _productCategories = _responseBody['product_categories'];
     _selectedProductCategory = _productCategories.first;
+
+    // save sizes and set selected size
+    for (var _ps in _responseBody['product_sizes']) {
+      _productSizes.add({
+      'id': _sizeCount, 
+      'size': {
+        'id': _ps['id'],
+        'name': _ps['name']
+      },
+      'price': 0
+      });
+      _sizeCount++;
+    }
+    _selectedProductSizes.add(_productSizes.first);
+
     refresh = false;
     notifyListeners();
   }
@@ -81,5 +102,22 @@ class ProductFormController extends ChangeNotifier {
 
   void onPickImage()async{
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    print(image);
+  }
+
+  void sizeOnChange(value, _selected){
+    int _selectedIndex = _selectedProductSizes.indexWhere((_spc) => _spc['id'] == _selected['id']);
+    _selectedProductSizes[_selectedIndex] = value;
+    notifyListeners();
+  }
+
+  void addSize(){
+    _selectedProductSizes.add({
+      'id': _sizeCount,
+      'size': _productSizes.first['size'],
+      'price': 0
+    });
+    _sizeCount++;
+    notifyListeners();
   }
 }
