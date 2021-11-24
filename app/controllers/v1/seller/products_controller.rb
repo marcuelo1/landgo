@@ -10,9 +10,11 @@ class V1::Seller::ProductsController < SellerController
 
     def product_form
         categories = @seller.product_categories.select(:id, :name)
+        sizes = @seller.product_sizes.select(:id, :name)
 
         render json: {
-            product_categories: categories
+            product_categories: categories,
+            product_sizes: sizes,
         }, status: 200
     end
 end
