@@ -4,6 +4,7 @@ import 'package:landgo_seller/core/functions/style_function.dart';
 import 'package:landgo_seller/core/styles/shared_style.dart';
 import 'package:landgo_seller/core/widgets/bar_widgets.dart';
 import 'package:landgo_seller/core/widgets/card_widgets.dart';
+import 'package:landgo_seller/core/widgets/loading.dart';
 import 'package:landgo_seller/features/operations/controllers/product_form_controller.dart';
 import 'package:landgo_seller/features/profile/controllers/profile_controller.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,8 @@ class _ProductFormViewState extends State<ProductFormView> {
 
   late ProductFormController con;
   final formKey = GlobalKey<FormState>();
+  // loading screen
+  bool loading = false;
 
   @override
   void initState(){
@@ -41,21 +44,23 @@ class _ProductFormViewState extends State<ProductFormView> {
       con.setProduct(args['product']);
     }
     
-    return SafeArea(
+    return loading ? Loading() : SafeArea(
       child: Scaffold(
         appBar: BarWidgets.appBar(context),
         bottomNavigationBar: BarWidgets.bottomAppBar(context),
         backgroundColor: SharedStyle.red,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if(con.isNew)...[
-              Text("NEW PRODUCT")
-            ]else...[
-              Text("EDIT PRODUCT")
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if(con.isNew)...[
+                Text("NEW PRODUCT")
+              ]else...[
+                Text("EDIT PRODUCT")
+              ],
+              _buildForm()
             ],
-            _buildForm()
-          ],
+          ),
         ),
       ),
     );
@@ -77,6 +82,30 @@ class _ProductFormViewState extends State<ProductFormView> {
           // sizes
           _buildFormSizes(),
           // add ons
+          _buildFormAddOnGroups(),
+          // add product button
+          ElevatedButton(
+            onPressed: ()async{
+              if(!formKey.currentState!.validate()){
+                return;
+              }
+              // start loading page
+              setState(() => loading = true);
+              // Save form inputs to their variables
+              formKey.currentState!.save();
+              print(con.selectedProductSizes);
+              print(con.selectedProductAddOnGroups);
+
+              // Send data to backend
+              var _response = await con.saveProduct(context); 
+
+              // start loading page
+              setState(() => loading = false);
+
+              return _response;
+            }, 
+            child: Text("Add Product")
+          )
         ],
       )
     );
@@ -164,7 +193,7 @@ class _ProductFormViewState extends State<ProductFormView> {
             scrollDirection: Axis.horizontal,
             children: [
               for (var i = 0; i < pfc.selectedProductSizes.length; i++) ...[
-                _buildListItem(pfc, i)
+                _buildSizeListItem(pfc, i)
               ],
             ],
           );
@@ -173,7 +202,7 @@ class _ProductFormViewState extends State<ProductFormView> {
     );
   }
 
-  Widget _buildListItem(ProductFormController _pfc, int _index){
+  Widget _buildSizeListItem(ProductFormController _pfc, int _index){
     return CardWidgets.cardRed(
       cardWidth: 120, 
       referenceWidth: width, 
@@ -205,6 +234,90 @@ class _ProductFormViewState extends State<ProductFormView> {
             keyboardType: TextInputType.number,
             validator: (value) => _pfc.validatePrice(value),
             onSaved: (value) => _pfc.saveSizePrice(value, _index),
+          )
+        ],
+      )
+    );
+  }
+
+  Widget _buildFormAddOnGroups(){
+    return CardWidgets.card(
+      cardWidth: 320, 
+      referenceWidth: width, 
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Add Size
+          ElevatedButton(
+            onPressed: ()=> con.addAddOnGroup(), 
+            child: Text("Add Add On Group")
+          ),
+          Divider(thickness: 2),
+          // list of sizes
+          _buildListOfAddOnGroups()
+        ],
+      )
+    );
+  }
+
+  Widget _buildListOfAddOnGroups(){
+    return Container(
+      width: StyleFunction.scaleWidth(320, width),
+      height: StyleFunction.scaleHeight(200, height),
+      child: Consumer<ProductFormController>(
+        builder: (_, pfc, __) {
+          return ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              for (var i = 0; i < pfc.selectedProductAddOnGroups.length; i++) ...[
+                _buildAogListItem(pfc, i)
+              ],
+            ],
+          );
+        }
+      ),
+    );
+  }
+
+  Widget _buildAogListItem(ProductFormController _pfc, int _index){
+    return CardWidgets.cardRed(
+      cardWidth: 150, 
+      referenceWidth: width, 
+      child: Column(
+        children: [
+          // remove item
+          if(_index != 0)...[
+            Center(
+              child: IconButton(
+                onPressed: ()=> _pfc.removeAddOnGroup(_index), 
+                icon: Icon(Icons.close)
+              ),
+            )
+          ],
+          // Sizes
+          DropdownButton<Map>(
+            value: _pfc.selectedProductAddOnGroups[_index]['add_on_group'],
+            items: _pfc.productAddOnGroups.map((_productAddOnGroup) {
+              return DropdownMenuItem<Map>(
+                value: _productAddOnGroup,
+                child: Text(_productAddOnGroup['name']),
+              );
+            }).toList(),
+            onChanged: (value) => _pfc.sizeOnChange(value, _index),
+          ),
+          // Require Field
+          TextFormField(
+            decoration: SharedStyle.textFormFieldDecoration('Require'),
+            keyboardType: TextInputType.number,
+            validator: (value) => _pfc.validateAddOnGroupRequire(value),
+            onSaved: (value) => _pfc.saveRequire(value, _index),
+          ),
+          // Num of Select Field
+          TextFormField(
+            decoration: SharedStyle.textFormFieldDecoration('# of selection'),
+            keyboardType: TextInputType.number,
+            validator: (value) => _pfc.validateAddOnGroupNumSelect(value),
+            onSaved: (value) => _pfc.saveNumSelect(value, _index),
           )
         ],
       )

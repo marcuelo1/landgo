@@ -5,22 +5,24 @@ import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/models/product_model.dart';
 import 'package:landgo_seller/core/network/app_url.dart';
+import 'package:landgo_seller/core/widgets/pop_up.dart';
 
 class ProductFormController extends ChangeNotifier {
   // Private Variables
-  String _getProductFormDataUrl = "${AppUrl.root}/${AppUrl.version}/seller/products/product_form";
   late ProductModel _chosenProduct;
   bool _isNew = false;
-  List _productCategories = [];
   Map<String, String> _headers = {};
   final ImagePicker _picker = ImagePicker();
+  List _productCategories = [];
   List _productSizes = [];
+  List _productAddOnGroups = [];
 
   // form variables
   String _formName = "";
   String _formDescription = "";
   Map _selectedProductCategory = {"id": 0,   "name": ""};
   List _selectedProductSizes = [];
+  List _selectedProductAddOnGroups = [];
 
   // Public Variables
   bool get isNew => _isNew;
@@ -30,6 +32,8 @@ class ProductFormController extends ChangeNotifier {
   Map get selectedProductCategory => _selectedProductCategory;
   UnmodifiableListView get productSizes => UnmodifiableListView(_productSizes);
   UnmodifiableListView get selectedProductSizes => UnmodifiableListView(_selectedProductSizes);
+  UnmodifiableListView get productAddOnGroups => UnmodifiableListView(_productAddOnGroups);
+  UnmodifiableListView get selectedProductAddOnGroups => UnmodifiableListView(_selectedProductAddOnGroups);
 
   // Functions
   void setHeader(){
@@ -42,6 +46,7 @@ class ProductFormController extends ChangeNotifier {
     setHeader();
 
     _chosenProduct = _product;
+    String _getProductFormDataUrl = "${AppUrl.root}/${AppUrl.version}/seller/products/product_form";
     Map _response = await HttpRequestFunction.getData(_getProductFormDataUrl, _headers);
     Map _responseBody = _response['body'];
     print("==================");
@@ -62,6 +67,14 @@ class ProductFormController extends ChangeNotifier {
       'size': _productSizes.first,
       'price': 0
     });
+
+    // save add on groups
+    for (var _aog in _responseBody['add_on_groups']) {
+      _productAddOnGroups.add({
+        'id': _aog['id'],
+        'name': _aog['name']
+      });
+    }
 
     refresh = false;
     notifyListeners();
@@ -130,5 +143,69 @@ class ProductFormController extends ChangeNotifier {
 
   void saveSizePrice(value, int _index){
     _selectedProductSizes[_index]['price'] = value;
+  }
+
+  void addAddOnGroup(){
+    _selectedProductAddOnGroups.add({
+      'add_on_group': _productAddOnGroups.first,
+      'require': 0,
+      'num_of_select': 0
+    });
+    notifyListeners();
+  }
+  
+  void removeAddOnGroup(int _index){
+    _selectedProductAddOnGroups.removeAt(_index);
+    notifyListeners();
+  }
+
+  String? validateAddOnGroupRequire(String? value){
+    if(value == null || value == ""){
+      return "Require is required";
+    }
+
+    return null;
+  }
+
+  void saveRequire(value, int _index){
+    _selectedProductAddOnGroups[_index]['require'] = value;
+    notifyListeners();
+  }
+
+  String? validateAddOnGroupNumSelect(String? value){
+    if(value == null || value == ""){
+      return "Num of Select is required";
+    }
+
+    return null;
+  }
+
+  void saveNumSelect(value, int _index){
+    _selectedProductAddOnGroups[_index]['num_of_select'] = value;
+    notifyListeners();
+  }
+
+  Future<dynamic> saveProduct(BuildContext context)async{
+    Map _data = {
+      'name': _formName,
+      'description': _formDescription,
+      'product_category_id': _selectedProductCategory['id'],
+      'product_sizes': _selectedProductSizes,
+      'product_add_on_groups': _selectedProductAddOnGroups
+    };
+
+    String _getProductFormDataUrl = "${AppUrl.root}/${AppUrl.version}/seller/products";
+    Map _response = await HttpRequestFunction.sendData(_getProductFormDataUrl, _headers, _data);
+    Map _responseBody = _response['body'];
+    
+    if(_response['status'] == 200){ // successful
+      Navigator.pushNamed(context, "PendingTransactions.routeName");
+    }else if(_response['status'] == 422){ // doesnt have account
+      PopUp.error(context, _responseBody['status']);
+    }else if(_response['status'] == 401){ // invalid creds
+      PopUp.error(context, _responseBody['errors'][0]);
+    }else{  // 500 status code
+      PopUp.error(context);
+    }
   }
 }
