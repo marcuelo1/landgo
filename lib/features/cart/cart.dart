@@ -10,6 +10,7 @@ import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
+import 'package:ryve_mobile/core/models/seller_model.dart';
 
 class Cart extends StatefulWidget {
   static const String routeName = "cart";
@@ -147,23 +148,23 @@ class _CartState extends State<Cart> {
     ));
   }
 
-  Widget _sellerContent(Map seller) {
+  Widget _sellerContent(SellerModel seller) {
     return GestureDetector(
       onTap: () async {
-        if (sellerCartProducts[seller['id']].isEmpty) {
-          String _rawUrl = _dataUrlCartProduct + "?seller_id=${seller['id']}";
+        if (sellerCartProducts[seller.id].isEmpty) {
+          String _rawUrl = _dataUrlCartProduct + "?seller_id=${seller.id}";
           Map _response = await SharedFunction.getData(_rawUrl, _headers);
 
           if (_response['status'] == 200) {
-            sellerCartProducts[seller['id']] = _response['body']['carts'];
+            sellerCartProducts[seller.id] = _response['body']['carts'];
           }
         }
 
         setState(() {
-          if (selectedSellersId.contains(seller['id'])) {
-            selectedSellersId.remove(seller['id']);
+          if (selectedSellersId.contains(seller.id)) {
+            selectedSellersId.remove(seller.id);
           } else {
-            selectedSellersId.add(seller['id']);
+            selectedSellersId.add(seller.id);
           }
         });
       },
@@ -171,8 +172,8 @@ class _CartState extends State<Cart> {
     );
   }
 
-  Widget checkoutDetails(Map _seller) {
-    int seller_id = _seller['id'];
+  Widget checkoutDetails(SellerModel _seller) {
+    int seller_id = _seller.id;
     List _carts = sellerCartProducts[seller_id];
 
     // GET SUB TOTAL
@@ -181,7 +182,7 @@ class _CartState extends State<Cart> {
     sellerSubTotals[seller_id] = _subTotalPrice;
 
     // GET DELIVERY FEE
-    double _deliveryFee = deliveryFees[_seller['id'].toString()];
+    double _deliveryFee = deliveryFees[_seller.id.toString()];
 
     // GET VAT
     double _vat = _subTotalPrice * .2 * .12;

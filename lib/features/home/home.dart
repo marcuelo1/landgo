@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/core/models/product_model.dart';
 import 'package:ryve_mobile/features/home/home_style.dart';
 import 'package:ryve_mobile/features/home/search_page.dart';
 import 'package:ryve_mobile/features/sellers/views/product.dart';
@@ -10,6 +11,7 @@ import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'dart:convert';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
+import 'package:ryve_mobile/core/models/seller_model.dart';
 
 class Home extends StatefulWidget {
   static const String routeName = "home";
@@ -35,10 +37,10 @@ class _HomeState extends State<Home> {
   late List categories;
 
   // products
-  List products = [];
+  List<ProductModel> products = [];
 
   // sellers
-  List sellers = [];
+  List<SellerModel> sellers = [];
 
   Map selected_location = {};
   Map _buyer = {};
@@ -81,8 +83,8 @@ class _HomeState extends State<Home> {
                 _buyer = responseBody['buyer'];
                 categories = responseBody['categories'];
                 selected_location = responseBody['selected_location'];
-                products = responseBody['products'];
-                sellers = responseBody['sellers'];
+                products = ProductModel.fromJson(responseBody['products']);
+                sellers = SellerModel.fromJson(responseBody['sellers']);
 
                 return content();
               }
@@ -216,6 +218,9 @@ class _HomeState extends State<Home> {
       ); // empty
     }
 
+    print(
+        "food category==================================================================");
+    print(category);
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, Sellers.routeName, arguments: {

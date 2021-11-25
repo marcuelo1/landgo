@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/core/models/product_model.dart';
 import 'package:ryve_mobile/features/cart/cart.dart';
 import 'package:ryve_mobile/locations/list_of_locations.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
@@ -9,6 +10,7 @@ import 'package:ryve_mobile/features/sidebar/list_of_vouchers.dart';
 import 'package:ryve_mobile/features/sidebar/profile.dart';
 import 'package:ryve_mobile/features/sign_in/views/sign_in.dart';
 import 'package:ryve_mobile/transactions/current_transactions.dart';
+import 'package:ryve_mobile/core/models/seller_model.dart';
 
 class SharedWidgets {
   /////////////////////
@@ -204,7 +206,7 @@ class SharedWidgets {
   static final double productImageWidth = 70;
   static final double productImageHeight = 70;
 
-  static Widget product(Map product, double width, double height) {
+  static Widget product(ProductModel product, double width, double height) {
     return Column(
       children: [
         // Space
@@ -226,14 +228,15 @@ class SharedWidgets {
     );
   }
 
-  static Widget _productContent(Map product, double width, double height) {
+  static Widget _productContent(
+      ProductModel product, double width, double height) {
     return Container(
       height: SharedFunction.scaleHeight(productHeight, height),
       width: SharedFunction.scaleWidth(productWidth, width),
       child: Row(
         children: [
           // product image
-          productImage(product['image'], width, height),
+          productImage(product.image, width, height),
           // space
           SizedBox(
             width: SharedFunction.scaleWidth(21, width),
@@ -256,18 +259,18 @@ class SharedWidgets {
     );
   }
 
-  static Widget _productDetails(Map product, double width) {
+  static Widget _productDetails(ProductModel product, double width) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // product name
-        _productName(product['name']),
+        _productName(product.name),
         // product description
-        _productDescription(product['description'], width),
+        _productDescription(product.description, width),
         // product price
-        _productPrice(product['price'], product['base_price'], width)
+        _productPrice(product.price, product.base_price, width)
       ],
     );
   }
@@ -319,16 +322,16 @@ class SharedWidgets {
   /////////////////////
   static final double sellerWidth = 327;
   static final double sellerHeight = 198;
-  static final double sellerFinalHeight = 229;
+  static final double sellerFinalHeight = 250;
   static final double sellerImageWidth = 327;
   static final double sellerImageHeight = 125;
   static final double sellerAddressWidth = 232;
 
-  static Widget seller(Map seller, double width, double height) {
-    String url = seller['image'];
-    String name = seller['name'];
-    String address = seller['address'];
-    String rating = seller['rating'].toStringAsFixed(1);
+  static Widget seller(SellerModel seller, double width, double height) {
+    String url = seller.image;
+    String name = seller.name;
+    String address = seller.address;
+    String rating = seller.rating.toString();
 
     return Column(
       children: [
@@ -463,7 +466,10 @@ class SharedWidgets {
 
   // BUTTONS
   static Widget redBtn(
-      {required void Function()onPressed, String name = "", double width = 0, double height = 0}) {
+      {required void Function() onPressed,
+      String name = "",
+      double width = 0,
+      double height = 0}) {
     return Container(
       decoration: SharedStyle.btnContainerDecor,
       child: ElevatedButton(

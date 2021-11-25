@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:ryve_mobile/core/entities/seller.dart';
+import 'package:ryve_mobile/core/models/seller_model.dart';
 import 'package:ryve_mobile/features/sellers/styles/show_seller_style.dart';
 import 'package:ryve_mobile/features/sellers/views/product.dart';
 import 'package:ryve_mobile/core/entities/headers.dart';
@@ -8,6 +10,8 @@ import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
+import 'package:ryve_mobile/features/sellers/controllers/seller_controller.dart';
+import 'package:provider/provider.dart';
 
 class ShowSeller extends StatefulWidget {
   static const String routeName = "show_seller";
@@ -17,8 +21,7 @@ class ShowSeller extends StatefulWidget {
 }
 
 class _ShowSellerState extends State<ShowSeller> {
-  // url
-  String _dataUrl = "${SharedUrl.root}/${SharedUrl.version}/buyer/sellers";
+  late SellerController con;
   // variables for scale functions
   late double width;
   late double height;
@@ -31,75 +34,44 @@ class _ShowSellerState extends State<ShowSeller> {
   final double categoryHeight = 40;
   final double categoryNameWidth = 70;
 
-  Map seller = {};
-  List product_categories = [];
-  List products = [];
-  // response
-  Map response = {};
-  // headers
-  Map<String,String> _headers = {};
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    _headers = Headers.getHeaders();
-    print(_headers);
+    con = Provider.of<SellerController>(context, listen: false);
   }
 
   @override
   Widget build(BuildContext context) {
+    SellerModel seller;
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
-    seller = ModalRoute.of(context)!.settings.arguments as Map;
-    print(seller);
-    _dataUrl = _dataUrl + "/${seller['id']}";
+    seller = ModalRoute.of(context)!.settings.arguments as SellerModel;
+    con.getSpecificSeller(seller);
 
-    return FutureBuilder(
-      future: SharedFunction.getData(_dataUrl, _headers),
-      builder: (BuildContext context, AsyncSnapshot snapshot){
-        // Connection state of getting the data
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return Text("check internet");
-          case ConnectionState.waiting: // Retrieving
-            return Loading();
-          default: // Success of connecting to back end
-            // check if snapshot has an error
-            if(snapshot.hasError){
-              return Text("Error: ${snapshot.error}");
-            }
-
-            // get response
-            response = snapshot.data;
-            Map responseBody = response['body'];
-            print(responseBody);
-
-            // get product categories
-            product_categories = responseBody['product_categories'];
-            // get products
-            products = responseBody['products'];
-
-            return Scaffold(
-              appBar: SharedWidgets.appBar(context, title: seller['name'], showCart: true),
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // seller image
-                    sellerImage(seller['image']),
-                    // product categories
-                    productCategories(product_categories),
-                    // list of products
-                    listOfProducts(products)
-                  ],
-                ),
-              ),
+    return SafeArea(
+      child: Scaffold(
+        appBar:
+            SharedWidgets.appBar(context, title: seller.name, showCart: true),
+        body: SingleChildScrollView(child: Consumer<SellerController>(
+          builder: (_, _sellers, __) {
+            return Column(
+              children: [
+                // seller image
+                sellerImage(seller.image),
+                // product categories
+                productCategories(con.product_categories),
+                // list of products
+                listOfProducts(con.products),
+              ],
             );
-        }
-      }
+          },
+        )),
+      ),
     );
   }
 
-  Widget sellerImage(String url){
+  Widget sellerImage(String url) {
     return Container(
       width: SharedFunction.scaleWidth(sellerImageWidth, width),
       height: SharedFunction.scaleHeight(sellerImageHeight, height),
@@ -110,14 +82,14 @@ class _ShowSellerState extends State<ShowSeller> {
     );
   }
 
-  Widget productCategories(List _product_categories){
+  Widget productCategories(List _product_categories) {
     return Container(
       height: SharedFunction.scaleHeight(categoryHeight, height),
       color: SharedStyle.black2,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
-          for (var i = 0; i < _product_categories.length; i++) ... [
+          for (var i = 0; i < _product_categories.length; i++) ...[
             productCategoryName(_product_categories[i]['name']),
           ]
         ],
@@ -125,7 +97,7 @@ class _ShowSellerState extends State<ShowSeller> {
     );
   }
 
-  Widget productCategoryName(String name){
+  Widget productCategoryName(String name) {
     return Container(
       width: categoryNameWidth,
       child: Padding(
@@ -140,19 +112,21 @@ class _ShowSellerState extends State<ShowSeller> {
     );
   }
 
-  Widget listOfProducts(List _products){
-    return  Container(
+  Widget listOfProducts(List _products) {
+    return Container(
       width: SharedFunction.scaleWidth(listOfProductsWidth, width),
-      height: (height - SharedFunction.scaleHeight(categoryHeight, height) - AppBar().preferredSize.height),
+      height: (height -
+          SharedFunction.scaleHeight(categoryHeight, height) -
+          AppBar().preferredSize.height),
       child: ListView(
         children: [
-          for (var i = 0; i < products.length; i++) ... [
+          for (var i = 0; i < _products.length; i++) ...[
             TextButton(
-              onPressed: (){
-                Navigator.pushNamed(context, Product.routeName, arguments: {"product": products[i]});
-              },
-              child: SharedWidgets.product(products[i], width, height)
-            )
+                onPressed: () {
+                  Navigator.pushNamed(context, Product.routeName,
+                      arguments: {"product": _products[i]});
+                },
+                child: SharedWidgets.product(_products[i], width, height))
           ]
         ],
       ),
