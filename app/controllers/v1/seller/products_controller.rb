@@ -44,14 +44,17 @@ class V1::Seller::ProductsController < SellerController
         end
 
         # create product add ons
-        if params[:add_on_group_ids]
-            params[:add_on_group_ids].each_with_index do |_, i|
+        if params[:product_add_on_groups]
+            params[:product_add_on_groups].each do |paog|
                 pao = ProductAddOn.new()
                 pao.product_id = product.id 
-                pao.add_on_group_id = params[:add_on_group_ids][i] 
-                pao.require = params[:requires][i]
+                pao.add_on_group_id = paog[:add_on_group][:id] 
+                pao.require = paog[:require]
+                pao.num_of_select = paog[:num_of_select]
                 pao.save
             end
         end
+
+        render json: {success: true}, status: 200
     end
 end
