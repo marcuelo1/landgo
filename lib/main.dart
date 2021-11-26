@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:landgo_seller/core/controllers/seller_controller.dart';
 import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/features/operations/controllers/list_of_products_controller.dart';
 import 'package:landgo_seller/features/operations/controllers/product_form_controller.dart';
@@ -22,6 +23,7 @@ void main() async{
         ChangeNotifierProvider(create: (_) => PendingTransactionsController()),
         ChangeNotifierProvider(create: (_) => ProfileController()),
         ChangeNotifierProvider(create: (_) => ListOfProductsController()),
+        ChangeNotifierProvider(create: (_) => SellerController()),
         ChangeNotifierProvider(create: (_) => ProductFormController())
       ],
       child: const MyApp(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:landgo_seller/core/controllers/seller_controller.dart';
 import 'package:landgo_seller/core/functions/style_function.dart';
 import 'package:landgo_seller/core/models/seller_model.dart';
 import 'package:landgo_seller/core/styles/shared_style.dart';
@@ -19,10 +20,12 @@ class _ProfileState extends State<Profile> {
   late double height;
   late double scale;
   late ProfileController con;
+  late SellerController sellerCon;
 
   @override
   void initState(){
     super.initState();
+    sellerCon =  Provider.of<SellerController>(context, listen: false);
     con =  Provider.of<ProfileController>(context, listen: false);
     con.getProfileData();
   }
@@ -53,20 +56,20 @@ class _ProfileState extends State<Profile> {
                     child: ClipRRect(
                       borderRadius: SharedStyle.borderRadius(10, 10, 10, 10),
                       child: Image.network(
-                        pc.seller.image,
+                        sellerCon.seller.image,
                         fit: BoxFit.fill,
                       ),
                     ),
                   ),
                   // Name
                   Text("Name"),
-                  Text(pc.seller.name),
+                  Text(sellerCon.seller.name),
                   // Address
                   Text("Address"),
-                  Text(pc.seller.address),
+                  Text(sellerCon.seller.address),
                   // Phone Number
                   Text("Phone Number"),
-                  Text(pc.seller.phoneNumber),
+                  Text(sellerCon.seller.phoneNumber),
                   // Schedule
                 ],
               );

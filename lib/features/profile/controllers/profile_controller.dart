@@ -8,7 +8,7 @@ import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/models/seller_model.dart';
 import 'package:landgo_seller/core/network/app_url.dart';
 
-class ProfileController extends SellerController {
+class ProfileController extends ChangeNotifier {
   // Private Variables
   String _getProfileDataUrl = "${AppUrl.root}/${AppUrl.version}/seller/profile";
   Map<String, String> _headers = {};
@@ -31,7 +31,7 @@ class ProfileController extends SellerController {
     print("=============================");
     print(_responseBody);
 
-    super.seller = SellerModel.fromJson(_responseBody['seller']);
+    // super.seller = SellerModel.fromJson(_responseBody['seller']);
     SharedPreferencesData.saveStringData("seller", jsonEncode(_responseBody['seller']));
     notifyListeners();
   }
