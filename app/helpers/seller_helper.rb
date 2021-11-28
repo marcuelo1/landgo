@@ -21,7 +21,10 @@ module SellerHelper
     def product_info product
         sizes = product.product_prices.collect do |pp|
             {
-                name: pp.product_size.name,
+                size: {
+                    id: pp.product_size.id,
+                    name: pp.product_size.name
+                },
                 price: pp.price,
                 base_price: pp.base_price
             }

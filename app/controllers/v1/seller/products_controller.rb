@@ -21,7 +21,6 @@ class V1::Seller::ProductsController < SellerController
     end
 
     def create
-        :seller_id, :name, :product_category_id, :image, :description
         # create product
         product = Product.new(
             seller_id: @seller.id,
@@ -55,6 +54,6 @@ class V1::Seller::ProductsController < SellerController
             end
         end
 
-        render json: {success: true}, status: 200
+        render json: {product: product_info(product)}, status: 200
     end
 end
