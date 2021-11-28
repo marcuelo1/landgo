@@ -51,7 +51,11 @@ class ProductFormController extends ChangeNotifier {
 
     // save categories and set selected category
     _productCategories = _responseBody['product_categories'];
-    _selectedProductCategory = _productCategories.first;
+    if(_isNew){
+      _selectedProductCategory = _productCategories.first;
+    }else{
+      _selectedProductCategory = _productCategories.first;
+    }
 
     // save sizes and set selected size
     for (var _ps in _responseBody['product_sizes']) {
