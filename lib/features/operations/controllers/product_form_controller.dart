@@ -61,10 +61,14 @@ class ProductFormController extends ChangeNotifier {
         'name': _ps['name']
       });
     }
-    _selectedProductSizes.add({
-      'size': _productSizes.first,
-      'price': 0
-    });
+    if(_isNew){
+      _selectedProductSizes.add({
+        'size': _productSizes.first,
+        'price': 0
+      });
+    }else{
+      
+    }
 
     // save add on groups
     for (var _aog in _responseBody['add_on_groups']) {

@@ -78,10 +78,15 @@ class _ListOfProductsViewState extends State<ListOfProductsView> {
                               //   onPressed: (){}, 
                               //   child: Text("Edit")
                               // ),
+                              // Edit Product
+                              IconButton(
+                                onPressed: () => lofc.editProductBtn(context, product), 
+                                icon: Icon(Icons.edit)
+                              ),
                               // View Details
-                              ElevatedButton(
+                              IconButton(
                                 onPressed: () => lofc.viewDetails(product.id), 
-                                child: Text("View")
+                                icon: Icon(Icons.remove_red_eye_outlined)
                               ),
                             ],
                           ),

@@ -37,4 +37,9 @@ class ListOfProductsController extends ChangeNotifier {
     _sellerController.setChosenProduct(ProductModel.newProduct());
     Navigator.pushNamed(context, ProductFormView.routeName);
   }
+
+  void editProductBtn(BuildContext context, ProductModel _product){
+    _sellerController.setChosenProduct(_product);
+    Navigator.pushNamed(context, ProductFormView.routeName);
+  }
 }
