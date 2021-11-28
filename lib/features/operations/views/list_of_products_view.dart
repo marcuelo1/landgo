@@ -160,12 +160,12 @@ class _ListOfProductsViewState extends State<ListOfProductsView> {
           ]
         ),
         // iterate all sizes
-        for (ProductSizeModel _size in _productSizes) ...[
+        for (ProductSizeModel _productSize in _productSizes) ...[
           TableRow(
             children: [
-              Text(_size.name),
-              Text(_size.basePrice.toStringAsFixed(2)),
-              Text(_size.price.toStringAsFixed(2))
+              Text(_productSize.size.name),
+              Text(_productSize.basePrice.toStringAsFixed(2)),
+              Text(_productSize.price.toStringAsFixed(2))
             ]
           )
         ]

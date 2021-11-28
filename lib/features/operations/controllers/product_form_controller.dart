@@ -5,17 +5,18 @@ import 'package:landgo_seller/core/controllers/seller_controller.dart';
 import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/models/product_model.dart';
+import 'package:landgo_seller/core/models/product_size_model.dart';
+import 'package:landgo_seller/core/models/size_model.dart';
 import 'package:landgo_seller/core/network/app_url.dart';
 import 'package:landgo_seller/core/widgets/pop_up.dart';
 import 'package:provider/provider.dart';
 
 class ProductFormController extends ChangeNotifier {
   // Private Variables
-  late ProductModel _chosenProduct;
   bool _isNew = false;
   final ImagePicker _picker = ImagePicker();
   List _productCategories = [];
-  List _productSizes = [];
+  List<SizeModel> _sizes = [];
   List _productAddOnGroups = [];
   late SellerController _sellerController;
 
@@ -23,16 +24,15 @@ class ProductFormController extends ChangeNotifier {
   String _formName = "";
   String _formDescription = "";
   Map _selectedProductCategory = {"id": 0,   "name": ""};
-  List _selectedProductSizes = [];
+  List<ProductSizeModel> _selectedProductSizes = [];
   List _selectedProductAddOnGroups = [];
 
   // Public Variables
   bool get isNew => _isNew;
-  ProductModel get product => _chosenProduct;
   UnmodifiableListView get productCategories => UnmodifiableListView(_productCategories);
   Map get selectedProductCategory => _selectedProductCategory;
-  UnmodifiableListView get productSizes => UnmodifiableListView(_productSizes);
-  UnmodifiableListView get selectedProductSizes => UnmodifiableListView(_selectedProductSizes);
+  UnmodifiableListView<SizeModel> get sizes => UnmodifiableListView<SizeModel>(_sizes);
+  UnmodifiableListView<ProductSizeModel> get selectedProductSizes => UnmodifiableListView<ProductSizeModel>(_selectedProductSizes);
   UnmodifiableListView get productAddOnGroups => UnmodifiableListView(_productAddOnGroups);
   UnmodifiableListView get selectedProductAddOnGroups => UnmodifiableListView(_selectedProductAddOnGroups);
 
@@ -41,8 +41,7 @@ class ProductFormController extends ChangeNotifier {
     // set seller controller
     _sellerController = Provider.of<SellerController>(context, listen: false);
     
-    _chosenProduct = _sellerController.chosenProduct;
-    _isNew = _chosenProduct.id == 0;
+    _isNew = _sellerController.chosenProduct.id == 0;
 
     String _getProductFormDataUrl = "${AppUrl.root}/${AppUrl.version}/seller/products/product_form";
     Map _response = await HttpRequestFunction.getData(_getProductFormDataUrl, _sellerController.headers);
@@ -56,18 +55,14 @@ class ProductFormController extends ChangeNotifier {
 
     // save sizes and set selected size
     for (var _ps in _responseBody['product_sizes']) {
-      _productSizes.add({
-        'id': _ps['id'],
-        'name': _ps['name']
-      });
+      _sizes.add(SizeModel.fromJson(_ps));
     }
     if(_isNew){
-      _selectedProductSizes.add({
-        'size': _productSizes.first,
-        'price': 0
-      });
+      _selectedProductSizes.add(ProductSizeModel(size: _sizes.first, price: 0, basePrice: 0));
     }else{
-      
+      for (ProductSizeModel _productSize in _sellerController.chosenProduct.sizes) {
+        _selectedProductSizes.add(_productSize);
+      }
     }
 
     // save add on groups
@@ -116,15 +111,12 @@ class ProductFormController extends ChangeNotifier {
   }
 
   void sizeOnChange(value, int _index){
-    _selectedProductSizes[_index]['size'] = value;
+    _selectedProductSizes[_index].size = value;
     notifyListeners();
   }
 
   void addSize(){
-    _selectedProductSizes.add({
-      'size': _productSizes.first,
-      'price': 0
-    });
+    _selectedProductSizes.add(ProductSizeModel(size: _sizes.first, price: 0, basePrice: 0));
     notifyListeners();
   }
 
@@ -142,7 +134,7 @@ class ProductFormController extends ChangeNotifier {
   }
 
   void saveSizePrice(value, int _index){
-    _selectedProductSizes[_index]['price'] = value;
+    _selectedProductSizes[_index].price = value;
   }
 
   void addAddOnGroup(){

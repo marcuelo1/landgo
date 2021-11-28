@@ -46,7 +46,15 @@ class SellerController extends ChangeNotifier {
   }
 
   void addProductToList(ProductModel _newProduct){
+    _chosenProduct = _newProduct;
     _products.add(_newProduct);
+    notifyListeners();
+  }
+  
+  void updateProductInList(ProductModel _updatedProduct){
+    _chosenProduct = _updatedProduct;
+    int _productIndex = _products.indexWhere((_product) => _product.id == _updatedProduct.id);
+    _products[_productIndex] = _updatedProduct;
     notifyListeners();
   }
 }

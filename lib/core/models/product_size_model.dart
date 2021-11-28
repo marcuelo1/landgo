@@ -1,12 +1,13 @@
 import 'package:landgo_seller/core/entities/product_size.dart';
+import 'package:landgo_seller/core/models/size_model.dart';
 
 class ProductSizeModel extends ProductSize {
   ProductSizeModel({
-    required String name,
+    required SizeModel size,
     required double price,
     required double basePrice,
   }) : super(
-    name: name,
+    size: size,
     price: price,
     basePrice: basePrice
   );
@@ -27,7 +28,7 @@ class ProductSizeModel extends ProductSize {
 
   static ProductSizeModel _productSizeInfo(Map<String, dynamic> json){
     return ProductSizeModel(
-      name: json['name'], 
+      size: SizeModel.fromJson(json['size']), 
       price: (json['price'] as num).toDouble(), 
       basePrice: (json['base_price'] as num).toDouble(), 
     );

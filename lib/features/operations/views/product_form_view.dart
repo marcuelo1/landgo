@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:landgo_seller/core/controllers/seller_controller.dart';
 import 'package:landgo_seller/core/functions/style_function.dart';
+import 'package:landgo_seller/core/models/size_model.dart';
 import 'package:landgo_seller/core/styles/shared_style.dart';
 import 'package:landgo_seller/core/widgets/bar_widgets.dart';
 import 'package:landgo_seller/core/widgets/card_widgets.dart';
@@ -38,6 +39,7 @@ class _ProductFormViewState extends State<ProductFormView> {
   
   @override
   Widget build(BuildContext context) {
+    sellerCon = Provider.of<SellerController>(context);
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
@@ -113,6 +115,7 @@ class _ProductFormViewState extends State<ProductFormView> {
     return Consumer<ProductFormController>(
       builder: (_, pfc, __) {
         return TextFormField(
+          initialValue: sellerCon.chosenProduct.name,
           decoration: SharedStyle.textFormFieldDecoration('Name'),
           validator: (value) => pfc.validateFormName(value),
           onSaved: (value) => pfc.saveFormName(value),
@@ -125,6 +128,7 @@ class _ProductFormViewState extends State<ProductFormView> {
     return Consumer<ProductFormController>(
       builder: (_, pfc, __) {
         return TextFormField(
+          initialValue: sellerCon.chosenProduct.description,
           decoration: SharedStyle.textFormFieldDecoration('Description'),
           validator: (value) => pfc.validateFormName(value),
           onSaved: (value) => pfc.saveFormName(value),
@@ -216,18 +220,19 @@ class _ProductFormViewState extends State<ProductFormView> {
             )
           ],
           // Sizes
-          DropdownButton<Map>(
-            value: _pfc.selectedProductSizes[_index]['size'],
-            items: _pfc.productSizes.map((_productSize) {
-              return DropdownMenuItem<Map>(
-                value: _productSize,
-                child: Text(_productSize['name']),
+          DropdownButton<SizeModel>(
+            value: _pfc.selectedProductSizes[_index].size,
+            items: _pfc.sizes.map((_size) {
+              return DropdownMenuItem<SizeModel>(
+                value: _size.id == _pfc.selectedProductSizes[_index].size.id ? _pfc.selectedProductSizes[_index].size : _size,
+                child: Text(_size.name),
               );
             }).toList(),
             onChanged: (value) => _pfc.sizeOnChange(value, _index),
           ),
           // Price Field
           TextFormField(
+            initialValue: _pfc.selectedProductSizes[_index].price.toStringAsFixed(2),
             decoration: SharedStyle.textFormFieldDecoration('Price'),
             keyboardType: TextInputType.number,
             validator: (value) => _pfc.validatePrice(value),
