@@ -46,4 +46,8 @@ class ProductModel extends Product {
       addOnGroups: ProductAddOnGroupModel.fromJson(json['add_on_groups'])
     );
   }
+
+  static ProductModel newProduct(){
+    return ProductModel(id: 0, name: "", categoryName: "", description: "", image: "", sizes: [], addOnGroups: []);
+  }
 }

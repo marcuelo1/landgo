@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:landgo_seller/core/controllers/seller_controller.dart';
 import 'package:landgo_seller/core/functions/style_function.dart';
 import 'package:landgo_seller/core/models/add_on_group_model.dart';
 import 'package:landgo_seller/core/models/product_add_on_groups_model.dart';
@@ -23,16 +24,18 @@ class _ListOfProductsViewState extends State<ListOfProductsView> {
   late double height;
   late double scale;
   late ListOfProductsController con;
+  late SellerController sellerCon;
 
   @override
   void initState(){
     super.initState();
     con = Provider.of<ListOfProductsController>(context, listen: false);
-    con.getProductsData();
+    con.getProductsData(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    sellerCon = Provider.of<SellerController>(context);
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
@@ -56,7 +59,7 @@ class _ListOfProductsViewState extends State<ListOfProductsView> {
                   ),
                   Divider(thickness: 2),
                   // List of Products
-                  for (ProductModel product in lofc.products) ... [
+                  for (ProductModel product in sellerCon.products) ... [
                     CardWidgets.card(
                       cardWidth: 250, 
                       referenceWidth: width, 
@@ -77,13 +80,13 @@ class _ListOfProductsViewState extends State<ListOfProductsView> {
                               // ),
                               // View Details
                               ElevatedButton(
-                                onPressed: () => con.viewDetails(product.id), 
+                                onPressed: () => lofc.viewDetails(product.id), 
                                 child: Text("View")
                               ),
                             ],
                           ),
                           // body
-                          if(con.isShow[product.id] == true)...[
+                          if(lofc.isShow[product.id] == true)...[
                             _buildProductBody(product)
                           ]
                         ],

@@ -1,43 +1,27 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:landgo_seller/core/controllers/seller_controller.dart';
 import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/models/product_model.dart';
 import 'package:landgo_seller/core/models/seller_model.dart';
 import 'package:landgo_seller/core/network/app_url.dart';
 import 'package:landgo_seller/features/operations/views/product_form_view.dart';
+import 'package:provider/provider.dart';
 
 class ListOfProductsController extends ChangeNotifier {
   // Private Variables
-  String _getProductsDataUrl = "${AppUrl.root}/${AppUrl.version}/seller/products";
-  List<ProductModel> _products = [];
-  Map<String, String> _headers = {};
-  SellerModel _seller = SellerModel.getSeller;
-  Map isShow = {};
+  late SellerController _sellerController;
 
   // Public Variable
-  UnmodifiableListView<ProductModel> get products => UnmodifiableListView(_products);
+  Map isShow = {};
 
   // Functions
-  void setHeader(){
-    _headers = SharedPreferencesData.getHeader();
-    print(_headers);
-  }
+  void getProductsData(BuildContext context)async{
+    // set seller controller
+    _sellerController = Provider.of<SellerController>(context, listen: false);
 
-  void getProductsData()async{
-    // set headers
-    setHeader();
-
-    String _rawUrl = _getProductsDataUrl + "?seller_id=${_seller.id.toString()}";
-    Map _response = await HttpRequestFunction.getData(_rawUrl, _headers);
-    Map _responseBody = _response['body'];
-    print("==================================");
-    print(_responseBody);
-
-    if(_response['status'] == 200){
-      _products = ProductModel.fromJson(_responseBody['products']);
-      notifyListeners();
-    }
+    _sellerController.setProducts();
   }
 
   void viewDetails(int _productId){
@@ -50,7 +34,7 @@ class ListOfProductsController extends ChangeNotifier {
   }
 
   void addProductBtn(BuildContext context){
-    ProductModel _newProduct = ProductModel(id: 0, name: "", categoryName: "", description: "", image: "", sizes: [], addOnGroups: []);
-    Navigator.pushNamed(context, ProductFormView.routeName, arguments: {"product": _newProduct});
+    _sellerController.setChosenProduct(ProductModel.newProduct());
+    Navigator.pushNamed(context, ProductFormView.routeName);
   }
 }

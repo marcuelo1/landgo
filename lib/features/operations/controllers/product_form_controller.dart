@@ -1,21 +1,23 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:landgo_seller/core/controllers/seller_controller.dart';
 import 'package:landgo_seller/core/data/shared_preferences_data.dart';
 import 'package:landgo_seller/core/functions/http_request_function.dart';
 import 'package:landgo_seller/core/models/product_model.dart';
 import 'package:landgo_seller/core/network/app_url.dart';
 import 'package:landgo_seller/core/widgets/pop_up.dart';
+import 'package:provider/provider.dart';
 
 class ProductFormController extends ChangeNotifier {
   // Private Variables
   late ProductModel _chosenProduct;
   bool _isNew = false;
-  Map<String, String> _headers = {};
   final ImagePicker _picker = ImagePicker();
   List _productCategories = [];
   List _productSizes = [];
   List _productAddOnGroups = [];
+  late SellerController _sellerController;
 
   // form variables
   String _formName = "";
@@ -27,7 +29,6 @@ class ProductFormController extends ChangeNotifier {
   // Public Variables
   bool get isNew => _isNew;
   ProductModel get product => _chosenProduct;
-  bool refresh = true;
   UnmodifiableListView get productCategories => UnmodifiableListView(_productCategories);
   Map get selectedProductCategory => _selectedProductCategory;
   UnmodifiableListView get productSizes => UnmodifiableListView(_productSizes);
@@ -36,18 +37,15 @@ class ProductFormController extends ChangeNotifier {
   UnmodifiableListView get selectedProductAddOnGroups => UnmodifiableListView(_selectedProductAddOnGroups);
 
   // Functions
-  void setHeader(){
-    _headers = SharedPreferencesData.getHeader();
-    print(_headers);
-  }
-  
-  void setProduct(ProductModel _product)async{
-    // set headers
-    setHeader();
+  void setProduct(BuildContext context)async{
+    // set seller controller
+    _sellerController = Provider.of<SellerController>(context, listen: false);
+    
+    _chosenProduct = _sellerController.chosenProduct;
+    _isNew = _chosenProduct.id == 0;
 
-    _chosenProduct = _product;
     String _getProductFormDataUrl = "${AppUrl.root}/${AppUrl.version}/seller/products/product_form";
-    Map _response = await HttpRequestFunction.getData(_getProductFormDataUrl, _headers);
+    Map _response = await HttpRequestFunction.getData(_getProductFormDataUrl, _sellerController.headers);
     Map _responseBody = _response['body'];
     print("==================");
     print(_responseBody);
@@ -75,8 +73,6 @@ class ProductFormController extends ChangeNotifier {
         'name': _aog['name']
       });
     }
-
-    refresh = false;
     notifyListeners();
   }
 
@@ -195,11 +191,13 @@ class ProductFormController extends ChangeNotifier {
     };
 
     String _getProductFormDataUrl = "${AppUrl.root}/${AppUrl.version}/seller/products";
-    Map _response = await HttpRequestFunction.sendData(_getProductFormDataUrl, _headers, _data);
+    Map _response = await HttpRequestFunction.sendData(_getProductFormDataUrl, _sellerController.headers, _data);
     Map _responseBody = _response['body'];
     
     if(_response['status'] == 200){ // successful
-      Navigator.pushNamed(context, "PendingTransactions.routeName");
+      ProductModel _newProduct = ProductModel.fromJson(_responseBody['product']);
+      _sellerController.addProductToList(_newProduct);
+      Navigator.pop(context);
     }else if(_response['status'] == 422){ // doesnt have account
       PopUp.error(context, _responseBody['status']);
     }else if(_response['status'] == 401){ // invalid creds

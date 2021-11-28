@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:landgo_seller/core/controllers/seller_controller.dart';
 import 'package:landgo_seller/core/functions/style_function.dart';
 import 'package:landgo_seller/core/styles/shared_style.dart';
 import 'package:landgo_seller/core/widgets/bar_widgets.dart';
@@ -23,6 +24,7 @@ class _ProductFormViewState extends State<ProductFormView> {
   late double scale;
 
   late ProductFormController con;
+  late SellerController sellerCon;
   final formKey = GlobalKey<FormState>();
   // loading screen
   bool loading = false;
@@ -30,6 +32,8 @@ class _ProductFormViewState extends State<ProductFormView> {
   @override
   void initState(){
     super.initState();
+    con = Provider.of<ProductFormController>(context, listen: false);
+    con.setProduct(context);
   }
   
   @override
@@ -37,12 +41,6 @@ class _ProductFormViewState extends State<ProductFormView> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
-
-    final Map args = ModalRoute.of(context)!.settings.arguments as Map; // got an error when i placed it in initState()
-    con = Provider.of<ProductFormController>(context, listen: false);
-    if(con.refresh){
-      con.setProduct(args['product']);
-    }
     
     return loading ? Loading() : SafeArea(
       child: Scaffold(
