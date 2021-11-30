@@ -1,2 +1,19 @@
-%h1 Admin
-%h3= @admin.email
+#admin-index
+    .header.d-flex.justify-content-between 
+        .page-title Home Page
+    %br/
+    .body
+        .card 
+            .card-header 
+                %h3 Checkout Sellers
+            .card-body
+                %table.table-list 
+                    %tr 
+                        %th Checkout Seller Id
+                        %th Enqueued Time
+                        %th Action
+                    - @checkout_sellers.each do |cs|
+                        %tr 
+                            %th= cs.id
+                            %th= cs.enqueued_time
+                            %th Action

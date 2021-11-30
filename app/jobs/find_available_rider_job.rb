@@ -44,6 +44,8 @@ class FindAvailableRiderJob < ApplicationJob
 
         # Max time for finding rider is 60seconds
         if time >= 60
+          checkout_seller.update(enqueued_time: Time.now)
+          checkout_seller.reload
           # broadcast to admin website and stop loop
           is_continue = false
         else
