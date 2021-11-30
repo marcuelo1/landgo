@@ -14,6 +14,8 @@
                         %th Action
                     - @checkout_sellers.each do |cs|
                         %tr 
-                            %th= cs.id
-                            %th= cs.enqueued_time
-                            %th Action
+                            %td= cs.id
+                            %td= cs.enqueued_time
+                            %td 
+                                .show-btn.btn.btn-secondary.refind-avail-rider-btn{cs_id: cs.id}
+                                    %i.icon-eye-open 

@@ -15,6 +15,7 @@ import 'bootstrap'
 require("packs/shared")
 require("packs/sellers_page")
 require("packs/seller_index")
+require("packs/admin_index")
 
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)

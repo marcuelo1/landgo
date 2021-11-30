@@ -4,8 +4,6 @@ Rails.application.routes.draw do
   devise_for :admins
   
   namespace :admin do
-    get "/", to: "admin#index"
-
     resources :category do
     end
     
@@ -45,6 +43,12 @@ Rails.application.routes.draw do
     end
 
     resources :riders do
+    end
+    
+    resources :admin, path: '' do
+      collection do
+        post :refind_available_rider
+      end
     end
   end
 
