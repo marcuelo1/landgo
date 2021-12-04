@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:ryve_mobile/core/models/product_model.dart';
+import 'package:ryve_mobile/features/sellers/controllers/product_controller.dart';
 import 'package:ryve_mobile/features/sellers/styles/product_style.dart';
-import 'package:ryve_mobile/core/entities/headers.dart';
-import 'package:ryve_mobile/core/widgets/loading.dart';
-import 'package:ryve_mobile/core/widgets/pop_up.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/core/styles/shared_style.dart';
 import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/core/widgets/shared_widgets.dart';
+import 'package:provider/provider.dart';
 
 class Product extends StatefulWidget {
   const Product({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class _ProductState extends State<Product> {
   late double width;
   late double height;
   late double scale;
-
+  late ProductController con;
   // dimensions
   final double productImageWidth = 325;
   final double productImageHeight = 200;
@@ -35,27 +36,12 @@ class _ProductState extends State<Product> {
   final double addToBasketBtnHeight = 60;
 
   Map seller = {};
-  Map product = {};
-  List sizes = [];
-  List add_on_groups = [];
-  String displayPrice = "";
+  late ProductModel product;
 
-  // selected
-  Map selectedSize = {};
-  Map selectedAddOns =
-      {}; // {aog_id: {require: int, num_of_select: int, addOns: List of add on ids, addOnPrices: List of add on prices} }
-  int quan_of_prod = 1;
-
-  // response
-  Map response = {};
-  Map responseBody = {};
-  // headers
-  Map<String, String> _headers = {};
   @override
   void initState() {
     super.initState();
-    _headers = Headers.getHeaders();
-    print(_headers);
+    con = Provider.of<ProductController>(context, listen: false);
   }
 
   @override
@@ -63,146 +49,96 @@ class _ProductState extends State<Product> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
     scale = SharedStyle.referenceWidth / width;
+
+    return content(context);
+  }
+
+  Widget content(context) {
     final Map args = ModalRoute.of(context)!.settings.arguments as Map;
     product = args['product'];
     print(product);
-    _dataUrl = _dataUrl + "?id=${product['id']}";
+    con.getProductDetails(product);
 
-    return responseBody.isEmpty
-        ? FutureBuilder(
-            future: SharedFunction.getData(_dataUrl, _headers),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              // Connection state of getting the data
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                  return Text("check internet");
-                case ConnectionState.waiting: // Retrieving
-                  return Loading();
-                default: // Success of connecting to back end
-                  // check if snapshot has an error
-                  if (snapshot.hasError) {
-                    return Text("Error: ${snapshot.error}");
-                  }
-
-                  // get response
-                  response = snapshot.data;
-                  responseBody = response['body'];
-                  print(responseBody);
-                  print(
-                      "==============================================================");
-
-                  sizes = responseBody['sizes'];
-                  // check if product has only one size, so we can display at the bottom of product name
-                  if (sizes.length == 1) {
-                    displayPrice = sizes[0]['price'].toStringAsFixed(2);
-                    selectedSize["product_price_id"] =
-                        sizes[0]['product_price_id'];
-                    selectedSize["price"] = sizes[0]['price'];
-                  }
-
-                  // get add on groups
-                  add_on_groups = responseBody['add_on_groups'];
-                  print(add_on_groups);
-                  print(
-                      "==============================================================");
-                  for (var aog in add_on_groups) {
-                    selectedAddOns[aog['id']] = {
-                      "require": aog['require'],
-                      "num_of_select": aog['num_of_select'],
-                      "addOns": [],
-                      "addOnPrices": []
-                    };
-                  }
-                  print(selectedAddOns);
-                  print(
-                      "==============================================================");
-
-                  seller = responseBody['seller'];
-
-                  return content();
-              }
-            })
-        : content();
-  }
-
-  Widget content() {
     return SafeArea(
         child: Scaffold(
       appBar: SharedWidgets.appBar(context, title: seller['name']),
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            width: SharedFunction.scaleWidth(327, width),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // space
-                SizedBox(
-                  height: SharedFunction.scaleHeight(20, height),
-                ),
-                // product image
-                productImage(product['image']),
-                // space
-                SizedBox(
-                  height: SharedFunction.scaleHeight(10, height),
-                ),
-                // product name
-                productName(product['name']),
-                // space
-                SizedBox(
-                  height: SharedFunction.scaleHeight(5, height),
-                ),
-                // product description
-                productDescription(product['description']),
-                // space
-                SizedBox(
-                  height: SharedFunction.scaleHeight(7, height),
-                ),
-                // product price
-                if (sizes.length == 1) ...[
-                  productPrice(displayPrice),
-                  // space
-                  SizedBox(
-                    height: SharedFunction.scaleHeight(30, height),
-                  ),
-                ],
-                // product size
-                if (sizes.length > 1) ...[
-                  productSizes(sizes),
-                  // space
-                  SizedBox(
-                    height: SharedFunction.scaleHeight(30, height),
-                  ),
-                ],
-                // product add ons
-                if (add_on_groups.length > 0) ...[
-                  productAddOns(add_on_groups),
-                  // space
-                  SizedBox(
-                    height: SharedFunction.scaleHeight(30, height),
-                  ),
-                ],
-                // Quantity
-                quantity(),
-                // space
-                SizedBox(
-                  height: SharedFunction.scaleHeight(30, height),
-                ),
-                // Total
-                total(),
-                // space
-                SizedBox(
-                  height: SharedFunction.scaleHeight(45, height),
-                ),
-                // Add to cart
-                addToBasketBtn(),
-                // space
-                SizedBox(
-                  height: SharedFunction.scaleHeight(80, height),
-                ),
-              ],
-            ),
-          ),
+              width: SharedFunction.scaleWidth(327, width),
+              child: Consumer<ProductController>(
+                builder: (_, _product, __) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // space
+                      SizedBox(
+                        height: SharedFunction.scaleHeight(20, height),
+                      ),
+                      // product image
+                      productImage(product.image),
+                      // space
+                      SizedBox(
+                        height: SharedFunction.scaleHeight(10, height),
+                      ),
+                      // product name
+                      productName(product.name),
+                      // space
+                      SizedBox(
+                        height: SharedFunction.scaleHeight(5, height),
+                      ),
+                      // product description
+                      productDescription(product.description),
+                      // space
+                      SizedBox(
+                        height: SharedFunction.scaleHeight(7, height),
+                      ),
+                      // product price
+                      if (_product.sizes.length == 1) ...[
+                        productPrice(_product.displayPrice),
+                        // space
+                        SizedBox(
+                          height: SharedFunction.scaleHeight(30, height),
+                        ),
+                      ],
+                      // product size
+                      if (_product.sizes.length > 1) ...[
+                        productSizes(_product),
+                        // space
+                        SizedBox(
+                          height: SharedFunction.scaleHeight(30, height),
+                        ),
+                      ],
+                      // product add ons
+                      if (_product.add_on_groups.length > 0) ...[
+                        productAddOns(_product),
+                        // space
+                        SizedBox(
+                          height: SharedFunction.scaleHeight(30, height),
+                        ),
+                      ],
+                      // Quantity
+                      quantity(_product),
+                      // space
+                      SizedBox(
+                        height: SharedFunction.scaleHeight(30, height),
+                      ),
+                      // Total
+                      total(_product),
+                      // space
+                      SizedBox(
+                        height: SharedFunction.scaleHeight(45, height),
+                      ),
+                      // Add to cart
+                      addToBasketBtn(_product),
+                      // space
+                      SizedBox(
+                        height: SharedFunction.scaleHeight(80, height),
+                      ),
+                    ],
+                  );
+                },
+              )),
         ),
       ),
     ));
@@ -229,7 +165,7 @@ class _ProductState extends State<Product> {
 
   Widget productName(String name) {
     return Text(
-      name,
+      "Test",
       textAlign: TextAlign.center,
       style: ProductStyle.productName,
     );
@@ -237,18 +173,18 @@ class _ProductState extends State<Product> {
 
   Widget productDescription(String _description) {
     return Text(
-      _description,
+      "_description",
       textAlign: TextAlign.center,
       style: ProductStyle.productDescription,
     );
   }
 
   Widget productPrice(String price) {
-    return Text("₱$price",
+    return Text("₱",
         textAlign: TextAlign.center, style: ProductStyle.productPrice);
   }
 
-  Widget productSizes(List _sizes) {
+  Widget productSizes(ProductController product) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -259,8 +195,8 @@ class _ProductState extends State<Product> {
           height: SharedFunction.scaleHeight(10, height),
         ),
         // sizes
-        for (var size in _sizes) ...[
-          productSizeDetail(size),
+        for (var size in product.sizes) ...[
+          productSizeDetail(size, product),
           // space
           SizedBox(
             height: SharedFunction.scaleHeight(10, height),
@@ -270,18 +206,12 @@ class _ProductState extends State<Product> {
     );
   }
 
-  Widget productSizeDetail(Map size) {
+  Widget productSizeDetail(Map size, ProductController product) {
     String _name = size['size'];
-    bool selected =
-        selectedSize["product_price_id"] == size['product_price_id'];
+    bool selected = product.selected(size);
 
     return ElevatedButton(
-        onPressed: () {
-          setState(() {
-            selectedSize["product_price_id"] = size['product_price_id'];
-            selectedSize["price"] = size['price'];
-          });
-        },
+        onPressed: () => product.setSize(size),
         style: selected ? ProductStyle.selectedBtn : ProductStyle.unselectedBtn,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -294,15 +224,15 @@ class _ProductState extends State<Product> {
         ));
   }
 
-  Widget productAddOns(List addOnGroups) {
+  Widget productAddOns(ProductController product) {
     return Column(
       children: [
-        for (var aog in addOnGroups) ...[addOnGroup(aog)]
+        for (var aog in product.add_on_groups) ...[addOnGroup(aog, product)]
       ],
     );
   }
 
-  Widget addOnGroup(Map aog) {
+  Widget addOnGroup(Map aog, ProductController product) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -315,7 +245,7 @@ class _ProductState extends State<Product> {
         // add ons
         for (var add_on in aog['add_ons']) ...[
           // add on
-          addOn(add_on),
+          addOn(add_on, product),
           // space
           SizedBox(
             height: SharedFunction.scaleHeight(10, height),
@@ -325,51 +255,14 @@ class _ProductState extends State<Product> {
     );
   }
 
-  Widget addOn(Map ao) {
+  Widget addOn(Map ao, ProductController product) {
     String _name = ao['name'];
     String _price = ao['price'].toStringAsFixed(2);
-    bool selected =
-        selectedAddOns[ao['add_on_group_id']]['addOns'].contains(ao['id']);
+    bool selected = product.selectedAddOns[ao['add_on_group_id']]['addOns']
+        .contains(ao['id']);
 
     return ElevatedButton(
-        onPressed: () {
-          if (selected) {
-            int _addOnsRequire =
-                selectedAddOns[ao['add_on_group_id']]['require'];
-            // if required then cannot unselect, and the user should select another choice
-            if (_addOnsRequire == 0) {
-              setState(() {
-                selectedAddOns[ao['add_on_group_id']]['addOns']
-                    .remove(ao['id']);
-                selectedAddOns[ao['add_on_group_id']]['addOnPrices']
-                    .remove(ao['price']);
-              });
-            }
-          } else {
-            setState(() {
-              List _addOns = selectedAddOns[ao['add_on_group_id']]['addOns'];
-              int _numberOfSelected =
-                  selectedAddOns[ao['add_on_group_id']]['num_of_select'];
-              // check if add on selected hasn't selected any yet
-              if (_addOns.isEmpty) {
-                selectedAddOns[ao['add_on_group_id']]['addOns'].add(ao['id']);
-                selectedAddOns[ao['add_on_group_id']]['addOnPrices']
-                    .add(ao['price']);
-              } else {
-                // check number of items can be selected
-                if (_numberOfSelected == _addOns.length) {
-                  selectedAddOns[ao['add_on_group_id']]['addOns'].removeAt(0);
-                  selectedAddOns[ao['add_on_group_id']]['addOnPrices']
-                      .removeAt(0);
-                }
-
-                selectedAddOns[ao['add_on_group_id']]['addOns'].add(ao['id']);
-                selectedAddOns[ao['add_on_group_id']]['addOnPrices']
-                    .add(ao['price']);
-              }
-            });
-          }
-        },
+        onPressed: () => product.checkAddOns(ao, selected),
         style: selected ? ProductStyle.selectedBtn : ProductStyle.unselectedBtn,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -382,40 +275,38 @@ class _ProductState extends State<Product> {
         ));
   }
 
-  Widget quantity() {
+  Widget quantity(ProductController product) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // title
         plainTitle("Quantity"),
         //
-        quantityBar()
+        quantityBar(product)
       ],
     );
   }
 
-  Widget quantityBar() {
+  Widget quantityBar(ProductController product) {
     return Container(
       width: SharedFunction.scaleWidth(quantityBarWidth, width),
       height: SharedFunction.scaleHeight(quantityBarHeight, height),
       decoration: ProductStyle.quantityBar,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [quantityMinus(), quantityNum(), quantityAdd()],
+        children: [
+          quantityMinus(product),
+          quantityNum(product),
+          quantityAdd(product)
+        ],
       ),
     );
   }
 
-  Widget quantityMinus() {
+  Widget quantityMinus(ProductController product) {
     return Center(
       child: IconButton(
-        onPressed: () {
-          if (quan_of_prod > 1) {
-            setState(() {
-              quan_of_prod--;
-            });
-          }
-        },
+        onPressed: () => product.quantityMinus(),
         icon: Icon(
           Icons.remove,
         ),
@@ -424,35 +315,31 @@ class _ProductState extends State<Product> {
     );
   }
 
-  Widget quantityAdd() {
+  Widget quantityAdd(ProductController product) {
     return Center(
       child: IconButton(
-        onPressed: () {
-          setState(() {
-            quan_of_prod++;
-          });
-        },
+        onPressed: () => product.quantityAdd(),
         icon: Icon(Icons.add),
         color: SharedStyle.red,
       ),
     );
   }
 
-  Widget quantityNum() {
+  Widget quantityNum(ProductController product) {
     return Text(
-      "$quan_of_prod",
+      "QuantityNum",
       style: ProductStyle.quantityBarNum,
     );
   }
 
-  Widget total() {
+  Widget total(ProductController product) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // title
         plainTitle("Total"),
         // total amount
-        totalAmount(getTotalAmount().toStringAsFixed(2))
+        totalAmount(product.getTotalAmount().toStringAsFixed(2))
       ],
     );
   }
@@ -473,7 +360,7 @@ class _ProductState extends State<Product> {
       children: [
         plainTitle(name),
         Text(
-          requireName,
+          "title",
         ),
       ],
     );
@@ -481,14 +368,14 @@ class _ProductState extends State<Product> {
 
   Widget plainTitle(String name) {
     return Text(
-      name,
+      "plainTitle",
       style: ProductStyle.title,
     );
   }
 
   Widget subTitle(String name, bool selected) {
     return Text(
-      name,
+      "subTitle",
       style: selected
           ? ProductStyle.selectedSubTitle
           : ProductStyle.unselectedSubTitle,
@@ -504,7 +391,7 @@ class _ProductState extends State<Product> {
       children: [
         if (!_isSame) ...[
           Text(
-            "₱$_stringPrice",
+            "₱priceDisplay",
             style: selected
                 ? ProductStyle.selectedSubTitle
                 : ProductStyle.unselectedSubTitle,
@@ -514,7 +401,7 @@ class _ProductState extends State<Product> {
           )
         ],
         Text(
-          "₱$_stringBasePrice",
+          "₱_stringBasePrice",
           style: selected
               ? (_isSame
                   ? ProductStyle.selectedSubTitle
@@ -528,74 +415,12 @@ class _ProductState extends State<Product> {
   }
 
   Widget totalAmount(String _total) {
-    return Text("₱$_total", style: ProductStyle.totalAmount);
+    return Text("₱totalAmount", style: ProductStyle.totalAmount);
   }
 
-  double getTotalAmount() {
-    // get price of size
-    double _sizePrice =
-        selectedSize["price"] == null ? 0 : selectedSize["price"];
-    double _addOnPrice = 0;
-
-    if (selectedAddOns.isNotEmpty) {
-      selectedAddOns.forEach((key, value) {
-        _addOnPrice += value["addOnPrices"].isEmpty
-            ? 0
-            : value["addOnPrices"].reduce((a, b) => a + b);
-      });
-    }
-
-    double _total = quan_of_prod * (_sizePrice + _addOnPrice);
-    return _total;
-  }
-
-  Widget addToBasketBtn() {
-    Function() _onPressed = () async {
-      // check if size has been selected
-      if (selectedSize["product_price_id"] == null) {
-        PopUp.error(context, "Please choose one size");
-        return;
-      }
-
-      // check if add on required is not selected
-      int check = 0;
-      selectedAddOns.forEach((key, value) {
-        if (value["addOns"].length < value["require"]) {
-          check = 1;
-        }
-      });
-
-      if (check == 1) {
-        PopUp.error(context, "Please select on of the required add ons");
-        return;
-      }
-
-      // send data to back end
-      List _addOnsIds = [];
-      selectedAddOns.forEach((key, value) {
-        _addOnsIds.add(value["addOns"]);
-      });
-
-      Map _data = {
-        "product_id": product["id"],
-        "seller_id": seller["id"],
-        "product_price_id": selectedSize["product_price_id"],
-        "quantity": quan_of_prod,
-        "add_on_ids": _addOnsIds,
-      };
-
-      String _url = "${SharedUrl.root}/${SharedUrl.version}/buyer/carts";
-      Map _response = await SharedFunction.sendData(_url, _headers, _data);
-
-      if (_response["status"] == 200) {
-        Navigator.pop(context);
-      } else {
-        PopUp.error(context, "error in server");
-      }
-    };
-
+  Widget addToBasketBtn(ProductController product) {
     return SharedWidgets.redBtn(
-        onPressed: _onPressed,
+        onPressed: () => product.addToCart(context),
         name: "Add To Basket",
         width: width,
         height: height);

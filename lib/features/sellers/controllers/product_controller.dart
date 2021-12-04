@@ -7,18 +7,9 @@ import 'package:ryve_mobile/shared/shared_url.dart';
 import 'package:ryve_mobile/shared/shared_function.dart';
 import 'package:ryve_mobile/core/widgets/pop_up.dart';
 
-class SellerController extends ChangeNotifier {
+class ProductController extends ChangeNotifier {
   String _getUrl = "${SharedUrl.root}/${SharedUrl.version}/buyer/";
-
   Map<String, String> _headers = {};
-
-  List category_deals = []; // category deals
-  List<SellerModel> top_sellers = []; // top_sellers
-  List<SellerModel> recent_sellers = []; // recent_sellers
-  List<SellerModel> all_sellers = []; // all sellers
-
-  List product_categories = [];
-  List<ProductModel> products = [];
 
   List sizes = [];
   List add_on_groups = [];
@@ -29,50 +20,10 @@ class SellerController extends ChangeNotifier {
   int quan_of_prod = 1;
   late SellerModel seller;
   late ProductModel product;
-  UnmodifiableListView<SellerModel> get topSellers =>
-      UnmodifiableListView(top_sellers);
-  UnmodifiableListView<SellerModel> get recentSellers =>
-      UnmodifiableListView(recent_sellers);
-  UnmodifiableListView<SellerModel> get allSellers =>
-      UnmodifiableListView(all_sellers);
 
   void setHeader() {
     _headers = Headers.getHeaders();
     print(_headers);
-  }
-
-  void getSellersData(category) async {
-    print("GETTING SELLERS DATA");
-    // get headers
-    setHeader();
-    //get url
-    String url = _getUrl + "sellers?id=${category['id']}";
-    // request data from the server
-    Map _response = await SharedFunction.getData(url, _headers);
-    Map _responseBody = _response['body'];
-
-    top_sellers = SellerModel.fromJson(_responseBody['top_sellers']);
-    recent_sellers = SellerModel.fromJson(_responseBody['recent_sellers']);
-    all_sellers = SellerModel.fromJson(_responseBody['all_sellers']);
-
-    category_deals = _responseBody['category_deals'];
-    print("=============================");
-    print(_responseBody);
-
-    notifyListeners();
-  }
-
-  void getSpecificSeller(seller) async {
-    setHeader();
-    String _dataUrl = _getUrl + "sellers/${seller.id}";
-
-    Map _response = await SharedFunction.getData(_dataUrl, _headers);
-    Map _responseBody = _response['body'];
-    product_categories = _responseBody['product_categories'];
-    // get products
-    products = ProductModel.fromJson(_responseBody['products']);
-
-    notifyListeners();
   }
 
   void getProductDetails(product) async {
@@ -100,6 +51,79 @@ class SellerController extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool selected(size) {
+    return selectedSize["product_price_id"] == size['product_price_id'];
+  }
+
+  void setSize(size) {
+    selectedSize["product_price_id"] = size['product_price_id'];
+    selectedSize["price"] = size['price'];
+    notifyListeners();
+  }
+
+  void checkAddOns(Map addOn, bool selected) {
+    if (selected) {
+      int _addOnsRequire = selectedAddOns[addOn['add_on_group_id']]['require'];
+      // if required then cannot unselect, and the user should select another choice
+      if (_addOnsRequire == 0) {
+        selectedAddOns[addOn['add_on_group_id']]['addOns'].remove(addOn['id']);
+        selectedAddOns[addOn['add_on_group_id']]['addOnPrices']
+            .remove(addOn['price']);
+      }
+    } else {
+      List _addOns = selectedAddOns[addOn['add_on_group_id']]['addOns'];
+      int _numberOfSelected =
+          selectedAddOns[addOn['add_on_group_id']]['num_of_select'];
+      // check if add on selected hasn't selected any yet
+      if (_addOns.isEmpty) {
+        selectedAddOns[addOn['add_on_group_id']]['addOns'].add(addOn['id']);
+        selectedAddOns[addOn['add_on_group_id']]['addOnPrices']
+            .add(addOn['price']);
+      } else {
+        // check number of items can be selected
+        if (_numberOfSelected == _addOns.length) {
+          selectedAddOns[addOn['add_on_group_id']]['addOns'].removeAt(0);
+          selectedAddOns[addOn['add_on_group_id']]['addOnPrices'].removeAt(0);
+        }
+
+        selectedAddOns[addOn['add_on_group_id']]['addOns'].add(addOn['id']);
+        selectedAddOns[addOn['add_on_group_id']]['addOnPrices']
+            .add(addOn['price']);
+      }
+    }
+    notifyListeners();
+  }
+
+  void quantityMinus() {
+    if (quan_of_prod > 1) {
+      quan_of_prod--;
+    }
+    notifyListeners();
+  }
+  void quantityAdd() {
+    if (quan_of_prod > 1) {
+      quan_of_prod--;
+    }
+    notifyListeners();
+  }
+  double getTotalAmount() {
+    // get price of size
+    double _sizePrice = selectedSize["price"] == null
+        ? 0
+        : selectedSize["price"];
+    double _addOnPrice = 0;
+
+    if (selectedAddOns.isNotEmpty) {
+      selectedAddOns.forEach((key, value) {
+        _addOnPrice += value["addOnPrices"].isEmpty
+            ? 0
+            : value["addOnPrices"].reduce((a, b) => a + b);
+      });
+    }
+
+    double _total = quan_of_prod * (_sizePrice + _addOnPrice);
+    return _total;
+  }
   void addToCart(context) async {
     if (selectedSize["product_price_id"] == null) {
       PopUp.error(context, "Please choose one size");

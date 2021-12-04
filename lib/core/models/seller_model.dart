@@ -38,7 +38,7 @@ class SellerModel extends Seller {
       name: json['name'],
       rating: json['rating'],
       address: json['address'],
-      phoneNumber: json['address'],
+      phoneNumber: json['phoneNumber'],
       image: json['image'],
     );
   }

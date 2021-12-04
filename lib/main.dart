@@ -4,6 +4,7 @@ import 'package:ryve_mobile/features/cart/review_payment_location.dart';
 import 'package:ryve_mobile/features/home/home.dart';
 import 'package:ryve_mobile/features/home/search_page.dart';
 import 'package:ryve_mobile/features/home/search_results.dart';
+import 'package:ryve_mobile/features/sellers/controllers/product_controller.dart';
 import 'package:ryve_mobile/features/sellers/controllers/seller_controller.dart';
 import 'package:ryve_mobile/locations/location_form.dart';
 import 'package:ryve_mobile/locations/list_of_locations.dart';
@@ -26,7 +27,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Headers.init();
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => SellerController())],
+    providers: [
+      ChangeNotifierProvider(create: (_) => SellerController()),
+      ChangeNotifierProvider(create: (_) => ProductController()),
+    ],
     child: const MyApp(),
   ));
 }
