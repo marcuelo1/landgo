@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  seller: one
+  discount_type: 1
+  discount_amount: 1.5
+  products_id: MyString
+  min_amount: 1.5
+  start_date: 2021-12-07 10:26:51
+  end_date: 2021-12-07 10:26:51
+
+two:
+  seller: two
+  discount_type: 1
+  discount_amount: 1.5
+  products_id: MyString
+  min_amount: 1.5
+  start_date: 2021-12-07 10:26:51
+  end_date: 2021-12-07 10:26:51

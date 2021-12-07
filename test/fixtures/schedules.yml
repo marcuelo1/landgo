@@ -1,11 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  price: 1.5
-  product: one
-  product_size: one
+  seller: one
+  monday_start: 2021-12-07 10:39:03
 
 two:
-  price: 1.5
-  product: two
-  product_size: two
+  seller: two
+  monday_start: 2021-12-07 10:39:03

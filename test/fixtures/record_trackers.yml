@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  seller: one
+  object: one
+  object_type: Object
+  attribute: MyString
+  old_data: MyString
+  new_Data: MyString
+  status: 1
+  approved_date: 2021-12-07 10:07:33
+  declined_date: 2021-12-07 10:07:33
+  declined_reason: MyString
+
+two:
+  seller: two
+  object: two
+  object_type: Object
+  attribute: MyString
+  old_data: MyString
+  new_Data: MyString
+  status: 1
+  approved_date: 2021-12-07 10:07:33
+  declined_date: 2021-12-07 10:07:33
+  declined_reason: MyString

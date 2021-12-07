@@ -9,14 +9,16 @@ class Seller < ActiveRecord::Base
 
   belongs_to :category
   has_one_attached :image
+  has_one :schedule
   has_many :product_categories, dependent: :destroy
   has_many :products, dependent: :destroy
-  has_many :product_sizes, dependent: :destroy
-  has_many :add_on_groups, dependent: :destroy
-  has_many :add_ons, through: :add_on_groups
-  has_one :location, as: :user, dependent: :destroy
+  has_many :template_aogs, dependent: :destroy
   has_many :checkout_sellers, dependent: :destroy
+  has_many :seller_transactions, dependent: :destroy
+  has_many :record_trackers, dependent: :destroy
+  has_many :discount_trackers, dependent: :destroy
 
+  ### PG SEARCH
   include PgSearch::Model
   multisearchable against: [:name], update_if: :name_changed?
   pg_search_scope(
@@ -30,8 +32,15 @@ class Seller < ActiveRecord::Base
     }
   )
 
+  ### GEOCODE
+  reverse_geocoded_by :latitude, :longitude
+
   DISTANCE = 5
   RATE_PER_KM = 10
+
+  def address 
+    [details, street, village, city.present? ? city + " City" : "", state].compact.join(", ") 
+  end 
 
   def rating
     4.8
@@ -53,4 +62,18 @@ class Seller < ActiveRecord::Base
     return 10
   end
   
+  def self.transfer_loc_to_seller
+    Location.where(user_type: "Seller").each do |l|
+      seller = Seller.find(l.user_id)
+      seller.longitude = l.longitude
+      seller.latitude = l.latitude
+      seller.details = l.details
+      seller.street = l.street
+      seller.city = l.city
+      seller.village = l.village
+      seller.state = l.state
+
+      seller.save
+    end
+  end
 end

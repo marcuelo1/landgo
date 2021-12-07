@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_30_035108) do
+ActiveRecord::Schema.define(version: 2021_12_07_054436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,10 +38,11 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
 
   create_table "add_on_groups", force: :cascade do |t|
     t.string "name"
-    t.bigint "seller_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["seller_id"], name: "index_add_on_groups_on_seller_id"
+    t.string "title"
+    t.bigint "template_aog_id", null: false
+    t.index ["template_aog_id"], name: "index_add_on_groups_on_template_aog_id"
   end
 
   create_table "add_ons", force: :cascade do |t|
@@ -65,13 +66,6 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
-  end
-
-  create_table "batches", force: :cascade do |t|
-    t.string "name"
-    t.float "acceptance_rate"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "buyer_payment_methods", force: :cascade do |t|
@@ -122,28 +116,41 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
   end
 
   create_table "cart_add_ons", force: :cascade do |t|
-    t.bigint "cart_id", null: false
     t.bigint "add_on_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "cart_product_id", null: false
     t.index ["add_on_id"], name: "index_cart_add_ons_on_add_on_id"
-    t.index ["cart_id"], name: "index_cart_add_ons_on_cart_id"
+    t.index ["cart_product_id"], name: "index_cart_add_ons_on_cart_product_id"
   end
 
-  create_table "carts", force: :cascade do |t|
-    t.bigint "buyer_id", null: false
+  create_table "cart_products", force: :cascade do |t|
+    t.bigint "cart_seller_id", null: false
     t.bigint "product_id", null: false
-    t.bigint "seller_id", null: false
+    t.bigint "product_size_id", null: false
     t.integer "quantity"
-    t.bigint "product_price_id", null: false
+    t.float "one_qty_price"
+    t.float "total"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["cart_seller_id"], name: "index_cart_products_on_cart_seller_id"
+    t.index ["product_id"], name: "index_cart_products_on_product_id"
+    t.index ["product_size_id"], name: "index_cart_products_on_product_size_id"
+  end
+
+  create_table "cart_sellers", force: :cascade do |t|
+    t.bigint "buyer_id", null: false
+    t.bigint "seller_id", null: false
+    t.float "sub_total"
+    t.float "delivery_fee"
+    t.bigint "voucher_id", null: false
+    t.float "vat"
     t.float "total"
-    t.float "single_item_price", default: 0.0
-    t.index ["buyer_id"], name: "index_carts_on_buyer_id"
-    t.index ["product_id"], name: "index_carts_on_product_id"
-    t.index ["product_price_id"], name: "index_carts_on_product_price_id"
-    t.index ["seller_id"], name: "index_carts_on_seller_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["buyer_id"], name: "index_cart_sellers_on_buyer_id"
+    t.index ["seller_id"], name: "index_cart_sellers_on_seller_id"
+    t.index ["voucher_id"], name: "index_cart_sellers_on_voucher_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -175,7 +182,6 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
   create_table "checkout_products", force: :cascade do |t|
     t.bigint "checkout_seller_id", null: false
     t.bigint "product_id", null: false
-    t.bigint "product_price_id", null: false
     t.string "size"
     t.float "price"
     t.integer "quantity"
@@ -183,9 +189,9 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "description"
+    t.string "name"
     t.index ["checkout_seller_id"], name: "index_checkout_products_on_checkout_seller_id"
     t.index ["product_id"], name: "index_checkout_products_on_product_id"
-    t.index ["product_price_id"], name: "index_checkout_products_on_product_price_id"
   end
 
   create_table "checkout_sellers", force: :cascade do |t|
@@ -200,7 +206,6 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
     t.float "subtotal", default: 0.0
     t.float "vat"
     t.bigint "rider_id"
-    t.float "rider_delivery_fee", default: 0.0
     t.datetime "enqueued_time"
     t.index ["checkout_id"], name: "index_checkout_sellers_on_checkout_id"
     t.index ["rider_id"], name: "index_checkout_sellers_on_rider_id"
@@ -221,9 +226,20 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
     t.index ["payment_method_id"], name: "index_checkouts_on_payment_method_id"
   end
 
+  create_table "discount_trackers", force: :cascade do |t|
+    t.bigint "seller_id", null: false
+    t.integer "discount_type"
+    t.float "discount_amount"
+    t.string "products_id"
+    t.float "min_amount"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["seller_id"], name: "index_discount_trackers_on_seller_id"
+  end
+
   create_table "locations", force: :cascade do |t|
-    t.string "user_type", null: false
-    t.bigint "user_id", null: false
     t.string "name"
     t.float "longitude"
     t.float "latitude"
@@ -235,7 +251,8 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
     t.string "village"
     t.string "state"
     t.boolean "selected", default: false
-    t.index ["user_type", "user_id"], name: "index_locations_on_user_type_and_user_id"
+    t.bigint "buyer_id", null: false
+    t.index ["buyer_id"], name: "index_locations_on_buyer_id"
   end
 
   create_table "payment_methods", force: :cascade do |t|
@@ -272,23 +289,13 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
     t.index ["seller_id"], name: "index_product_categories_on_seller_id"
   end
 
-  create_table "product_prices", force: :cascade do |t|
-    t.float "price"
-    t.bigint "product_id", null: false
-    t.bigint "product_size_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.float "base_price", default: 0.0
-    t.index ["product_id"], name: "index_product_prices_on_product_id"
-    t.index ["product_size_id"], name: "index_product_prices_on_product_size_id"
-  end
-
   create_table "product_sizes", force: :cascade do |t|
     t.string "name"
-    t.bigint "seller_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["seller_id"], name: "index_product_sizes_on_seller_id"
+    t.bigint "product_id"
+    t.float "price"
+    t.index ["product_id"], name: "index_product_sizes_on_product_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -298,8 +305,27 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "description"
+    t.bigint "template_aog_id", null: false
     t.index ["product_category_id"], name: "index_products_on_product_category_id"
     t.index ["seller_id"], name: "index_products_on_seller_id"
+    t.index ["template_aog_id"], name: "index_products_on_template_aog_id"
+  end
+
+  create_table "record_trackers", force: :cascade do |t|
+    t.bigint "seller_id", null: false
+    t.string "object_type", null: false
+    t.bigint "object_id", null: false
+    t.string "attribute"
+    t.string "old_data"
+    t.string "new_Data"
+    t.integer "status"
+    t.datetime "approved_date"
+    t.datetime "declined_date"
+    t.string "declined_reason"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["object_type", "object_id"], name: "index_record_trackers_on_object_type_and_object_id"
+    t.index ["seller_id"], name: "index_record_trackers_on_seller_id"
   end
 
   create_table "rider_transactions", force: :cascade do |t|
@@ -325,7 +351,6 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
     t.string "name"
-    t.string "nickname"
     t.string "image"
     t.string "email"
     t.json "tokens"
@@ -334,14 +359,49 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
     t.string "phone_number"
     t.string "first_name"
     t.string "last_name"
-    t.bigint "batch_id"
     t.integer "status", default: 0
     t.float "acceptance_rate", default: 0.0
-    t.index ["batch_id"], name: "index_riders_on_batch_id"
+    t.float "longitude"
+    t.float "latitude"
     t.index ["confirmation_token"], name: "index_riders_on_confirmation_token", unique: true
     t.index ["email"], name: "index_riders_on_email", unique: true
     t.index ["reset_password_token"], name: "index_riders_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_riders_on_uid_and_provider", unique: true
+  end
+
+  create_table "schedules", force: :cascade do |t|
+    t.bigint "seller_id", null: false
+    t.datetime "monday_start"
+    t.datetime "monday_end"
+    t.datetime "tuesday_start"
+    t.datetime "tuesday_end"
+    t.datetime "wednesday_start"
+    t.datetime "wednesday_end"
+    t.datetime "thursday_start"
+    t.datetime "thursday_end"
+    t.datetime "friday_start"
+    t.datetime "friday_end"
+    t.datetime "saturday_start"
+    t.datetime "saturday_end"
+    t.datetime "sunday_start"
+    t.datetime "sunday_end"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["seller_id"], name: "index_schedules_on_seller_id"
+  end
+
+  create_table "seller_transactions", force: :cascade do |t|
+    t.bigint "seller_id", null: false
+    t.bigint "checkout_seller_id", null: false
+    t.float "sub_total"
+    t.float "fees_amount"
+    t.float "total"
+    t.boolean "is_paid"
+    t.string "payment_method"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["checkout_seller_id"], name: "index_seller_transactions_on_checkout_seller_id"
+    t.index ["seller_id"], name: "index_seller_transactions_on_seller_id"
   end
 
   create_table "sellers", force: :cascade do |t|
@@ -357,20 +417,33 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
     t.string "name"
-    t.string "nickname"
     t.string "email"
     t.json "tokens"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "phone_number"
     t.bigint "category_id", null: false
-    t.string "address"
-    t.integer "num_of_completed_checkouts", default: 0
+    t.boolean "is_open", default: false
+    t.float "longitude"
+    t.float "latitude"
+    t.string "details"
+    t.string "street"
+    t.string "village"
+    t.string "city"
+    t.string "state"
     t.index ["category_id"], name: "index_sellers_on_category_id"
     t.index ["confirmation_token"], name: "index_sellers_on_confirmation_token", unique: true
     t.index ["email"], name: "index_sellers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_sellers_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_sellers_on_uid_and_provider", unique: true
+  end
+
+  create_table "template_aogs", force: :cascade do |t|
+    t.bigint "seller_id", null: false
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["seller_id"], name: "index_template_aogs_on_seller_id"
   end
 
   create_table "vouchers", force: :cascade do |t|
@@ -397,23 +470,24 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "add_on_groups", "sellers"
+  add_foreign_key "add_on_groups", "template_aogs"
   add_foreign_key "add_ons", "add_on_groups"
   add_foreign_key "buyer_payment_methods", "buyers"
   add_foreign_key "buyer_payment_methods", "payment_methods"
   add_foreign_key "buyer_vouchers", "buyers"
   add_foreign_key "buyer_vouchers", "vouchers"
   add_foreign_key "cart_add_ons", "add_ons"
-  add_foreign_key "cart_add_ons", "carts"
-  add_foreign_key "carts", "buyers"
-  add_foreign_key "carts", "product_prices"
-  add_foreign_key "carts", "products"
-  add_foreign_key "carts", "sellers"
+  add_foreign_key "cart_add_ons", "cart_products"
+  add_foreign_key "cart_products", "cart_sellers"
+  add_foreign_key "cart_products", "product_sizes"
+  add_foreign_key "cart_products", "products"
+  add_foreign_key "cart_sellers", "buyers"
+  add_foreign_key "cart_sellers", "sellers"
+  add_foreign_key "cart_sellers", "vouchers"
   add_foreign_key "category_deals", "categories"
   add_foreign_key "checkout_add_ons", "add_ons"
   add_foreign_key "checkout_add_ons", "checkout_products"
   add_foreign_key "checkout_products", "checkout_sellers"
-  add_foreign_key "checkout_products", "product_prices"
   add_foreign_key "checkout_products", "products"
   add_foreign_key "checkout_sellers", "checkouts"
   add_foreign_key "checkout_sellers", "riders"
@@ -421,16 +495,21 @@ ActiveRecord::Schema.define(version: 2021_11_30_035108) do
   add_foreign_key "checkout_sellers", "vouchers"
   add_foreign_key "checkouts", "buyers"
   add_foreign_key "checkouts", "payment_methods"
+  add_foreign_key "discount_trackers", "sellers"
+  add_foreign_key "locations", "buyers"
   add_foreign_key "product_add_ons", "add_on_groups"
   add_foreign_key "product_add_ons", "products"
   add_foreign_key "product_categories", "sellers"
-  add_foreign_key "product_prices", "product_sizes"
-  add_foreign_key "product_prices", "products"
-  add_foreign_key "product_sizes", "sellers"
+  add_foreign_key "product_sizes", "products"
   add_foreign_key "products", "product_categories"
   add_foreign_key "products", "sellers"
+  add_foreign_key "products", "template_aogs"
+  add_foreign_key "record_trackers", "sellers"
   add_foreign_key "rider_transactions", "checkout_sellers"
   add_foreign_key "rider_transactions", "riders"
-  add_foreign_key "riders", "batches"
+  add_foreign_key "schedules", "sellers"
+  add_foreign_key "seller_transactions", "checkout_sellers"
+  add_foreign_key "seller_transactions", "sellers"
   add_foreign_key "sellers", "categories"
+  add_foreign_key "template_aogs", "sellers"
 end

@@ -1,5 +1,5 @@
 class Location < ApplicationRecord
-  belongs_to :user, polymorphic: true
+  belongs_to :buyer
   
   # Geocode
   reverse_geocoded_by :latitude, :longitude

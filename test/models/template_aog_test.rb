@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BatchTest < ActiveSupport::TestCase
+class TemplateAogTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

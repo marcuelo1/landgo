@@ -9,7 +9,6 @@ class Rider < ActiveRecord::Base
 
   # has_one_attached :image
   has_one :wallet, as: :user, dependent: :destroy
-  has_one :location, as: :user, dependent: :destroy
   has_many :checkout_sellers
   has_many :rider_transactions
   belongs_to :batch

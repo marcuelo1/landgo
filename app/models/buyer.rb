@@ -7,8 +7,8 @@ class Buyer < ActiveRecord::Base
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
 
-  has_many :carts
-  has_many :locations, as: :user, dependent: :destroy
+  has_many :cart_sellers, dependent: :destroy
+  has_many :locations, dependent: :destroy
   has_many :checkouts, dependent: :destroy
   has_many :checkout_sellers, through: :checkouts
   has_many :buyer_payment_methods, dependent: :destroy
