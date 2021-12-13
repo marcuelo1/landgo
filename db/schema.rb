@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_08_012121) do
+ActiveRecord::Schema.define(version: 2021_12_13_104902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,13 +45,22 @@ ActiveRecord::Schema.define(version: 2021_12_08_012121) do
     t.index ["seller_id"], name: "index_add_on_groups_on_seller_id"
   end
 
+  create_table "add_on_to_groups", force: :cascade do |t|
+    t.bigint "add_on_group_id", null: false
+    t.bigint "add_on_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["add_on_group_id"], name: "index_add_on_to_groups_on_add_on_group_id"
+    t.index ["add_on_id"], name: "index_add_on_to_groups_on_add_on_id"
+  end
+
   create_table "add_ons", force: :cascade do |t|
     t.float "price"
     t.string "name"
-    t.bigint "add_on_group_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["add_on_group_id"], name: "index_add_ons_on_add_on_group_id"
+    t.bigint "seller_id", null: false
+    t.index ["seller_id"], name: "index_add_ons_on_seller_id"
   end
 
   create_table "admins", force: :cascade do |t|
@@ -451,7 +460,8 @@ ActiveRecord::Schema.define(version: 2021_12_08_012121) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "product_template_aog_id", null: false
     t.bigint "add_on_group_id", null: false
-    t.integer "num_of_required"
+    t.boolean "is_required"
+    t.integer "num_of_choices"
     t.index ["add_on_group_id"], name: "index_template_aogs_on_add_on_group_id"
     t.index ["product_template_aog_id"], name: "index_template_aogs_on_product_template_aog_id"
   end
@@ -481,7 +491,9 @@ ActiveRecord::Schema.define(version: 2021_12_08_012121) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "add_on_groups", "sellers"
-  add_foreign_key "add_ons", "add_on_groups"
+  add_foreign_key "add_on_to_groups", "add_on_groups"
+  add_foreign_key "add_on_to_groups", "add_ons"
+  add_foreign_key "add_ons", "sellers"
   add_foreign_key "buyer_payment_methods", "buyers"
   add_foreign_key "buyer_payment_methods", "payment_methods"
   add_foreign_key "buyer_vouchers", "buyers"

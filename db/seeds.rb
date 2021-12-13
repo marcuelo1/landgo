@@ -56,456 +56,59 @@ sellers = [
         address: "Lacson st., Bacolod City",
         image: 'mcdo.jpg',
         product_categories: ['Burger', 'Drinks', 'Desserts'],
-        product_sizes: ['Small', 'Medium', 'Large'],
-        add_on_groups: ['Add a dessert'],
-        add_ons: [
-            {
-                name: 'Large Sundae',
-                price: 50,
-                add_on_group_name: 'Add a dessert'
-
-            }
+        add_on_groups: [
+            {name: "aog1 required=false and any number of choices", title: "Please pick a dessert", is_required: false, num_of_choices: 0},
+            {name: "aog2 required=true 1 needed", title: "Please pick a side", is_required: true, num_of_choices: 1},
+            {name: "aog3 required=false upto 3 choices", title: "Please pick a side", is_required: false, num_of_choices: 3},
         ],
+        add_ons: [
+            {name: 'Large Sundae', price: 100},
+            {name: 'Regular Sundae', price: 75},
+            {name: 'Large Fries', price: 50},
+            {name: 'Regular Fries', price: 25},
+        ],
+        product_template_aogs: ['pta_1', 'pta_2', 'pta_3'],
         products: [
             {
                 name: "Chicken burger",
                 product_category_name: 'Burger',
                 image: "chicken_burger.jpg",
                 description: 'Best chicken buerge ever',
-                product_prices: [
-                    {
-                        size: 'Small',
-                        price: 45
-                    },
-                    {
-                        size: 'Medium',
-                        price: 65
-                    },
-                    {
-                        size: 'Large',
-                        price: 85
-                    },
+                product_sizes: [
+                    {name: 'Small', price: 45},
+                    {name: 'Medium', price: 65},
+                    {name: 'Large', price: 85},
                 ],
-                product_add_ons: [
-                    {
-                        name: 'Add a dessert',
-                        require: 1,
-                        num_of_select: 1
-                    }
-                ]
+                product_template_aogs: ['pta_1']
             },
             {
                 name: "Coke",
                 product_category_name: 'Drinks',
                 image: "coke.jpg",
                 description: 'Best soft drinks ever',
-                product_prices: [
-                    {
-                        size: 'Small',
-                        price: 25
-                    },
-                    {
-                        size: 'Medium',
-                        price: 35
-                    },
-                    {
-                        size: 'Large',
-                        price: 45
-                    },
+                product_sizes: [
+                    {name: 'Small', price: 25},
+                    {name: 'Medium', price: 35},
+                    {name: 'Large', price: 45},
                 ],
-                product_add_ons: [
-                    {
-                        name: 'Add a dessert',
-                        require: 1,
-                        num_of_select: 1
-                    }
-                ]
+                product_template_aogs: ['pta_1', 'pta_2']
             },
             {
                 name: "Sundae",
                 product_category_name: 'Desserts',
                 image: "sundae.jpg",
                 description: 'Best dessert ever',
-                product_prices: [
-                    {
-                        size: 'No Size',
-                        price: 25
-                    },
+                product_sizes: [
+                    {name: 'Small', price: 30},
+                    {name: 'Medium', price: 60},
+                    {name: 'Large', price: 90},
                 ],
-                product_add_ons: []
+                product_template_aogs: ['pta_1', 'pta_2', 'pta_3']
             }
         ],
         location: {
             latitude: 10.6580222,
             longitude: 122.9410383
-        }
-    },
-    {
-        name: "Jollibee Test",
-        email: "test2@gmail.com",
-        phone_number: "09214895941",
-        category_id: Category.find_by(name: "Food").id,
-        address: "Lacson st., Bacolod City",
-        image: 'jollibee.png',
-        product_categories: ['Burger', 'Drinks', 'Desserts'],
-        product_sizes: ['Small', 'Medium', 'Large'],
-        add_on_groups: ['Add a dessert'],
-        add_ons: [
-            {
-                name: 'Large Sundae',
-                price: 50,
-                add_on_group_name: 'Add a dessert'
-
-            }
-        ],
-        products: [
-            {
-                name: "Chicken burger",
-                product_category_name: 'Burger',
-                image: "chicken_burger.jpg",
-                description: 'Best chicken buerge ever',
-                product_prices: [
-                    {
-                        size: 'Small',
-                        price: 45
-                    },
-                    {
-                        size: 'Medium',
-                        price: 65
-                    },
-                    {
-                        size: 'Large',
-                        price: 85
-                    },
-                ],
-                product_add_ons: [
-                    {
-                        name: 'Add a dessert',
-                        require: 1,
-                        num_of_select: 1
-                    }
-                ]
-            },
-            {
-                name: "Coke",
-                product_category_name: 'Drinks',
-                image: "coke.jpg",
-                description: 'Best soft drinks ever',
-                product_prices: [
-                    {
-                        size: 'Small',
-                        price: 25
-                    },
-                    {
-                        size: 'Medium',
-                        price: 35
-                    },
-                    {
-                        size: 'Large',
-                        price: 45
-                    },
-                ],
-                product_add_ons: [
-                    {
-                        name: 'Add a dessert',
-                        require: 1,
-                        num_of_select: 1
-                    }
-                ]
-            },
-            {
-                name: "Sundae",
-                product_category_name: 'Desserts',
-                image: "sundae.jpg",
-                description: 'Best dessert ever',
-                product_prices: [
-                    {
-                        size: 'No Size',
-                        price: 25
-                    },
-                ],
-                product_add_ons: []
-            }
-        ],
-        location: {
-            latitude: 10.6612045,
-            longitude: 122.9427059
-        }
-    },
-    {
-        name: "KFC Test",
-        email: "test3@gmail.com",
-        phone_number: "09288264736",
-        category_id: Category.find_by(name: "Food").id,
-        address: "Lacson st., Bacolod City",
-        image: 'kfc.jpg',
-        product_categories: ['Burger', 'Drinks', 'Desserts'],
-        product_sizes: ['Small', 'Medium', 'Large'],
-        add_on_groups: ['Add a dessert'],
-        add_ons: [
-            {
-                name: 'Large Sundae',
-                price: 50,
-                add_on_group_name: 'Add a dessert'
-
-            }
-        ],
-        products: [
-            {
-                name: "Chicken burger",
-                product_category_name: 'Burger',
-                image: "chicken_burger.jpg",
-                description: 'Best chicken buerge ever',
-                product_prices: [
-                    {
-                        size: 'Small',
-                        price: 45
-                    },
-                    {
-                        size: 'Medium',
-                        price: 65
-                    },
-                    {
-                        size: 'Large',
-                        price: 85
-                    },
-                ],
-                product_add_ons: [
-                    {
-                        name: 'Add a dessert',
-                        require: 1,
-                        num_of_select: 1
-                    }
-                ]
-            },
-            {
-                name: "Coke",
-                product_category_name: 'Drinks',
-                image: "coke.jpg",
-                description: 'Best soft drinks ever',
-                product_prices: [
-                    {
-                        size: 'Small',
-                        price: 25
-                    },
-                    {
-                        size: 'Medium',
-                        price: 35
-                    },
-                    {
-                        size: 'Large',
-                        price: 45
-                    },
-                ],
-                product_add_ons: [
-                    {
-                        name: 'Add a dessert',
-                        require: 1,
-                        num_of_select: 1
-                    }
-                ]
-            },
-            {
-                name: "Sundae",
-                product_category_name: 'Desserts',
-                image: "sundae.jpg",
-                description: 'Best dessert ever',
-                product_prices: [
-                    {
-                        size: 'No Size',
-                        price: 25
-                    },
-                ],
-                product_add_ons: []
-            }
-        ],
-        location: {
-            latitude: 10.6639822,
-            longitude: 122.9442182
-        }
-    },
-    {
-        name: "Greenwich Test",
-        email: "test4@gmail.com",
-        phone_number: "09171058588",
-        category_id: Category.find_by(name: "Food").id,
-        address: "Lacson st., Bacolod City",
-        image: 'greenwich.jpg',
-        product_categories: ['Burger', 'Drinks', 'Desserts'],
-        product_sizes: ['Small', 'Medium', 'Large'],
-        add_on_groups: ['Add a dessert'],
-        add_ons: [
-            {
-                name: 'Large Sundae',
-                price: 50,
-                add_on_group_name: 'Add a dessert'
-
-            }
-        ],
-        products: [
-            {
-                name: "Chicken burger",
-                product_category_name: 'Burger',
-                image: "chicken_burger.jpg",
-                description: 'Best chicken buerge ever',
-                product_prices: [
-                    {
-                        size: 'Small',
-                        price: 45
-                    },
-                    {
-                        size: 'Medium',
-                        price: 65
-                    },
-                    {
-                        size: 'Large',
-                        price: 85
-                    },
-                ],
-                product_add_ons: [
-                    {
-                        name: 'Add a dessert',
-                        require: 1,
-                        num_of_select: 1
-                    }
-                ]
-            },
-            {
-                name: "Coke",
-                product_category_name: 'Drinks',
-                image: "coke.jpg",
-                description: 'Best soft drinks ever',
-                product_prices: [
-                    {
-                        size: 'Small',
-                        price: 25
-                    },
-                    {
-                        size: 'Medium',
-                        price: 35
-                    },
-                    {
-                        size: 'Large',
-                        price: 45
-                    },
-                ],
-                product_add_ons: [
-                    {
-                        name: 'Add a dessert',
-                        require: 1,
-                        num_of_select: 1
-                    }
-                ]
-            },
-            {
-                name: "Sundae",
-                product_category_name: 'Desserts',
-                image: "sundae.jpg",
-                description: 'Best dessert ever',
-                product_prices: [
-                    {
-                        size: 'No Size',
-                        price: 25
-                    },
-                ],
-                product_add_ons: []
-            }
-        ],
-        location: {
-            latitude: 10.6660869,
-            longitude: 122.9434742
-        }
-    },
-    {
-        name: "Sbarro Test",
-        email: "test5@gmail.com",
-        phone_number: "09123456789",
-        category_id: Category.find_by(name: "Food").id,
-        address: "Lacson st., Bacolod City",
-        image: 'sbarro.jpg',
-        product_categories: ['Burger', 'Drinks', 'Desserts'],
-        product_sizes: ['Small', 'Medium', 'Large'],
-        add_on_groups: ['Add a dessert'],
-        add_ons: [
-            {
-                name: 'Large Sundae',
-                price: 50,
-                add_on_group_name: 'Add a dessert'
-
-            }
-        ],
-        products: [
-            {
-                name: "Chicken burger",
-                product_category_name: 'Burger',
-                image: "chicken_burger.jpg",
-                description: 'Best chicken buerge ever',
-                product_prices: [
-                    {
-                        size: 'Small',
-                        price: 45
-                    },
-                    {
-                        size: 'Medium',
-                        price: 65
-                    },
-                    {
-                        size: 'Large',
-                        price: 85
-                    },
-                ],
-                product_add_ons: [
-                    {
-                        name: 'Add a dessert',
-                        require: 1,
-                        num_of_select: 1
-                    }
-                ]
-            },
-            {
-                name: "Coke",
-                product_category_name: 'Drinks',
-                image: "coke.jpg",
-                description: 'Best soft drinks ever',
-                product_prices: [
-                    {
-                        size: 'Small',
-                        price: 25
-                    },
-                    {
-                        size: 'Medium',
-                        price: 35
-                    },
-                    {
-                        size: 'Large',
-                        price: 45
-                    },
-                ],
-                product_add_ons: [
-                    {
-                        name: 'Add a dessert',
-                        require: 1,
-                        num_of_select: 1
-                    }
-                ]
-            },
-            {
-                name: "Sundae",
-                product_category_name: 'Desserts',
-                image: "sundae.jpg",
-                description: 'Best dessert ever',
-                product_prices: [
-                    {
-                        size: 'No Size',
-                        price: 25
-                    },
-                ],
-                product_add_ons: []
-            }
-        ],
-        location: {
-            latitude: 10.6726666,
-            longitude: 122.9441628
         }
     },
 ]
@@ -525,6 +128,29 @@ if Seller.count == 0
         file = File.open(File.join(Rails.root,"app/assets/images/sellers/#{s[:image]}")) if s[:image].present?
         filename = s[:image] if s[:image].present?
         seller.image.attach(io: file, filename: filename)
+
+        # create add ons
+        s[:add_ons].each do |ao|
+            AddOn.create(
+                name: ao[:name], 
+                price: ao[:price], 
+                seller_id: seller.id
+            )
+        end
+
+        # create add on groups 
+        s[:add_on_groups].each do |aog|
+            AddOnGroup.create(
+                name: aog[:name],
+                title: aog[:title],
+                seller_id: seller.id
+            )
+        end
+
+        # connect add ons to add on group
+        AddOnGroup.where(seller_id: seller.id).each do |aog|
+
+        end
 
         # create product size of No Size
         ProductSize.create(seller_id: seller.id, name: "No Size")
