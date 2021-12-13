@@ -7,13 +7,13 @@ class Admin::AddOnGroupsController < AdministratorController
 
     def create
         aog = AddOnGroup.new(add_on_group_params)
-        aog.save 
+        aog.save!
 
         redirect_to "/admin/seller/#{params[:seller_id]}"
     end
     
     private
     def add_on_group_params
-        params.permit(:seller_id, :name)
+        params.permit(:seller_id, :name, :title)
     end
 end

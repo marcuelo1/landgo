@@ -10,13 +10,18 @@ class Seller < ActiveRecord::Base
   belongs_to :category
   has_one_attached :image
   has_one :schedule
-  has_many :product_categories, dependent: :destroy
-  has_many :products, dependent: :destroy
-  has_many :template_aogs, dependent: :destroy
   has_many :checkout_sellers, dependent: :destroy
   has_many :seller_transactions, dependent: :destroy
+
   has_many :record_trackers, dependent: :destroy
   has_many :discount_trackers, dependent: :destroy
+
+  has_many :product_categories, dependent: :destroy
+  has_many :products, dependent: :destroy
+  
+  has_many :product_template_aogs, dependent: :destroy
+  has_many :add_on_groups, dependent: :destroy
+  has_many :add_ons, through: :add_on_groups
 
   ### PG SEARCH
   include PgSearch::Model

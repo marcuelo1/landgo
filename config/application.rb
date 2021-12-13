@@ -24,5 +24,7 @@ module Landgo
           methods: [:get, :post, :options, :delete, :put]
       end
     end
+
+    config.action_view.form_with_generates_remote_forms = false
   end
 end

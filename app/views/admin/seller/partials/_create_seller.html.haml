@@ -11,7 +11,9 @@
                 %br/
                 = f.text_field :phone_number, {placeholder: "Phone Number", style: "width:300px;", class: "form-control"}
                 %br/
-                = f.text_field :address, {placeholder: "Address", style: "width:300px;", class: "form-control"}
+                = f.text_field :latitude, {placeholder: "Latitude", style: "width:300px;", class: "form-control"}
+                %br/
+                = f.text_field :longitude, {placeholder: "Longitude", style: "width:300px;", class: "form-control"}
                 %br/
                 = f.collection_select :category_id, @categories, :id, :name, {}, {class: "form-select"}
                 %br/

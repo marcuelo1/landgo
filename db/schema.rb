@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_07_054436) do
+ActiveRecord::Schema.define(version: 2021_12_08_012121) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,8 +41,8 @@ ActiveRecord::Schema.define(version: 2021_12_07_054436) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "title"
-    t.bigint "template_aog_id", null: false
-    t.index ["template_aog_id"], name: "index_add_on_groups_on_template_aog_id"
+    t.bigint "seller_id", null: false
+    t.index ["seller_id"], name: "index_add_on_groups_on_seller_id"
   end
 
   create_table "add_ons", force: :cascade do |t|
@@ -298,6 +298,14 @@ ActiveRecord::Schema.define(version: 2021_12_07_054436) do
     t.index ["product_id"], name: "index_product_sizes_on_product_id"
   end
 
+  create_table "product_template_aogs", force: :cascade do |t|
+    t.string "name"
+    t.bigint "seller_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["seller_id"], name: "index_product_template_aogs_on_seller_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.bigint "product_category_id", null: false
@@ -305,10 +313,10 @@ ActiveRecord::Schema.define(version: 2021_12_07_054436) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "description"
-    t.bigint "template_aog_id", null: false
+    t.bigint "product_template_aog_id", null: false
     t.index ["product_category_id"], name: "index_products_on_product_category_id"
+    t.index ["product_template_aog_id"], name: "index_products_on_product_template_aog_id"
     t.index ["seller_id"], name: "index_products_on_seller_id"
-    t.index ["template_aog_id"], name: "index_products_on_template_aog_id"
   end
 
   create_table "record_trackers", force: :cascade do |t|
@@ -439,11 +447,13 @@ ActiveRecord::Schema.define(version: 2021_12_07_054436) do
   end
 
   create_table "template_aogs", force: :cascade do |t|
-    t.bigint "seller_id", null: false
-    t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["seller_id"], name: "index_template_aogs_on_seller_id"
+    t.bigint "product_template_aog_id", null: false
+    t.bigint "add_on_group_id", null: false
+    t.integer "num_of_required"
+    t.index ["add_on_group_id"], name: "index_template_aogs_on_add_on_group_id"
+    t.index ["product_template_aog_id"], name: "index_template_aogs_on_product_template_aog_id"
   end
 
   create_table "vouchers", force: :cascade do |t|
@@ -470,7 +480,7 @@ ActiveRecord::Schema.define(version: 2021_12_07_054436) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "add_on_groups", "template_aogs"
+  add_foreign_key "add_on_groups", "sellers"
   add_foreign_key "add_ons", "add_on_groups"
   add_foreign_key "buyer_payment_methods", "buyers"
   add_foreign_key "buyer_payment_methods", "payment_methods"
@@ -501,9 +511,10 @@ ActiveRecord::Schema.define(version: 2021_12_07_054436) do
   add_foreign_key "product_add_ons", "products"
   add_foreign_key "product_categories", "sellers"
   add_foreign_key "product_sizes", "products"
+  add_foreign_key "product_template_aogs", "sellers"
   add_foreign_key "products", "product_categories"
+  add_foreign_key "products", "product_template_aogs"
   add_foreign_key "products", "sellers"
-  add_foreign_key "products", "template_aogs"
   add_foreign_key "record_trackers", "sellers"
   add_foreign_key "rider_transactions", "checkout_sellers"
   add_foreign_key "rider_transactions", "riders"
@@ -511,5 +522,6 @@ ActiveRecord::Schema.define(version: 2021_12_07_054436) do
   add_foreign_key "seller_transactions", "checkout_sellers"
   add_foreign_key "seller_transactions", "sellers"
   add_foreign_key "sellers", "categories"
-  add_foreign_key "template_aogs", "sellers"
+  add_foreign_key "template_aogs", "add_on_groups"
+  add_foreign_key "template_aogs", "product_template_aogs"
 end
