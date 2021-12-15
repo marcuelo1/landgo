@@ -59,7 +59,7 @@ sellers = [
         add_on_groups: [
             {name: "aog1 required=false and any number of choices", title: "Please pick a dessert", is_required: false, num_of_choices: 0},
             {name: "aog2 required=true 1 needed", title: "Please pick a side", is_required: true, num_of_choices: 1},
-            {name: "aog3 required=false upto 3 choices", title: "Please pick a side", is_required: false, num_of_choices: 3},
+            {name: "aog3 required=false upto 3 choices", title: "Please pick a side 2", is_required: false, num_of_choices: 3},
         ],
         add_ons: [
             {name: 'Large Sundae', price: 100},
@@ -79,7 +79,7 @@ sellers = [
                     {name: 'Medium', price: 65},
                     {name: 'Large', price: 85},
                 ],
-                product_template_aogs: ['pta_1']
+                product_template_aog: 'pta_1'
             },
             {
                 name: "Coke",
@@ -91,7 +91,7 @@ sellers = [
                     {name: 'Medium', price: 35},
                     {name: 'Large', price: 45},
                 ],
-                product_template_aogs: ['pta_1', 'pta_2']
+                product_template_aog: 'pta_2'
             },
             {
                 name: "Sundae",
@@ -103,7 +103,7 @@ sellers = [
                     {name: 'Medium', price: 60},
                     {name: 'Large', price: 90},
                 ],
-                product_template_aogs: ['pta_1', 'pta_2', 'pta_3']
+                product_template_aog: 'pta_3'
             }
         ],
         location: {
@@ -140,50 +140,44 @@ if Seller.count == 0
 
         # create add on groups 
         s[:add_on_groups].each do |aog|
-            AddOnGroup.create(
+            add_on_group = AddOnGroup.create(
                 name: aog[:name],
                 title: aog[:title],
                 seller_id: seller.id
             )
+
+            # connect add ons to add on group
+            AddOn.where(seller_id: seller.id).each do |ao|
+                AddOnToGroup.create(add_on_group_id: add_on_group.id, add_on_id: ao.id)
+            end
         end
 
-        # connect add ons to add on group
-        AddOnGroup.where(seller_id: seller.id).each do |aog|
+        # create product template add on group
+        s[:product_template_aogs].each do |name|
+            pta = ProductTemplateAog.create(name: name, seller_id: seller.id)
 
+            # create template add on group
+            s[:add_on_groups].each do |aog_raw|
+                aog = AddOnGroup.where(seller_id: seller.id, name: aog_raw[:name]).first
+                TemplateAog.create(
+                    product_template_aog_id: pta.id,
+                    add_on_group_id: aog.id,
+                    is_required: aog_raw[:is_required],
+                    num_of_choices: aog_raw[:num_of_choices]
+                )
+            end
         end
-
-        # create product size of No Size
-        ProductSize.create(seller_id: seller.id, name: "No Size")
 
         # create product categories
         s[:product_categories].each do |pcs|
             ProductCategory.create(name: pcs, seller_id: seller.id)
         end
 
-        # create product sizes
-        s[:product_sizes].each do |ps|
-            ProductSize.create(name: ps, seller_id: seller.id)
-        end
-
-        # create product add on groups
-        s[:add_on_groups].each do |aog|
-            AddOnGroup.create(name: aog, seller_id: seller.id)
-        end
-
-        # create product add ons
-        s[:add_ons].each do |ao|
-            AddOn.create(
-                name: ao[:name], 
-                price: ao[:price], 
-                add_on_group_id: AddOnGroup.find_by(name: ao[:add_on_group_name], seller_id: seller.id).id
-            )
-        end
-
         # create products
         s[:products].each do |pr|
             product = Product.create(
                 name: pr[:name], 
-                product_category_id: ProductCategory.find_by(name: pr[:product_category_name], seller_id: seller.id).id, 
+                product_category_id: ProductCategory.find_by(name: pr[:product_category_name], seller_id: seller.id, 
                 description: pr[:description],
                 seller_id: seller.id
             )
@@ -192,43 +186,52 @@ if Seller.count == 0
             filename = pr[:image]
             product.image.attach(io: file, filename: filename)
 
-            pr[:product_prices].each do |pp|
-                ProductPrice.create(
+            pr[:product_sizes].each do |ps|
+                ProductSize.create(
+                    name: ps[:name],
                     product_id: product.id,
-                    price: pp[:price],
-                    base_price: pp[:price],
-                    product_size_id: ProductSize.find_by(name: pp[:size], seller_id: seller.id).id
+                    price: pp[:price]
                 )
             end
-
-            pr[:product_add_ons].each do |pao|
-                ProductAddOn.create(
-                    product_id: product.id,
-                    add_on_group_id: AddOnGroup.find_by(name: pao[:name], seller_id: seller.id).id,
-                    require: pao[:require],
-                    num_of_select: pao[:num_of_select]
-                )
-            end
+            
+            pta = ProductTemplateAog.where(name: pr[:product_template_aog], seller_id: seller.id).first
+            product.update(product_template_aog_id: pta.id)
         end
 
         # create location
         geo_object = Geocoder.search([s[:location][:latitude], s[:location][:longitude]]).first.data
-        location = Location.new(
-            user_id: seller.id,
-            user_type: "Seller",
-            longitude: s[:location][:longitude], 
-            latitude: s[:location][:latitude]
-        )
-        
+
         address = geo_object['address']
         print(address)
-        location.street = address['road']
-        location.village = address['village'] ? address['village'] : address['suburb']
-        location.city = address['city']
-        location.state = address['state']
-        location.details = "GF room 101"
-        location.save
         
+        seller.update(
+            longitude: s[:location][:longitude], 
+            latitude: s[:location][:latitude],
+            details: "GF room 101",
+            street: address['road'],
+            village: address['village'] ? address['village'] : address['suburb'],
+            city: address['city'],
+            state: address['state']
+        )
+
+        # create schedule
+        Schedule.create(
+            seller_id: seller.id,
+            monday_start: "8:00:AM",
+            monday_end: "5:30:PM",
+            tuesday_start: "8:00:AM",
+            tuesday_end: "5:30:PM",
+            wednesday_start: "8:00:AM",
+            wednesday_end: "5:30:PM",
+            thursday_start: "8:00:AM",
+            thursday_end: "5:30:PM",
+            friday_start: "8:00:AM",
+            friday_end: "5:30:PM",
+            saturay_start: "8:00:AM",
+            saturday_end: "5:30:PM",
+            sunday_start: "8:00:AM",
+            sunday_end: "5:30:PM",
+        )
     end
 end
 ###########################################################################################################

@@ -322,7 +322,7 @@ ActiveRecord::Schema.define(version: 2021_12_13_104902) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "description"
-    t.bigint "product_template_aog_id", null: false
+    t.bigint "product_template_aog_id"
     t.index ["product_category_id"], name: "index_products_on_product_category_id"
     t.index ["product_template_aog_id"], name: "index_products_on_product_template_aog_id"
     t.index ["seller_id"], name: "index_products_on_seller_id"
@@ -388,20 +388,20 @@ ActiveRecord::Schema.define(version: 2021_12_13_104902) do
 
   create_table "schedules", force: :cascade do |t|
     t.bigint "seller_id", null: false
-    t.datetime "monday_start"
-    t.datetime "monday_end"
-    t.datetime "tuesday_start"
-    t.datetime "tuesday_end"
-    t.datetime "wednesday_start"
-    t.datetime "wednesday_end"
-    t.datetime "thursday_start"
-    t.datetime "thursday_end"
-    t.datetime "friday_start"
-    t.datetime "friday_end"
-    t.datetime "saturday_start"
-    t.datetime "saturday_end"
-    t.datetime "sunday_start"
-    t.datetime "sunday_end"
+    t.string "monday_start"
+    t.string "monday_end"
+    t.string "tuesday_start"
+    t.string "tuesday_end"
+    t.string "wednesday_start"
+    t.string "wednesday_end"
+    t.string "thursday_start"
+    t.string "thursday_end"
+    t.string "friday_start"
+    t.string "friday_end"
+    t.string "saturday_start"
+    t.string "saturday_end"
+    t.string "sunday_start"
+    t.string "sunday_end"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["seller_id"], name: "index_schedules_on_seller_id"
